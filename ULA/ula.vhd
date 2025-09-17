@@ -6,7 +6,7 @@ entity ula is
     port( 
         in0,in1: in unsigned(15 downto 0); --16 bits cada entrada 
         op: in unsigned (1 downto 0) ; -- entrada do usuário para escolher a operação
-        e_out: out unsigned (15 downto 0);
+        ula_out: out unsigned (15 downto 0);
     );
 end entity;
 
@@ -48,15 +48,15 @@ architecture a_ula of ula is
           signal sub_in0, sub_in1, out_sub : unsigned(15 downto 0);
 
 
-          component product
+          component and
           port(   
-              product_in0 : in  unsigned(15 downto 0);
-              product_in1 : in  unsigned(15 downto 0);
-              out_product : out unsigned(15 downto 0)  
+              and_in0 : in  unsigned(15 downto 0);
+              and_in1 : in  unsigned(15 downto 0);
+              out_and : out unsigned(15 downto 0)  
           )
       
            end component;
-           signal product_in0, product_in1, out_product : unsigned(15 downto 0);
+           signal and_in0, and_in1, out_and : unsigned(15 downto 0);
         
 begin
      
@@ -72,16 +72,16 @@ begin
             out_sub => out_sub ,
         )
 
-        product_inst: product port map(
-            product_in0 => product_in0 ,
-            product_in1 => product_in1 ,
-            out_product => out_product ,
+        and_inst: and port map(
+            and_in0 => and_in0 ,
+            and_in1 => and_in1 ,
+            out_and => out_and ,
         )
 
-        exponential_inst: exponential port map(
-            exponential_in0 => exponential_in0 ,
-            exponential_in1 => exponential_in1 ,
-            out_exponential => out_exponential ,
+        or_inst: or port map(
+            or_in0 => or_in0 ,
+            or_in1 => or_in1 ,
+            out_or => out_or ,
         )
 
         mux_inst: mux port map(

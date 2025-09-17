@@ -17,7 +17,7 @@ architecture a_mux of mux is
     begin
        out_mux <=  mux_in0 when sel="00" else -- adição
                    mux_in1 when sel="01" else -- subtração
-                   mux_in2 when sel="10" else -- multiplicação 
-                   mux_in3 when sel="11" else -- exponenciação (eleva entrada 1 a entrada 2)
+                   mux_in2 when sel="10" else -- and 
+                   mux_in3 when sel="11" else -- or (eleva entrada 1 a entrada 2)
                    "00000000";              
     end architecture;
