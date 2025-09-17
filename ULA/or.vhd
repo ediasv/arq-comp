@@ -12,5 +12,5 @@ end entity;
 
 architecture a_or of or is
     begin
-        out_or <=or_in0 or or_in1;
+        out_or <= or_in0 or or_in1;
     end architecture;
