@@ -10,7 +10,9 @@ entity ula is
     port (
         in0, in1 : in  std_logic_vector(15 downto 0);
         op       : in  std_logic_vector(1 downto 0);
-        ula_out  : out std_logic_vector(15 downto 0)
+        ula_out  : out std_logic_vector(15 downto 0);
+        zero     : out std_logic;
+        carry    : out std_logic
     );
 end entity;
 
@@ -27,4 +29,7 @@ begin
              and_result         when op = "10" else
              or_result          when op = "11" else
              (others => '0');
+
+  zero  <= '1' when ula_out = x"0000" else '0';
+  carry <= sum_result(16
 end architecture;
