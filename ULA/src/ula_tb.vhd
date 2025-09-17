@@ -8,15 +8,15 @@ end entity;
 architecture a_ula_tb of ula_tb is
   component ula
     port (
-      in0, in1 : in  unsigned(15 downto 0);
-      op       : in  unsigned(1 downto 0);
-      ula_out  : out unsigned(15 downto 0)
+      in0, in1 : in  std_logic_vector(15 downto 0);
+      op       : in  std_logic_vector(1 downto 0);
+      ula_out  : out std_logic_vector(15 downto 0)
     );
   end component;
 
-  signal in0, in1 : unsigned(15 downto 0);
-  signal op       : unsigned(1 downto 0);
-  signal ula_out  : unsigned(15 downto 0);
+  signal in0, in1 : std_logic_vector(15 downto 0);
+  signal op       : std_logic_vector(1 downto 0);
+  signal ula_out  : std_logic_vector(15 downto 0);
 begin
   ula_inst: ula
     port map (
@@ -33,28 +33,23 @@ begin
     op  <= "00";
 
     -- sum of two positive integers
-    in0 <= to_unsigned(10, 16);
-    in1 <= to_unsigned(5, 16);
+    in0 <= std_logic_vector(to_signed(10, 16));
+    in1 <= std_logic_vector(to_signed(5, 16));
     wait for 50 ns;
 
     -- sum of a positive and a negative integer
-    in0 <= to_unsigned(-15, 16);
-    in1 <= to_unsigned(5, 16);
-    wait for 50 ns;
-
-    -- sum of a positive and a negative integer
-    in0 <= to_unsigned(-15, 16);
-    in1 <= to_unsigned(5, 16);
+    in0 <= std_logic_vector(to_signed(-15, 16));
+    in1 <= std_logic_vector(to_signed(5, 16));
     wait for 50 ns;
 
     -- sum of two negative integers
-    in0 <= to_unsigned(-10, 16);
-    in1 <= to_unsigned(-5, 16);
+    in0 <= std_logic_vector(to_signed(-10, 16));
+    in1 <= std_logic_vector(to_signed(-5, 16));
     wait for 50 ns;
 
     -- sum resulting in overflow
-    in0 <= to_unsigned(32760, 16);
-    in1 <= to_unsigned(10, 16);
+    in0 <= std_logic_vector(to_signed(32760, 16));
+    in1 <= std_logic_vector(to_signed(10, 16));
     wait for 50 ns;
 
     --------------------------------------------------------
@@ -62,23 +57,23 @@ begin
     op  <= "01"; -- sub
 
     -- subtraction of two positive integers
-    in0 <= to_unsigned(20, 16);
-    in1 <= to_unsigned(7, 16);
+    in0 <= std_logic_vector(to_signed(20, 16));
+    in1 <= std_logic_vector(to_signed(7, 16));
     wait for 50 ns;
 
     -- subtraction resulting in negative
-    in0 <= to_unsigned(5, 16);
-    in1 <= to_unsigned(10, 16);
+    in0 <= std_logic_vector(to_signed(5, 16));
+    in1 <= std_logic_vector(to_signed(10, 16));
     wait for 50 ns;
 
     -- subtraction resulting in overflow
-    in0 <= to_unsigned(-32760, 16);
-    in1 <= to_unsigned(10, 16);
+    in0 <= std_logic_vector(to_signed(-32760, 16));
+    in1 <= std_logic_vector(to_signed(10, 16));
     wait for 50 ns;
 
     -- subtraction of two negative integers
-    in0 <= to_unsigned(-20, 16);
-    in1 <= to_unsigned(-7, 16);
+    in0 <= std_logic_vector(to_signed(-20, 16));
+    in1 <= std_logic_vector(to_signed(-7, 16));
     wait for 50 ns;
 
     --------------------------------------------------------
