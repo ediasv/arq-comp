@@ -1,17 +1,31 @@
 library ieee;
-use ieee.std_logic_1164.all;
-ieee.numeric_std.all
+  use ieee.std_logic_1164.all;
+  use ieee.numeric_std.all;
 
 entity ula is
-    port( 
-        in0,in1: in unsigned(15 downto 0);  
-        op: in unsigned (1 downto 0) ; -- operator to be displayed chosen by user
-        ula_out: out unsigned (15 downto 0);  
-    );
+  port (
+    in0, in1 : in  unsigned(15 downto 0); --16 bits cada entrada 
+    op       : in  unsigned(1 downto 0);  -- entrada do usuário para escolher a operação
+    ula_out  : out unsigned(15 downto 0)
+  );
 end entity;
 
 architecture a_ula of ula is
-      
+  component mux
+    port (
+      mux_in0 : in  unsigned(15 downto 0);
+      mux_in1 : in  unsigned(15 downto 0);
+      mux_in2 : in  unsigned(15 downto 0);
+      mux_in3 : in  unsigned(15 downto 0);
+      sel     : in  unsigned(1 downto 0);
+      out_mux   : out unsigned(15 downto 0)
+    );
+  end component;
+  signal mux_in0, mux_in1, mux_in2, mux_in3, out_mux : unsigned(15 downto 0);
+  signal sel                                       : unsigned(1 downto 0);
+
+
+
         component add
         port(   
             add_in0 : in  unsigned(15 downto 0);
@@ -38,29 +52,8 @@ architecture a_ula of ula is
               out_and : out unsigned(15 downto 0)  
           )
            end component;
-           signal out_and : unsigned(15 downto 0);
+           signal and_in0, and_in1, out_and : unsigned(15 downto 0);
 
-          component or
-          port(   
-              or_in0 : in  unsigned(15 downto 0);
-              or_in1 : in  unsigned(15 downto 0);
-              out_or : out unsigned(15 downto 0)  
-          )
-           end component;
-           signal out_or : unsigned(15 downto 0);
-
-           component mux
-           port(   
-            mux_in0 : in  unsigned(15 downto 0);
-            mux_in1 : in  unsigned(15 downto 0);
-            mux_in2 : in  unsigned(15 downto 0);
-            mux_in3 : in  unsigned(15 downto 0);
-            sel     : in  unsigned(1 downto 0) ; 
-            out_mux : out unsigned(15 downto 0)  
-            )
-       
-            end component;
-    
 begin
      
         add_inst: add port map(
