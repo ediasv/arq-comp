@@ -40,7 +40,7 @@ architecture a_ula of ula is
            end component;
            signal out_and : unsigned(15 downto 0);
 
-           component or
+          component or
           port(   
               or_in0 : in  unsigned(15 downto 0);
               or_in1 : in  unsigned(15 downto 0);

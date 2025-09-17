@@ -15,8 +15,8 @@ end entity;
 
 architecture a_mux of mux is
     begin
-       out_mux <=  mux_in0 when sel="00" else -- adição
-                   mux_in1 when sel="01" else -- subtração
+       out_mux <=  mux_in0 when sel="00" else -- adition
+                   mux_in1 when sel="01" else -- subtraction
                    mux_in2 when sel="10" else -- and 
                    mux_in3 when sel="11" else -- or 
                    "00000000";              
