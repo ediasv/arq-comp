@@ -19,6 +19,7 @@ end entity;
 architecture a_ula of ula is
   signal sum_result, subtraction_result, and_result, or_result: std_logic_vector(15 downto 0);
 begin
+  temporary_sum <= std_logic_vector(signed(('0' & in0)) + signed(('0' & in1))); --carry flag
   sum_result         <= std_logic_vector(signed(in0) + signed(in1));
   subtraction_result <= std_logic_vector(signed(in0) - signed(in1));
   and_result         <= in0 and in1;
@@ -31,5 +32,7 @@ begin
              (others => '0');
 
   zero  <= '1' when ula_out = x"0000" else '0';
-  carry <= sum_result(16
+  carry <= temporary_sum(16) when op = "00" else
+           '1' when (op = "01" and in0 < in1) else 
+           '0';
 end architecture;
