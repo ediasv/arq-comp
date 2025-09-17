@@ -12,5 +12,5 @@ end entity;
 
 architecture a_sub of sub is
     begin
-        out_sub <= sub_in0 + sub_in1;
+        out_sub <= sub_in0 - sub_in1;
     end architecture;
