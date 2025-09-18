@@ -1,6 +1,6 @@
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+  use ieee.std_logic_1164.all;
+  use ieee.numeric_std.all;
 
 entity ula_tb is
 end entity;
@@ -8,29 +8,33 @@ end entity;
 architecture a_ula_tb of ula_tb is
   component ula
     port (
-      in0, in1 : in  std_logic_vector(15 downto 0);
-      op       : in  std_logic_vector(1 downto 0);
-      ula_out  : out std_logic_vector(15 downto 0)
+      in0, in1  : in  std_logic_vector(15 downto 0);
+      op        : in  std_logic_vector(1 downto 0);
+      ula_out   : out std_logic_vector(15 downto 0);
+      zero, sig : out std_logic
     );
   end component;
 
-  signal in0, in1 : std_logic_vector(15 downto 0);
-  signal op       : std_logic_vector(1 downto 0);
-  signal ula_out  : std_logic_vector(15 downto 0);
+  signal in0, in1  : std_logic_vector(15 downto 0);
+  signal op        : std_logic_vector(1 downto 0);
+  signal ula_out   : std_logic_vector(15 downto 0);
+  signal zero, sig : std_logic;
 begin
   ula_inst: ula
     port map (
       in0     => in0,
       in1     => in1,
       op      => op,
-      ula_out => ula_out
+      ula_out => ula_out,
+      zero    => zero,
+      sig     => sig
     );
 
   process
   begin
     --------------------------------------------------------
     -- addition
-    op  <= "00";
+    op <= "00";
 
     -- sum of two positive integers
     in0 <= std_logic_vector(to_signed(10, 16));
@@ -38,13 +42,13 @@ begin
     wait for 50 ns;
 
     -- sum of a positive and a negative integer
-    in0 <= std_logic_vector(to_signed(-15, 16));
+    in0 <= std_logic_vector(to_signed(- 15, 16));
     in1 <= std_logic_vector(to_signed(5, 16));
     wait for 50 ns;
 
     -- sum of two negative integers
-    in0 <= std_logic_vector(to_signed(-10, 16));
-    in1 <= std_logic_vector(to_signed(-5, 16));
+    in0 <= std_logic_vector(to_signed(- 10, 16));
+    in1 <= std_logic_vector(to_signed(- 5, 16));
     wait for 50 ns;
 
     -- sum resulting in overflow
@@ -54,7 +58,7 @@ begin
 
     --------------------------------------------------------
     -- subtraction
-    op  <= "01"; -- sub
+    op <= "01"; -- sub
 
     -- subtraction of two positive integers
     in0 <= std_logic_vector(to_signed(20, 16));
@@ -67,18 +71,18 @@ begin
     wait for 50 ns;
 
     -- subtraction resulting in overflow
-    in0 <= std_logic_vector(to_signed(-32760, 16));
+    in0 <= std_logic_vector(to_signed(- 32760, 16));
     in1 <= std_logic_vector(to_signed(10, 16));
     wait for 50 ns;
 
     -- subtraction of two negative integers
-    in0 <= std_logic_vector(to_signed(-20, 16));
-    in1 <= std_logic_vector(to_signed(-7, 16));
+    in0 <= std_logic_vector(to_signed(- 20, 16));
+    in1 <= std_logic_vector(to_signed(- 7, 16));
     wait for 50 ns;
 
     --------------------------------------------------------
     -- AND
-    op  <= "10";
+    op <= "10";
 
     in0 <= x"00FF";
     in1 <= x"0F0F";
@@ -86,12 +90,12 @@ begin
 
     --------------------------------------------------------
     -- OR
-    op  <= "11";
-    
+    op <= "11";
+
     in0 <= x"00F0";
     in1 <= x"0F00";
     wait for 50 ns;
 
     wait;
   end process;
-end architecture a_ula_tb;
+end architecture;
