@@ -10,20 +10,24 @@ architecture a_ula_tb of ula_tb is
     port (
       in0, in1 : in  std_logic_vector(15 downto 0);
       op       : in  std_logic_vector(1 downto 0);
-      ula_out  : out std_logic_vector(15 downto 0)
+      ula_out  : out std_logic_vector(15 downto 0);
+      zero, carry     : out std_logic
     );
   end component;
 
   signal in0, in1 : std_logic_vector(15 downto 0);
   signal op       : std_logic_vector(1 downto 0);
   signal ula_out  : std_logic_vector(15 downto 0);
+  signal zero, carry : std_logic;
 begin
   ula_inst: ula
     port map (
       in0     => in0,
       in1     => in1,
       op      => op,
-      ula_out => ula_out
+      ula_out => ula_out,
+      zero     => zero,
+      carry   => carry
     );
 
   process

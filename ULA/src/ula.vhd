@@ -12,28 +12,28 @@ entity ula is
         op       : in  std_logic_vector(1 downto 0);
         ula_out  : out std_logic_vector(15 downto 0);
         zero     : out std_logic;
-        carry    : out std_logic
     );
 end entity;
 
 architecture a_ula of ula is
-  signal sum_result, subtraction_result, and_result, or_result: std_logic_vector(15 downto 0);
-  signal temporary_sum: std_logic_vector(16 downto 0);
+  signal subtraction_result, and_result, or_result: std_logic_vector(15 downto 0);
+  signal sum_result: std_logic_vector(16 downto 0);
+  signal ula_result: std_logic_vector(15 downto 0);
 begin
-  temporary_sum <= std_logic_vector(signed(('0' & in0)) + signed(('0' & in1))); --carry flag
-  sum_result         <= std_logic_vector(signed(in0) + signed(in1));
+  -- Addition with carry out
+  sum_result         <= std_logic_vector(resize(signed(in0), 17) + resize(signed(in1), 17));
   subtraction_result <= std_logic_vector(signed(in0) - signed(in1));
   and_result         <= in0 and in1;
   or_result          <= in0 or in1;
+  ula_out            <= ula_result;
 
-  ula_out <= sum_result         when op = "00" else
-             subtraction_result when op = "01" else
-             and_result         when op = "10" else
-             or_result          when op = "11" else
-             (others => '0');
+  zero  <= '1' when ula_result = x"0000" else '0';
 
-  zero  <= '1' when ula_out = x"0000" else '0';
-  carry <= temporary_sum(16) when op = "00" else
-           '1' when (op = "01" and unsigned(in0) < unsigned(in1)) else 
-           '0';
+
+
+  ula_result <= sum_result(15 downto 0) when op = "00" else
+                subtraction_result      when op = "01" else
+                and_result              when op = "10" else
+                or_result               when op = "11" else
+                (others => '0');
 end architecture;
