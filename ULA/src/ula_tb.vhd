@@ -80,6 +80,11 @@ begin
     in1 <= std_logic_vector(to_signed(- 7, 16));
     wait for 50 ns;
 
+    -- subtraction resulting in zero
+    in0 <= std_logic_vector(to_signed(10, 16));
+    in1 <= std_logic_vector(to_signed(10, 16));
+    wait for 50 ns;
+
     --------------------------------------------------------
     -- AND
     op <= "10";
