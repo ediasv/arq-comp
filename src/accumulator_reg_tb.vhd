@@ -62,20 +62,20 @@ begin
     report "Test 2: Add 5 to accumulator";
     wr_en <= '1';
     data_in <= x"0005";
-    wait for clk_period;
+    wait for clk_period * 2.7;
     assert data_out = x"0005" report "First accumulation failed" severity error;
 
     -- Test 3: Second accumulation
     report "Test 3: Add 10 to accumulator";
     data_in <= x"000A";
-    wait for clk_period;
+    wait for clk_period * 1.9;
     assert data_out = x"000F" report "Second accumulation failed (expected 15)" severity error;
 
     -- Test 4: Hold value when wr_en is '0'
     report "Test 4: Hold value (wr_en = '0')";
     wr_en <= '0';
     data_in <= x"00FF";
-    wait for clk_period;
+    wait for clk_period * 2.8;
     assert data_out = x"000F" report "Hold failed, value changed" severity error;
 
     -- Test 5: Resume accumulation

@@ -13,7 +13,8 @@ entity top_level is
         data_out         : out unsigned(15 downto 0);
         ula_op           : in  std_logic_vector(1 downto 0);
         ula_zero         : out std_logic;
-        ula_sig          : out std_logic
+        ula_sig          : out std_logic;
+        rst_acc          : in  std_logic
        );
 end entity;
 
@@ -40,6 +41,7 @@ architecture a_top_level of top_level is
 
   component ula
     port (
+      clk       : in  std_logic;
       in0, in1  : in  std_logic_vector(15 downto 0);
       op        : in  std_logic_vector(1 downto 0);
       ula_out   : out std_logic_vector(15 downto 0);
@@ -66,7 +68,7 @@ begin
   acc: accumulator_reg
     port map (
       clk      => clk,
-      rst      => rst,
+      rst      => rst_acc,
       wr_en    => acc_en,
       data_in  => unsigned(ula_out),
       data_out => acc_data_out
@@ -74,6 +76,7 @@ begin
 
   ula_inst: ula
     port map (
+      clk     => clk,
       in0     => ula_in0,
       in1     => ula_in1,
       op      => ula_op,
