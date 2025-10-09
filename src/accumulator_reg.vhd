@@ -21,16 +21,22 @@ architecture a_accumulator_reg of accumulator_reg is
          );
   end component;
 
+  signal acc_input : unsigned(15 downto 0);
+  signal acc_value : unsigned(15 downto 0);
+
 begin
+  -- Calculate next accumulator value
+  acc_input <= acc_value + data_in when wr_en = '1' else acc_value;
+
   reg_acc: reg16bits
     port map (
       clk      => clk,
       rst      => rst,
-      wr_en    => wr_en,
-      data_in  => data_in,
-      data_out => data_out
+      wr_en    => '1',  -- Always write to capture the accumulator state
+      data_in  => acc_input,
+      data_out => acc_value
     );
 
-  data_out <= data_out + data_in when wr_en = '1' else data_out;
+  data_out <= acc_value;
 
 end architecture;
