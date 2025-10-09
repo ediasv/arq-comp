@@ -66,7 +66,7 @@ begin
       clk      => clk,
       rst      => rst,
       wr_en    => wr_en,
-      data_in  => bank_data_out,
+      data_in  => ula_out,
       data_out => acc_data_out
     );
 
@@ -80,7 +80,8 @@ begin
       sig     => ula_sig
     );
 
-  data_out <= ula_out;n
+  data_out <= unsigned(ula_out);
   ula_in0  <= std_logic_vector(acc_data_out);
+  
 
 end architecture;
