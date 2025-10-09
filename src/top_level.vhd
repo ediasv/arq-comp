@@ -3,28 +3,21 @@ library ieee;
   use ieee.numeric_std.all;
 
 entity top_level is
-  port (clk      : in  std_logic;
-        rst      : in  std_logic;
-        wr_en    : in  std_logic;
-        addr_wr  : in  std_logic_vector(2 downto 0); -- 3 bits para 8 registradores
-        data_in  : in  unsigned(15 downto 0);
-        data_out : out unsigned(15 downto 0);
-        ula_op   : in  std_logic_vector(1 downto 0);
-        ula_zero : out std_logic;
-        ula_sig  : out std_logic
+  port (clk              : in  std_logic;
+        rst              : in  std_logic;
+        wr_en            : in  std_logic;
+        acc_en           : in  std_logic;
+        op_with_constant : in  std_logic;
+        addr_wr          : in  std_logic_vector(2 downto 0); -- 3 bits para 8 registradores
+        data_in          : in  unsigned(15 downto 0);
+        data_out         : out unsigned(15 downto 0);
+        ula_op           : in  std_logic_vector(1 downto 0);
+        ula_zero         : out std_logic;
+        ula_sig          : out std_logic
        );
 end entity;
 
 architecture a_top_level of top_level is
-
-   component mux16bits
-    port(   in_constant   : in  unsigned(15 downto 0);
-            in_reg   : in  unsigned(15 downto 0);
-            op    : in    std_logic; 
-            mux_out : out unsigned(15 downto 0)
-      ); 
-   end component;
-
 
   component bank_of_registers
     port (clk      : in  std_logic;
@@ -74,8 +67,8 @@ begin
     port map (
       clk      => clk,
       rst      => rst,
-      wr_en    => wr_en,
-      data_in  => ula_out,
+      wr_en    => acc_en,
+      data_in  => unsigned(ula_out),
       data_out => acc_data_out
     );
 
@@ -91,16 +84,7 @@ begin
 
   data_out <= unsigned(ula_out);
   ula_in0  <= std_logic_vector(acc_data_out);
-  
-
-
-   mux_inst: mux16bits
-      port map(
-          in_constant => x"00FF", -- constante 255
-          in_reg      => bank_data_out,
-          op          => wr_en,    -- se wr_en=1, escolhe constante; se wr_en=0, escolhe registrador
-          mux_out     => data_out
-      );
-
+  ula_in1  <= std_logic_vector(bank_data_out) when op_with_constant = '0' else
+              std_logic_vector(data_in);
 
 end architecture;
