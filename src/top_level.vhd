@@ -14,6 +14,15 @@ end entity;
 
 architecture a_top_level of top_level is
 
+   component mux16bits
+    port(   in_constant   : in  unsigned(15 downto 0);
+            in_reg   : in  unsigned(15 downto 0);
+            op    : in    std_logic; 
+            mux_out : out unsigned(15 downto 0)
+      ); 
+   end component;
+
+
   component bank_of_registers
     port (clk      : in  std_logic;
           rst      : in  std_logic;
@@ -57,5 +66,15 @@ begin
     );
 
   data_out <= bank_data_out;
+
+
+   mux_inst: mux16bits
+      port map(
+          in_constant => x"00FF", -- constante 255
+          in_reg      => bank_data_out,
+          op          => wr_en,    -- se wr_en=1, escolhe constante; se wr_en=0, escolhe registrador
+          mux_out     => data_out
+      );
+
 
 end architecture;
