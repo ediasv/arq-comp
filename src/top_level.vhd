@@ -8,9 +8,9 @@ entity top_level is
         wr_en            : in  std_logic;
         acc_en           : in  std_logic;
         op_with_constant : in  std_logic;
-        addr_dest        : in  std_logic_vector(2 downto 0); -- 3 bits para 8 registradores
-        addr_source      : in  std_logic_vector(2 downto 0); -- 3 bits para 8 registradores
-        data_in          : in  unsigned(15 downto 0);
+        addr_dest        : in  std_logic_vector(2 downto 0);
+        addr_source      : in  std_logic_vector(2 downto 0);
+        const_in         : in  unsigned(15 downto 0);
         data_out         : out unsigned(15 downto 0);
         ula_op           : in  std_logic_vector(1 downto 0);
         ula_zero         : out std_logic;
@@ -26,8 +26,8 @@ architecture a_top_level of top_level is
     port (clk         : in  std_logic;
           rst         : in  std_logic;
           wr_en       : in  std_logic;
-          addr_dest   : in  std_logic_vector(2 downto 0); -- address to select one of the 8 registers
-          addr_source : in  std_logic_vector(2 downto 0); -- address to select one of the 8 registers
+          addr_dest   : in  std_logic_vector(2 downto 0);
+          addr_source : in  std_logic_vector(2 downto 0);
           data_in     : in  unsigned(15 downto 0);
           data_out    : out unsigned(15 downto 0)
          );
@@ -51,10 +51,7 @@ architecture a_top_level of top_level is
     );
   end component;
 
-  signal bank_data_out, bank_data_in : unsigned(15 downto 0);
-  signal acc_data_out                : unsigned(15 downto 0);
-  signal ula_out                     : std_logic_vector(15 downto 0);
-  signal ula_in0, ula_in1            : std_logic_vector(15 downto 0);
+  signal bank_data_out, bank_data_in, acc_data_out, ula_out, ula_in0, ula_in1, acc_data_in : unsigned(15 downto 0);
 begin
 
   bank: bank_of_registers
@@ -73,7 +70,7 @@ begin
       clk      => clk,
       rst      => rst_acc,
       wr_en    => acc_en,
-      data_in  => ula_out,
+      data_in  => acc_data_in,
       data_out => acc_data_out
     );
 
@@ -88,9 +85,11 @@ begin
     );
 
   data_out <= ula_out;
-  ula_in0  <= acc_data_out;
-  ula_in1  <= bank_data_out when op_with_constant = '0' else
-              data_in;
+
+  ula_in0 <= acc_data_out when op_with_constant = '0' else
+             const_in;
+
+  ula_in1 <= bank_data_out;
 
   bank_data_in <= bank_data_out when is_ld = '1' else ula_out;
 

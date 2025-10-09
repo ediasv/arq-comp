@@ -14,7 +14,7 @@ end entity;
 architecture a_reg16bits of reg16bits is
   signal registro : unsigned(15 downto 0);
 begin
-  process (clk, rst, wr_en) -- acionado se houver mudança em clk, rst ou wr_en
+  process (clk, rst) -- acionado se houver mudança em clk ou rst
   begin
     if rst = '1' then
       registro <= (others => '0');

@@ -1,0 +1,6 @@
+anal:
+    rm -f work-obj93.cf
+    ghdl -a ./*.vhd
+
+flu:
+    ./flu.fish
