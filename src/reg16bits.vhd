@@ -25,5 +25,5 @@ begin
     end if;
   end process;
 
-  data_out <= registro; -- conexao direta, fora do processo
+  data_out <= registro;
 end architecture;
