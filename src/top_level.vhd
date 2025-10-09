@@ -59,7 +59,7 @@ begin
       rst      => rst,
       wr_en    => wr_en,
       addr_wr  => addr_wr,
-      data_in  => data_in,
+      data_in  => unsigned(ula_out),
       data_out => bank_data_out
     );
 

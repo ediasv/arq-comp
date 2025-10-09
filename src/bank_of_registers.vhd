@@ -6,7 +6,7 @@ entity bank_of_registers is
   port (clk      : in  std_logic;
         rst      : in  std_logic;
         wr_en    : in  std_logic;
-        addr_wr  : in  std_logic_vector(2 downto 0);
+        addr_wr  : in  std_logic_vector(2 downto 0); -- address to select one of the 8 registers
         data_in  : in  unsigned(15 downto 0);
         data_out : out unsigned(15 downto 0)
        );
