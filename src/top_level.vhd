@@ -10,13 +10,14 @@ entity top_level is
         op_with_constant : in  std_logic;
         addr_dest        : in  std_logic_vector(2 downto 0);
         addr_source      : in  std_logic_vector(2 downto 0);
+        data_in          : in  unsigned(15 downto 0);
         const_in         : in  unsigned(15 downto 0);
         data_out         : out unsigned(15 downto 0);
         ula_op           : in  std_logic_vector(1 downto 0);
         ula_zero         : out std_logic;
         ula_sig          : out std_logic;
         rst_acc          : in  std_logic;
-        is_ld            : in  std_logic
+        sel_bank_in : in std_logic_vector(1 downto 0) -- 00 bank_out, 01 data_in, 10 ula_out
        );
 end entity;
 
@@ -91,6 +92,12 @@ begin
 
   ula_in1 <= bank_data_out;
 
-  bank_data_in <= bank_data_out when is_ld = '1' else ula_out;
+  acc_data_in <= ula_out;
+
+  with sel_bank_in select
+    bank_data_in <= bank_data_out when "00",
+                    data_in       when "01",
+                    ula_out       when "10",
+                    (others => '0') when others;
 
 end architecture;
