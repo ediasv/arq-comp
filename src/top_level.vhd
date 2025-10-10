@@ -17,7 +17,7 @@ entity top_level is
         ula_zero         : out std_logic;
         ula_sig          : out std_logic;
         rst_acc          : in  std_logic;
-        sel_bank_in : in std_logic_vector(1 downto 0) -- 00 bank_out, 01 data_in, 10 ula_out
+        sel_bank_in      : in  std_logic_vector(1 downto 0) -- 00 bank_out, 01 data_in, 10 ula_out
        );
 end entity;
 
@@ -95,9 +95,9 @@ begin
   acc_data_in <= ula_out;
 
   with sel_bank_in select
-    bank_data_in <= bank_data_out when "00",
-                    data_in       when "01",
-                    ula_out       when "10",
-                    (others => '0') when others;
+    bank_data_in <= bank_data_out       when "00",
+                    data_in             when "01",
+                    acc_data_out        when "10",
+                        (others => '0') when others;
 
 end architecture;
