@@ -5,7 +5,7 @@ library ieee;
 entity state_machine is
   port (clk      : in  std_logic;
         rst      : in  std_logic;
-        sm_out   : out std_logic;
+        sm_out   : out std_logic
        );
 end entity;
 
