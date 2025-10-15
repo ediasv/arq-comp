@@ -1,6 +1,6 @@
 #!/usr/bin/fish
 
-rm work-obj93.cf
+rm -f work-obj93.cf
 
 for file in *.vhd
     ghdl -a $file
@@ -11,4 +11,3 @@ for file in *_tb.vhd
     ghdl -e $basename
     ghdl -r $basename --vcd=$basename.vcd
 end
-
