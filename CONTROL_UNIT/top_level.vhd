@@ -86,7 +86,7 @@ begin
       rst    => rst,
       sm_out => sm_to_pc_en
     );
-  
+
   plux_one: external_circuit
     port map (
       data_ext_in  => pc_to_plus_one,
