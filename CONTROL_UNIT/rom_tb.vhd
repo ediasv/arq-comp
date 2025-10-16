@@ -15,7 +15,7 @@ architecture a_rom_tb of rom_tb is
 
   signal clk      : std_logic := '0';
   signal endereco : unsigned(6 downto 0) := (others => '0');
-  signal dado     : unsigned(14 downto 0);
+  signal dado     : unsigned(14 downto 0) := (others => '0');
   
   constant period_time : time := 100 ns;
   signal finished : std_logic := '0';
@@ -42,21 +42,12 @@ begin
   -- Stimulus process
   stimulus: process
   begin
-    -- Testa endereços de 0 a 10 (onde você tem dados)
-    for i in 0 to 10 loop
+
+    -- Testa endereços de 0 a 127
+    for i in 0 to 127 loop
       endereco <= to_unsigned(i, 7);
       wait for period_time;
     end loop;
-
-    -- Testa alguns endereços vazios
-    endereco <= to_unsigned(50, 7);
-    wait for period_time;
-    
-    endereco <= to_unsigned(100, 7);
-    wait for period_time;
-    
-    endereco <= to_unsigned(127, 7);
-    wait for period_time;
 
     -- Finaliza
     finished <= '1';
