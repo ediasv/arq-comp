@@ -13,12 +13,13 @@ end entity;
 
 architecture a_program_counter of program_counter is
   signal pc_value : unsigned(6 downto 0) := (others => '0');
+
 begin
   process (clk)
   begin
     if rising_edge(clk) then
       if wr_en = '1' then
-        pc_value <= data_in + 1;  -- incrementa o valor
+        pc_value <= data_in;  
       end if;
     end if;
   end process;
