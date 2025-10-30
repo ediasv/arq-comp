@@ -1,6 +1,22 @@
-a:
+set shell := ["fish", "-c"]
+
+alias a := analyze
+
+clean:
     rm -f work-obj93.cf
+
+analyze: clean
     ghdl -a ./*.vhd
 
-all:
-    ./analyze_evaluate.fish
+all: clean
+    #!/usr/bin/env fish
+
+    for file in *.vhd
+        ghdl -a $file
+    end
+
+    for file in *_tb.vhd
+        set basename (basename $file .vhd)
+        ghdl -e $basename
+        ghdl -r $basename --vcd=$basename.vcd
+    end
