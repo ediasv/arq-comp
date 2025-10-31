@@ -1,7 +1,5 @@
 set shell := ["fish", "-c"]
 
-alias a := analyze
-
 clean:
     rm -f work-obj93.cf
 
