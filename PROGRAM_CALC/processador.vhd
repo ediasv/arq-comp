@@ -10,6 +10,11 @@ end entity;
 
 architecture a_processador of processador is
 
+  --  Carga de constantes, transferência de valores entre registradores, salto incondicional e nop;
+  -- 'Registrador de Instruções': ['wr_en no primeiro estado'],
+  -- 'Incremento do PC': ['PC+1 gravado entre o primeiro e segundo estado E jmp '
+  -- 'Executado no último estado']}
+
   -- Sinais internos
   signal pc_out       : unsigned(6 downto 0);
   signal instr        : unsigned(15 downto 0);
@@ -26,7 +31,7 @@ architecture a_processador of processador is
       );
     end component;
 
-    component proto_uc
+    component uc
       port (
         uc_data_in : in  unsigned(14 downto 0);
         jump_en    : out std_logic

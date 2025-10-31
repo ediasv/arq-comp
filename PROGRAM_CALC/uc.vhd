@@ -2,13 +2,13 @@ library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
 
-entity proto_uc is
+entity uc is
   port (uc_data_in : in  unsigned(14 downto 0);
         jump_en    : out std_logic
        );
 end entity;
 
-architecture a_proto_uc of proto_uc is
+architecture a_uc of uc is
   signal opcode : unsigned(3 downto 0) := (others => '0');
 begin
   -- opcode sempre recebe os 4 bits mais significativos
