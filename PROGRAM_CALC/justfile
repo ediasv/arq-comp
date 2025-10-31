@@ -18,5 +18,6 @@ all: clean
     for file in *_tb.vhd
         set basename (basename $file .vhd)
         ghdl -e $basename
-        ghdl -r $basename --vcd=$basename.vcd
+        ghdl -r $basename --vcd=gtk_output/$basename.vcd
+        echo "Test successfully created for $basename"
     end
