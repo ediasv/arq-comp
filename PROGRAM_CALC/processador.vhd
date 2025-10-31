@@ -38,7 +38,7 @@ architecture a_processador of processador is
       );
     end component;
 
-    component reg16bits
+    component acc
       port (
         clk      : in  std_logic;
         rst      : in  std_logic;
@@ -63,6 +63,25 @@ architecture a_processador of processador is
         result   : out unsigned(15 downto 0)
       );
     end component;
+
+  component sm
+    port ( 
+      clk,rst: in std_logic;
+      estado: out unsigned(1 downto 0)
+    );
+    end component;
+
+    component inst_reg
+    port (
+        clk      : in  std_logic;
+        rst      : in  std_logic;
+        wr_en    : in  std_logic;
+        data_from_rom  : in  unsigned(15 downto 0);
+        data_out : out unsigned(15 downto 0)
+    );
+    end component;
+
+
 
     begin 
     
