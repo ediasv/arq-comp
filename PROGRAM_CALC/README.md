@@ -1,6 +1,7 @@
 # Documentação do Microprocessador
 
-Este documento descreve a arquitetura e o funcionamento do microprocessador desenvolvido para o projeto.
+Este documento descreve a arquitetura e o funcionamento do microprocessador
+desenvolvido para o projeto.
 
 ---
 
@@ -15,15 +16,17 @@ Este documento descreve a arquitetura e o funcionamento do microprocessador dese
 
 ### Ciclo de Instrução
 
-1. **Estado 1 (Read)**: Registrador de instruções com `wr_en` ativo
+Atualmente temos 3 estados: fetch (1°), decode (2°) e execute (3°)
+
+1. **Estado 1**: Registrador de instruções com `wr_en` ativo
 2. **Entre Estado 1 e 2**: Incremento do PC (PC+1) é gravado
 3. **Último Estado**: Execução de instruções de salto (jump)
 
 ### Operações Suportadas
 
 - **Carga de Constantes**: Via instrução LD (sem somar)
-- **Soma**: Sempre entre dois registradores (não suporta soma com constantes)
-- **Subtração**: Entre registradores ou com constantes
+- **Soma**: Sempre entre um registrador e o acumulador (não suporta soma com constantes)
+- **Subtração**: Entre um registrador e o acumulador ou com constantes
 - **Saltos Condicionais**: BEQ (Branch if Equal) e BVS (Branch if Overflow Set)
 - **Não há instruções exclusivas de comparação**
 
@@ -74,8 +77,8 @@ armazena o resultado no acumulador.
 
 **Exemplo**:
 
-```
-ADD A, R4  // Acumulador = A + R4
+```asm
+ADD A, R4  // A = A + R4
 ```
 
 ---
@@ -88,17 +91,17 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 
 ### Pseudocódigo do Programa
 
-| Passo | Endereço | Operação         | Descrição                     |
-| ----- | -------- | ---------------- | ----------------------------- |
-| A     | 0        | `LD R3, #5`      | Carrega R3 com o valor 5      |
-| B     | 1        | `LD R4, #8`      | Carrega R4 com o valor 8      |
-| C     | 2        | `ADD R5, R3, R4` | Soma R3 com R4 e guarda em R5 |
-| D     | 3        | `SUB R5, R5, #1` | Subtrai 1 de R5               |
-| E     | 4        | `JMP #20`        | Salta para o endereço 20      |
-| F     | 5        | `LD R5, #0`      | Zera R5 _(nunca executada)_   |
-| G     | 20       | `MOV R3, R5`     | Copia R5 para R3              |
-| H     | 21       | `JMP #2`         | Salta para o passo C (loop)   |
-| I     | 22       | `LD R3, #0`      | Zera R3 _(nunca executada)_   |
+| Passo | Descrição                     |
+| ----- | ----------------------------- |
+| A     | Carrega R3 com o valor 5      |
+| B     | Carrega R4 com o valor 8      |
+| C     | Soma R3 com R4 e guarda em R5 |
+| D     | Subtrai 1 de R5               |
+| E     | Salta para o endereço 20      |
+| F     | Zera R5 _(nunca executada)_   |
+| G     | Copia R5 para R3              |
+| H     | Salta para o passo C (loop)   |
+| I     | Zera R3 _(nunca executada)_   |
 
 ### Fluxo de Execução
 
@@ -132,12 +135,3 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 - **Passos F e I** nunca serão executados devido aos saltos incondicionais
 - O programa entra em **loop infinito** entre os endereços 2 e 21
 - A cada iteração do loop, R5 é recalculado e decrementado
-
----
-
-## Observações de Implementação
-
-1. A ROM deve ser configurada com as instruções codificadas conforme o formato de 15 bits
-2. Verificar a sincronização correta dos sinais de controle nos diferentes estados
-3. Garantir que o incremento do PC ocorra no momento correto do ciclo
-4. Testar os saltos condicionais (BEQ, BVS) em diferentes cenários
