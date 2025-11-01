@@ -107,7 +107,7 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 
 ```mermaid
 graph TD
-    Start([Início: Endereço 0]) --> A
+    Start([Início]) --> A
     A[A] --> B[B]
     B --> C[C]
     C --> D[D]
