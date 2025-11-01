@@ -108,12 +108,12 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 ```mermaid
 graph TD
     Start([Início: Endereço 0]) --> A
-    A[A: R3 = 5] --> B[B: R4 = 8]
-    B --> C[C: R5 = R3 + R4]
-    C --> D[D: R5 = R5 - 1]
-    D --> E[E: JMP 20]
-    E --> G[G: R3 = R5]
-    G --> H[H: JMP 2]
+    A[A] --> B[B]
+    B --> C[C]
+    C --> D[D]
+    D --> E[E]
+    E --> G[G]
+    G --> H[H]
     H --> C
 ```
 
