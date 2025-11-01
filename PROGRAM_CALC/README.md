@@ -34,8 +34,8 @@ Atualmente temos 3 estados: fetch (1°), decode (2°) e execute (3°)
 
 ## Formato das Instruções
 
-As instruções tem 15 bits e podem ser dos formatos **S** (**S**em constante)
-ou **C** (**C**om constante)
+As instruções tem 15 bits e podem ser dos formatos **S** (**S**em constante),
+**C** (**C**om constante) ou **J** (**J**ump)
 
 ### Formato S
 
@@ -66,19 +66,108 @@ AAAA CCCCCCC OOOO
 
 ## Conjunto de Instruções
 
+### NOP
+
+**Descrição**: Instrução sem operação. Não executa nenhuma ação, apenas
+consome um ciclo de clock.
+
+- **Opcode**: `0000`
+- **Formato**: N/A (sem operandos)
+
+**Exemplo**:
+
+```asm
+NOP ; Não faz nada
+```
+
 ### ADD A, RX
 
 **Descrição**: Soma o conteúdo de um registrador com o valor do acumulador e
 armazena o resultado no acumulador.
 
 - **Opcode**: `0001`
+- **Formato**: S
 - **Operandos**: Sempre dois registradores (um deles é o acumulador)
 - **Restrição**: Não há soma com constantes
 
 **Exemplo**:
 
 ```asm
-ADD A, R4  // A = A + R4
+ADD A, R4 ; A = A + R4
+```
+
+### SUB A, RX
+
+**Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e
+armazena o resultado no acumulador.
+
+- **Opcode**: `0010`
+- **Formato**: S
+- **Operandos**: Sempre dois registradores (um deles é o acumulador)
+
+**Exemplo**:
+
+```asm
+SUB A, R3 ; A = R3 - A
+```
+
+### SUBI A, I
+
+**Descrição**: Subtrai um valor imediato (constante) do acumulador e
+armazena o resultado no acumulador.
+
+- **Opcode**: `0011`
+- **Formato**: C
+- **Operandos**: Acumulador e valor imediato de 7 bits
+
+**Exemplo**:
+
+```asm
+SUBI A, 1 ; A = A - 1
+```
+
+### MV RX, RY
+
+**Descrição**: Move (copia) o conteúdo de um registrador para outro registrador.
+
+- **Opcode**: `0100`
+- **Formato**: S
+- **Operandos**: Dois registradores (origem e destino)
+
+**Exemplo**:
+
+```asm
+MV R5, R3 ; R5 = R3
+```
+
+### LD RX, I
+
+**Descrição**: Carrega um valor imediato (constante) em um registrador.
+
+- **Opcode**: `0101`
+- **Formato**: C
+- **Operandos**: Registrador de destino e valor imediato de 7 bits
+- **Restrição**: Não realiza operações aritméticas, apenas carregamento
+
+**Exemplo**:
+
+```asm
+LD R3, 5 ; R3 = 5
+```
+
+### JMP ADDRESS
+
+**Descrição**: Salto incondicional para um endereço específico da memória.
+
+- **Opcode**: `0110`
+- **Formato**: C
+- **Operandos**: Endereço de destino de 7 bits
+- **Execução**: Realizado no último estado do ciclo de instrução
+
+**Exemplo**:
+
+```asm
+JMP 20 ; PC = 20
 ```
 
 ---
