@@ -105,29 +105,16 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 
 ### Fluxo de Execução
 
-```
-┌─────────────────────────────────────┐
-│ Início: Endereço 0                  │
-└────────────┬────────────────────────┘
-             │
-             ▼
-      ┌──────────────┐
-      │ A: R3 = 5    │
-      │ B: R4 = 8    │
-      └──────┬───────┘
-             │
-             ▼
-      ┌──────────────┐ ◄─────────┐
-      │ C: R5=R3+R4  │           │
-      │ D: R5=R5-1   │           │
-      │ E: JMP 20    │           │
-      └──────┬───────┘           │
-             │                   │
-             ▼                   │
-      ┌──────────────┐           │
-      │ G: R3 = R5   │           │
-      │ H: JMP 2     │───────────┘
-      └──────────────┘
+```mermaid
+graph TD
+    Start([Início: Endereço 0]) --> A
+    A[A: R3 = 5] --> B[B: R4 = 8]
+    B --> C[C: R5 = R3 + R4]
+    C --> D[D: R5 = R5 - 1]
+    D --> E[E: JMP 20]
+    E --> G[G: R3 = R5]
+    G --> H[H: JMP 2]
+    H --> C
 ```
 
 ### Notas Importantes
