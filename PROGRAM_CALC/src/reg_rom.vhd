@@ -2,7 +2,7 @@ library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
 
-entity inst_reg is
+entity reg_rom is
   port (clk      : in  std_logic;
         rst      : in  std_logic;
         wr_en    : in  std_logic;
@@ -11,7 +11,7 @@ entity inst_reg is
        );
 end entity;
 
-architecture a_inst_reg of inst_reg is
+architecture a_reg_rom of reg_rom is
   signal registro : unsigned(15 downto 0);
 begin
   process (clk, rst) -- acionado se houver mudança em clk ou rst
