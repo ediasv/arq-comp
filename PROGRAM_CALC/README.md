@@ -222,35 +222,48 @@ graph TD
 Assembly:
 
 ```asm
-    LD  R3, 5 ; A:
-              ; Carrega R3 com o valor 5
+    ; A:
+    ; Carrega R3 com o valor 5
+    LD  R3, 5
 
-    LD  R4, 8 ; B:
-              ; Carrega R4 com o valor 8
+    ; B:
+    ; Carrega R4 com o valor 8
+    LD  R4, 8
 
-C:  MV  A, R4 ; C:
-    ADD R3, A ; Soma R3 com R4 e guarda em R5
+    ; C:
+    ; Soma R3 com R4 e guarda em R5
+C:  MV  A, R4
+    ADD R3, A
     MV  R5, A
 
-    MV  A, R5 ; D:
-    SUBI 1, A ; Subtrai 1 de R5
+    ; D:
+    ; Subtrai 1 de R5
+    MV  A, R5
+    SUBI 1, A
     MV  R5, A
 
-    JMP E     ; E:
-              ; Salta para o endereço 20
+    ; E:
+    ; Salta para o endereço 20
+    JMP E
 
-    MV  A, R5 ; F:
-    SUB R5, A ; Zera R5 (Nunca executa)
+    ; F:
+    ; Zera R5 (Nunca executa)
+    MV  A, R5
+    SUB R5, A
     MV  R5, A
 
-E:  MV R3, R5 ; G (Endereço 20):
-              ; Copia R5 para R3
+    ; G (Endereço 20):
+    ; Copia R5 para R3
+E:  MV R3, R5
 
-    JMP C     ; H
-              ; Salta para o passo C
+    ; H
+    ; Salta para o passo C
+    JMP C
 
-    MV  A, R3 ; I:
-    SUB R3, A ; Zera R3 (Nunca executa)
+    ; I:
+    ; Zera R3 (Nunca executa)
+    MV  A, R3
+    SUB R3, A
     MV R3, A
 ```
 
