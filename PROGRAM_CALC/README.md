@@ -59,7 +59,7 @@ AAAA CCCCCCC OOOO
 | Campo    | Bits   | Descrição                                       |
 | -------- | ------ | ----------------------------------------------- |
 | **A**    | 4 bits | Número do primeiro registrador (R0-R7 + ACC)    |
-| **C**    | 4 bits | Número do segundo registrador ou valor imediato |
+| **C**    | 7 bits | Número do segundo registrador ou valor imediato |
 | **OOOO** | 4 bits | Opcode da instrução                             |
 
 ---
@@ -80,7 +80,7 @@ consome um ciclo de clock.
 NOP ; Não faz nada
 ```
 
-### ADD A, RX
+### ADD RX, A
 
 **Descrição**: Soma o conteúdo de um registrador com o valor do acumulador e
 armazena o resultado no acumulador.
@@ -93,10 +93,10 @@ armazena o resultado no acumulador.
 **Exemplo**:
 
 ```asm
-ADD A, R4 ; A = A + R4
+ADD R4, A ; A = R4 + A
 ```
 
-### SUB A, RX
+### SUB RX, A
 
 **Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e
 armazena o resultado no acumulador.
@@ -108,12 +108,12 @@ armazena o resultado no acumulador.
 **Exemplo**:
 
 ```asm
-SUB A, R3 ; A = R3 - A
+SUB R3, A ; A = R3 - A
 ```
 
-### SUBI A, I
+### SUBI I, A
 
-**Descrição**: Subtrai um valor imediato (constante) do acumulador e
+**Descrição**: Subtrai do valor imediato (constante) o valor do acumulador e
 armazena o resultado no acumulador.
 
 - **Opcode**: `0011`
@@ -123,16 +123,17 @@ armazena o resultado no acumulador.
 **Exemplo**:
 
 ```asm
-SUBI A, 1 ; A = A - 1
+SUBI 1, A ; A = 1 - A
 ```
 
 ### MV RX, RY
 
 **Descrição**: Move (copia) o conteúdo de um registrador para outro registrador.
+RX recebe o valor de RY.
 
 - **Opcode**: `0100`
 - **Formato**: S
-- **Operandos**: Dois registradores (origem e destino)
+- **Operandos**: Dois registradores (destino e origem)
 
 **Exemplo**:
 
@@ -191,6 +192,10 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 | G     | Copia R5 para R3              |
 | H     | Salta para o passo C (loop)   |
 | I     | Zera R3 _(nunca executada)_   |
+
+- **Passos F e I** nunca serão executados devido aos saltos incondicionais
+- O programa entra em **loop infinito** entre os endereços 2 e 21
+- A cada iteração do loop, R5 é recalculado e decrementado
 
 ### Fluxo de Execução
 
