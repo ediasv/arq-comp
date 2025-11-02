@@ -252,6 +252,17 @@ C:  MV  A, R4
     SUB R5, A
     MV  R5, A
 
+    /* Instruções aleatórias, apenas para preencher a ROM
+       até o endereço 20 */
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+
     ; G (Endereço 20):
     ; Copia R5 para R3
 E:  MV R3, R5
