@@ -298,110 +298,129 @@ Binário:
 ; opcode: 0101
 ; A: 0011
 ; I: 0000101
-001100001010101
+0011_0000101_0101
 
 ; LD  R4, 8
 ; formato de instrução: C
 ; opcode: 0101
 ; A: 0100
 ; I: 0001000
-010000010000101
+0100_0001000_0101
 
 ; MV  A, R4
 ; formato de instrução: S
 ; opcode: 0100
 ; A: 1001
 ; B: 0100
-000100101000100
-
+000_1001_0100_0100
 
 ; ADD R3, A
 ; formato de instrução: S
 ; opcode: 0001
 ; A: 0011
-; I: 0000101
+; B: 1001
+000_0011_1001_0001
 
 ; MV  R5, A
 ; formato de instrução: S
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0100
+; A: 0101
+; B: 1001
+000_0101_1001_0100
 
 ; MV  A, R5
 ; formato de instrução: S
 ; opcode: 0100
-; A: 0011
-; I: 0000101
+; A: 1001
+; B: 0101
+000_0100_1001_0101
 
 ; SUBI 1, A
 ; formato de instrução: C
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0011
+; A: 1001
+; I: 0000001
+1001_0000001_0011
 
 ; MV  R5, A
 ; formato de instrução: S
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0100
+; A: 0101
+; B: 1001
+000_0101_1001_0100
 
 ; JMP E
 ; formato de instrução: C
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0110
+; A: ~
+; I: 0010100
+0000_0010100_0110
 
 ; MV  A, R5
 ; formato de instrução: S
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0100
+; A: 1001
+; B: 0101
+000_1001_0101_0100
 
 ; SUB R5, A
 ; formato de instrução: S
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0010
+; A: 0101
+; B: 1001
+000_0101_1001_0010
 
 ; MV  R5, A
 ; formato de instrução: S
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0100
+; A: 0101
+; B: 1001
+000_0101_1001_0100
 
 ; NOP
 ; formato de instrução: N/A
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0000
+000_0000_0000_0000
+000_0000_0000_0000
+000_0000_0000_0000
+000_0000_0000_0000
+000_0000_0000_0000
+000_0000_0000_0000
+000_0000_0000_0000
+000_0000_0000_0000
 
 ; MV R3, R5
 ; formato de instrução: S
-; opcode: 0101
+; opcode: 0100
 ; A: 0011
-; I: 0000101
+; B: 0101
+000_0011_0101_0100
 
 ; JMP C
 ; formato de instrução: C
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0110
+; A: ~
+; I: 0000011
+000_0000011_0110
 
 ; MV  A, R3
 ; formato de instrução: S
-; opcode: 0101
-; A: 0011
-; I: 0000101
+; opcode: 0100
+; A: 1001
+; B: 0011
+000_1001_0011_0100
 
 ; SUB R3, A
 ; formato de instrução: S
-; opcode: 0101
+; opcode: 0010
 ; A: 0011
-; I: 0000101
+; B: 1001
+000_0011_1001_0010
 
 ; MV R3, A
 ; formato de instrução: S
-; opcode: 0101
+; opcode: 0100
 ; A: 0011
-; I: 0000101
+; B: 1001
+000_0011_1001_0100
 ```
