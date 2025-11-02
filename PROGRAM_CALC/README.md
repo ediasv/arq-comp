@@ -216,3 +216,42 @@ graph TD
 - **Passos F e I** nunca serão executados devido aos saltos incondicionais
 - O programa entra em **loop infinito** entre os endereços 2 e 21
 - A cada iteração do loop, R5 é recalculado e decrementado
+
+### Pograma
+
+Assembly:
+
+```asm
+    LD  R3, 5 ; A:
+              ; Carrega R3 com o valor 5
+
+    LD  R4, 8 ; B:
+              ; Carrega R4 com o valor 8
+
+C:  MV  A, R4 ; C:
+    ADD R3, A ; Soma R3 com R4 e guarda em R5
+    MV  R5, A
+
+    MV  A, R5 ; D:
+    SUBI 1, A ; Subtrai 1 de R5
+    MV  R5, A
+
+    JMP E     ; E:
+              ; Salta para o endereço 20
+
+    MV  A, R5 ; F:
+    SUB R5, A ; Zera R5 (Nunca executa)
+    MV  R5, A
+
+E:  MV R3, R5 ; G (Endereço 20):
+              ; Copia R5 para R3
+
+    JMP C     ; H
+              ; Salta para o passo C
+
+    MV  A, R3 ; I:
+    SUB R3, A ; Zera R3 (Nunca executa)
+    MV R3, A
+```
+
+Binário:
