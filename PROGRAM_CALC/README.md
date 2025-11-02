@@ -35,7 +35,7 @@ Atualmente temos 3 estados: fetch (1°), decode (2°) e execute (3°)
 ## Formato das Instruções
 
 As instruções tem 15 bits e podem ser dos formatos **S** (**S**em constante),
-**C** (**C**om constante) ou **J** (**J**ump)
+**C** (**C**om constante ou salto incondicional)
 
 ### Formato S
 
@@ -56,15 +56,27 @@ XXX AAAA BBBB OOOO
 AAAA CCCCCCC OOOO
 ```
 
-| Campo    | Bits   | Descrição                                       |
-| -------- | ------ | ----------------------------------------------- |
-| **A**    | 4 bits | Número do primeiro registrador (R0-R7 + ACC)    |
-| **C**    | 7 bits | Número do segundo registrador ou valor imediato |
-| **OOOO** | 4 bits | Opcode da instrução                             |
+| Campo    | Bits   | Descrição                                         |
+| -------- | ------ | ------------------------------------------------- |
+| **A**    | 4 bits | Número do primeiro registrador (R0-R7 + ACC)      |
+| **I**    | 7 bits | Valor imediato ou endereço do salto incondicional |
+| **OOOO** | 4 bits | Opcode da instrução                               |
 
 ---
 
 ## Conjunto de Instruções
+
+### Tabela de Instruções
+
+| Instrução   | Opcode | Formato | Descrição                             |
+| ----------- | ------ | ------- | ------------------------------------- |
+| NOP         | `0000` | N/A     | Instrução sem operação                |
+| ADD RX, A   | `0001` | S       | Soma registrador com acumulador       |
+| SUB RX, A   | `0010` | S       | Subtrai acumulador de registrador     |
+| SUBI I, A   | `0011` | C       | Subtrai acumulador de valor imediato  |
+| MV RX, RY   | `0100` | S       | Move conteúdo entre registradores     |
+| LD RX, I    | `0101` | C       | Carrega valor imediato em registrador |
+| JMP ADDRESS | `0110` | C       | Salto incondicional                   |
 
 ### NOP
 
@@ -282,10 +294,111 @@ Binário:
 
 ```asm
 ; LD  R3, 5
+; formato de instrução: C
 ; opcode: 0101
 ; A: 0011
 ; I: 0000101
 001100001010101
 
+; LD  R4, 8
+; formato de instrução: C
+; opcode: 0101
+; A: 0011
+; I: 0000101
 
+; MV  A, R4
+; formato de instrução: S
+; opcode: 0100
+; A: 0011
+; I: 0000101
+
+; ADD R3, A
+; formato de instrução: S
+; opcode: 0001
+; A: 0011
+; I: 0000101
+
+; MV  R5, A
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV  A, R5
+; formato de instrução: S
+; opcode: 0100
+; A: 0011
+; I: 0000101
+
+; SUBI 1, A
+; formato de instrução: C
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV  R5, A
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; JMP E
+; formato de instrução: C
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV  A, R5
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; SUB R5, A
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV  R5, A
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; NOP
+; formato de instrução: N/A
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV R3, R5
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; JMP C
+; formato de instrução: C
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV  A, R3
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; SUB R3, A
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
+
+; MV R3, A
+; formato de instrução: S
+; opcode: 0101
+; A: 0011
+; I: 0000101
 ```
