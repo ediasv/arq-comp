@@ -303,14 +303,17 @@ Binário:
 ; LD  R4, 8
 ; formato de instrução: C
 ; opcode: 0101
-; A: 0011
-; I: 0000101
+; A: 0100
+; I: 0001000
+010000010000101
 
 ; MV  A, R4
 ; formato de instrução: S
 ; opcode: 0100
-; A: 0011
-; I: 0000101
+; A: 1001
+; B: 0100
+000100101000100
+
 
 ; ADD R3, A
 ; formato de instrução: S
