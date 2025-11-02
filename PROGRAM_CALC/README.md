@@ -252,8 +252,8 @@ C:  MV  A, R4
     SUB R5, A
     MV  R5, A
 
-    /* Instruções aleatórias, apenas para preencher a ROM
-       até o endereço 20 */
+    ; Instruções aleatórias, apenas para preencher a ROM
+    ; até o endereço 20
     NOP
     NOP
     NOP
