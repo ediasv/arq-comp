@@ -9,11 +9,11 @@ analyze: clean
 all: clean
     #!/usr/bin/env fish
 
-    for file in *.vhd
+    for file in src/*.vhd
         ghdl -a $file
     end
 
-    for file in *_tb.vhd
+    for file in test/*_tb.vhd
         set basename (basename $file .vhd)
         ghdl -e $basename
         ghdl -r $basename --vcd=gtk_output/$basename.vcd
