@@ -28,7 +28,7 @@ architecture a_processador of processador is
       uc_data_in           : in  unsigned(14 downto 0);
       sm                   : in  unsigned(1 downto 0);
       sel_mux_to_pc        : out std_logic;
-      sel_mux_to_bank      : out std_logic;
+      sel_mux_to_bank      : out unsigned (1 downto 0);
       sel_mux_to_ula       : out std_logic;
       sel_mux_to_acc       : out std_logic;
       sel_ula_operation    : out unsigned(1 downto 0);
@@ -62,8 +62,8 @@ architecture a_processador of processador is
       clk           : in  std_logic;
       rst           : in  std_logic;
       wr_en         : in  std_logic;
-      data_from_rom : in  unsigned(15 downto 0);
-      data_out      : out unsigned(15 downto 0)
+      data_from_rom : in  unsigned(14 downto 0);
+      data_out      : out unsigned(14 downto 0)
     );
   end component;
 
@@ -72,8 +72,8 @@ architecture a_processador of processador is
       clk         : in  std_logic;
       rst         : in  std_logic;
       wr_en       : in  std_logic;
-      addr_dest   : in  unsigned(2 downto 0);
-      addr_source : in  unsigned(2 downto 0);
+      addr_dest   : in  unsigned(3 downto 0);
+      addr_source : in  unsigned(3 downto 0);
       data_in     : in  unsigned(15 downto 0);
       data_out    : out unsigned(15 downto 0)
     );
@@ -113,24 +113,24 @@ architecture a_processador of processador is
   --mux 2
   signal rom_to_reg_rom  : unsigned(14 downto 0);
   signal reg_rom_out     : unsigned(14 downto 0);
-  signal mux_to_bank     : unsigned(14 downto 0) := (others => '0');
-  signal sel_mux_to_bank : std_logic             := '0';
+  signal mux_to_bank     : unsigned(15 downto 0) := (others => '0');
+  signal sel_mux_to_bank : unsigned (1 downto 0) := (others => '0');
 
   --mux 3
-  signal bank_to_mux    : unsigned(14 downto 0) := (others => '0');
-  signal mux_to_ula     : unsigned(14 downto 0) := (others => '0');
+  signal bank_to_mux    : unsigned(15 downto 0) := (others => '0');
+  signal mux_to_ula     : unsigned(15 downto 0) := (others => '0');
   signal sel_mux_to_ula : std_logic             := '0';
 
   --mux 4
-  signal ula_to_mux     : unsigned(14 downto 0) := (others => '0');
-  signal mux_to_acc     : unsigned(14 downto 0) := (others => '0');
-  signal acc_to_ula     : unsigned(14 downto 0) := (others => '0');
+  signal ula_to_mux     : unsigned(15 downto 0) := (others => '0');
+  signal mux_to_acc     : unsigned(15 downto 0) := (others => '0');
+  signal acc_to_ula     : unsigned(15 downto 0) := (others => '0');
   signal sel_mux_to_acc : std_logic             := '0';
 
-  signal sel_ula_operation : unsigned(3 downto 0) := (others => '0');
+  signal sel_ula_operation : unsigned(1 downto 0) := (others => '0');
 
   signal format_decoder : std_logic;
-  signal mux_addr_dest  : unsigned(2 downto 0);
+  signal mux_addr_dest  : unsigned(3 downto 0);
 
 begin
 
@@ -158,7 +158,7 @@ begin
       format_decoder       => format_decoder
     );
 
-  mux_to_pc <= reg_rom_out(10 downto 4) when sel_mux_to_pc = "1" else pc_to_rom + 1;
+  mux_to_pc <= reg_rom_out(10 downto 4) when sel_mux_to_pc = '1' else pc_to_rom + 1;
 
   inst_pc: program_counter
     port map (
@@ -185,11 +185,16 @@ begin
       data_out      => reg_rom_out
     );
 
-  mux_to_bank <= bank_to_mux              when sel_mux_to_bank = "00" else
-                 acc_to_ula               when sel_mux_to_bank = "01" else
-                 reg_rom_out(10 downto 4) when sel_mux_to_bank = "10";
+  -- mux_to_bank <= bank_to_mux              when sel_mux_to_bank = "00" else
+  --                acc_to_ula               when sel_mux_to_bank = "01" else
+  --                reg_rom_out(10 downto 4) when sel_mux_to_bank = "10";
 
-  mux_addr_dest <= reg_rom_out(11 downto 8) when format_decoder = "1" else reg_rom_out(14 downto 11);
+  mux_to_bank <= bank_to_mux when sel_mux_to_bank = "00" else
+  acc_to_ula  when sel_mux_to_bank = "01" else
+  ("000000000" & reg_rom_out(10 downto 4));  
+
+
+  mux_addr_dest <= reg_rom_out(11 downto 8) when format_decoder = '1' else reg_rom_out(14 downto 11);
 
   inst_bank: bank_of_registers
     port map (
@@ -211,7 +216,9 @@ begin
       data_out => acc_to_ula
     );
 
-  mux_to_ula <= reg_rom_out(10 downto 4) when sel_mux_to_ula = "1" else bank_to_mux; --reg_rom_out(10 downto 4) = constant
+    mux_to_ula <= ("000000000" & reg_rom_out(10 downto 4)) when sel_mux_to_ula = '1' 
+    else bank_to_mux;
+    -- mux_to_ula <= reg_rom_out(10 downto 4) when sel_mux_to_ula = '1' else bank_to_mux; --reg_rom_out(10 downto 4) = constant
 
   inst_ula: ula
     port map (
@@ -223,6 +230,6 @@ begin
       sig     => open
     );
 
-  mux_to_acc <= bank_to_mux when sel_mux_to_acc = "1" else ula_to_mux;
+  mux_to_acc <= bank_to_mux when sel_mux_to_acc = '1' else ula_to_mux;
 
 end architecture;

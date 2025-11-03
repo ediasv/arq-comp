@@ -10,7 +10,7 @@ library ieee;
 entity ula is
   port (
     in0, in1  : in  unsigned(15 downto 0);
-    op        : in  std_logic_vector(1 downto 0);
+    op        : in  unsigned(1 downto 0);
     ula_out   : out unsigned(15 downto 0);
     zero, sig : out std_logic
   );
