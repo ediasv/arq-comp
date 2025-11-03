@@ -50,7 +50,8 @@ begin
 
   sel_mux_to_bank <= "00" when opcode = "0100" and reg1 /= "1001" else --bank 
                      "01" when opcode = "0100" and reg2 = "1001" else                      -- accumulator
-                     "10" when format='0' and format = '0'; --rom
+                     "10" when format = '0' else --rom (LD instruction)
+                     "00"; -- default
 
   en_wr_pc <= '1' when sm = "01" or (sm = "10" and sel_mux_to_pc_internal = '1') else '0'; -- enable write only in fetch state
 
