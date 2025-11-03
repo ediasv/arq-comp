@@ -2,7 +2,7 @@ library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
 
-entity acc is
+entity reg16bits is
   port (clk      : in  std_logic;
         rst      : in  std_logic;
         wr_en    : in  std_logic;
@@ -11,7 +11,7 @@ entity acc is
        );
 end entity;
 
-architecture a_acc of acc is
+architecture a_reg16bits of reg16bits is
   signal registro : unsigned(15 downto 0);
 begin
   process (clk, rst) -- acionado se houver mudança em clk ou rst

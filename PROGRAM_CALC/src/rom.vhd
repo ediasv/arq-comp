@@ -48,7 +48,11 @@ begin
   process (clk)
   begin
     if (rising_edge(clk)) then
-      dado <= conteudo_rom(to_integer(endereco));
+      if (endereco >= 0 and endereco <= 127) then
+        dado <= conteudo_rom(to_integer(endereco));
+      else
+        dado <= (others => '0');
+      end if;
     end if;
   end process;
 end architecture;

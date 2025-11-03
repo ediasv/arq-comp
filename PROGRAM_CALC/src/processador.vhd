@@ -103,7 +103,7 @@ architecture a_processador of processador is
   --mux 1
   signal sel_mux_to_pc : std_logic := '0';
   signal mux_to_pc     : unsigned(6 downto 0);
-  signal pc_to_rom     : unsigned(6 downto 0);
+  signal pc_to_rom     : unsigned(6 downto 0) := (others => '0'); 
 
   signal en_wr_pc             : std_logic := '0';
   signal en_wr_acc            : std_logic := '0';
