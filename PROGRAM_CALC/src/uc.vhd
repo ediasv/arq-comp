@@ -14,7 +14,8 @@ entity uc is
     en_wr_pc          : out std_logic;
     en_wr_acc         : out std_logic;
     en_wr_reg_rom     : out std_logic;
-    en_bank_of_registers : out std_logic
+    en_bank_of_registers : out std_logic;
+    format_decoder : out std_logic
   );
 end entity;
 
@@ -37,9 +38,8 @@ begin
   reg2 <= uc_data_in(7 downto 4)  when format = '1' else (others => '0');
 
   --C format
-  -- cte <= uc_data_in(10 downto 4) when format = '0' else (others => '0');
 
-  -- jump_en <= '1' when opcode = "0110" and format='0' else '0';
+
   sel_mux_to_pc     <= '1' when opcode = "0110" and format = '0' else '0'; -- equals to jump_en 1 means rom_to_mux, 0 means add_to_mux
   sel_mux_to_ula    <= '1' when opcode = "0011" else '0';  -- 1 means operation with constant , 0 means    
              
@@ -61,5 +61,7 @@ begin
   en_wr_reg_rom <= '1' when sm = "00" else '0'; -- enable write only in fetch state
 
   en_bank_of_registers <= '1' when (opcode = "0101" or (opcode = "0100" and reg1/="1001")) else '0';
+
+  format_decoder <= format;
     
 end architecture;

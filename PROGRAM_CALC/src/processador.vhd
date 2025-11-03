@@ -35,7 +35,8 @@ architecture a_processador of processador is
       en_wr_pc          : out std_logic;
       en_wr_acc         : out std_logic;
       en_wr_reg_rom     : out std_logic;
-      en_bank_of_registers : out std_logic
+      en_bank_of_registers : out std_logic;
+      format_decoder : out std_logic
     );
   end component;
 
@@ -129,6 +130,8 @@ architecture a_processador of processador is
 
   signal sel_ula_operation : unsigned(3 downto 0) := (others => '0');
 
+  signal format_decoder : std_logic;
+  signal mux_addr_dest : unsigned(2 downto 0);
 
 begin
 
@@ -152,7 +155,8 @@ begin
       en_wr_pc          => en_wr_pc,
       en_wr_acc         => en_wr_acc,
       en_wr_reg_rom     => en_wr_reg_rom,
-      en_bank_of_registers => en_bank_of_registers
+      en_bank_of_registers => en_bank_of_registers,
+      format_decoder   => format_decoder
     );
   
   
@@ -185,15 +189,18 @@ begin
 
   mux_to_bank <= acc_to_ula when sel_mux_to_bank = "01" else
                 bank_to_mux when sel_mux_to_bank = "00" else
-                reg_rom_out when sel_mux_to_bank = "10"; 
+                reg_rom_out(10 downto 4) when sel_mux_to_bank = "10"; 
 
+
+
+  mux_addr_dest <= reg_rom_out(11 downto 8) when format_decoder = "1" else reg_rom_out(14 downto 11); 
 
   inst_bank: bank_of_registers
     port map (
       clk         => clk,
       rst         => rst,
-      addr_dest   => mux_to_bank(5 downto 3),
-      addr_source => mux_to_bank(2 downto 0),
+      addr_dest   => mux_addr_dest,
+      addr_source => reg_rom_out(7 downto 4),
       wr_en       => en_bank_of_registers,
       data_in     => mux_to_bank,
       data_out    => bank_to_mux
@@ -221,7 +228,7 @@ begin
       sig     => open
     );
 
-  mux_to_acc <= bank_to_mux when sel_mux_to_acc = "1" else ula_to_mux;                bank_to_mux;
+  mux_to_acc <= bank_to_mux when sel_mux_to_acc = "1" else ula_to_mux;             
 
   
   
