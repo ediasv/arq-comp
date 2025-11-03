@@ -10,17 +10,9 @@ desenvolvido para o projeto.
 ### Características Gerais
 
 - **ULA**: Implementada com acumulador
-- **Banco de Registradores**: 8 registradores disponíveis (R0-R7)
+- **Banco de Registradores**: 8 registradores (R0-R7)
 - **Tamanho da Instrução**: 15 bits
 - **ROM**: Síncrona
-
-### Ciclo de Instrução
-
-Atualmente temos 3 estados: fetch (1°), decode (2°) e execute (3°)
-
-1. **Estado 1**: Registrador de instruções com `wr_en` ativo
-2. **Entre Estado 1 e 2**: Incremento do PC (PC+1) é gravado
-3. **Último Estado**: Execução de instruções de salto (jump)
 
 ### Operações Suportadas
 
@@ -206,7 +198,7 @@ LD R3, 5  ; R3 = 5
 
 ### JMP ADDRESS
 
-**Descrição**: Salto incondicional para um endereço específico da memória.
+**Descrição**: Salto incondicional para um endereço da memória.
 
 - **Opcode**: `0110`
 - **Formato**: C
@@ -243,6 +235,8 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 | G     | Copia R5 para R3                  | 20       |
 | H     | Salta para o passo C (loop)       | 21       |
 | I     | Zera R3 _(nunca executada)_       | 22-24    |
+
+Observações:
 
 - **Passos F e I** nunca serão executados devido aos saltos incondicionais
 - O programa entra em **loop infinito** entre os endereços 2 e 21
