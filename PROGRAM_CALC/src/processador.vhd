@@ -158,7 +158,7 @@ begin
       format_decoder       => format_decoder
     );
 
-  mux_to_pc <= reg_rom_out when sel_mux_to_pc = "1" else pc_to_rom + 1;
+  mux_to_pc <= reg_rom_out(10 downto 4) when sel_mux_to_pc = "1" else pc_to_rom + 1;
 
   inst_pc: program_counter
     port map (
@@ -185,8 +185,8 @@ begin
       data_out      => reg_rom_out
     );
 
-  mux_to_bank <= acc_to_ula               when sel_mux_to_bank = "01" else
-                 bank_to_mux              when sel_mux_to_bank = "00" else
+  mux_to_bank <= bank_to_mux              when sel_mux_to_bank = "00" else
+                 acc_to_ula               when sel_mux_to_bank = "01" else
                  reg_rom_out(10 downto 4) when sel_mux_to_bank = "10";
 
   mux_addr_dest <= reg_rom_out(11 downto 8) when format_decoder = "1" else reg_rom_out(14 downto 11);

@@ -24,12 +24,11 @@ architecture a_uc of uc is
   signal reg1   : unsigned(3 downto 0) := (others => '0'); -- result register
   signal reg2   : unsigned(3 downto 0) := (others => '0');
   signal format : std_logic;
-  -- signal cte    : unsigned(6 downto 0) := (others => '0');
 
 begin
   -- opcode sempre recebe os 4 bits menos significativos
   --1 for S (SUBI, LD and JMP) format and 0 for C
-  format <= '1' when opcode = "0011" or opcode = "0101" or opcode = "0110" else '0';
+  format <= '1' when opcode = "0011" or opcode = "0101" or opcode = "0110" else '0'; -- 1 for S format 0 for C format
 
   opcode <= uc_data_in(3 downto 0);
   --S format
@@ -48,8 +47,8 @@ begin
   sel_mux_to_acc <= '1' when opcode = "0100" and reg1 = "1001" else '0'; -- 1 means bank instead of ULA
 
   sel_mux_to_bank <= "00" when opcode = "0100" and reg1 /= "1001" else --bank 
-                     "01" when reg2 = "1001" else                      -- accumulator
-                     "10" when opcode = "0101" and format = '0'; --rom
+                     "01" when opcode = "0100" and reg2 = "1001" else                      -- accumulator
+                     "10" when format='0' and format = '0'; --rom
 
   en_wr_pc <= '1' when sm = "01" or (sm = "10" and sel_mux_to_pc = '1') else '0'; -- enable write only in fetch state
 
