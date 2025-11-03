@@ -84,7 +84,8 @@ AAAA CCCCCCC OOOO
 
 ### NOP
 
-**Descrição**: Instrução sem operação. Não executa nenhuma ação, apenas consome um ciclo de clock.
+**Descrição**: Instrução sem operação. Não executa nenhuma ação,
+apenas consome um ciclo de clock.
 
 - **Opcode**: `0000`
 - **Formato**: N/A (sem operandos)
@@ -99,7 +100,8 @@ NOP  ; Não faz nada
 
 ### ADD RX, A
 
-**Descrição**: Soma o conteúdo de um registrador com o valor do acumulador e armazena o resultado no acumulador.
+**Descrição**: Soma o conteúdo de um registrador com o valor do acumulador
+e armazena o resultado no acumulador.
 
 - **Opcode**: `0001`
 - **Formato**: S
@@ -120,7 +122,8 @@ ADD R4, A  ; A = R4 + A
 
 ### SUB RX, A
 
-**Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e armazena o resultado no acumulador.
+**Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e
+armazena o resultado no acumulador.
 
 - **Opcode**: `0010`
 - **Formato**: S
@@ -140,7 +143,8 @@ SUB R3, A  ; A = R3 - A
 
 ### SUBI I, A
 
-**Descrição**: Subtrai do valor imediato (constante) o valor do acumulador e armazena o resultado no acumulador.
+**Descrição**: Subtrai do valor imediato (constante) o valor do acumulador e
+armazena o resultado no acumulador.
 
 - **Opcode**: `0011`
 - **Formato**: C
@@ -160,7 +164,8 @@ SUBI 1, A  ; A = 1 - A
 
 ### MV RX, RY
 
-**Descrição**: Move (copia) o conteúdo de um registrador para outro registrador. RX recebe o valor de RY.
+**Descrição**: Move (copia) o conteúdo de um registrador para outro
+registrador. RX recebe o valor de RY.
 
 - **Opcode**: `0100`
 - **Formato**: S
