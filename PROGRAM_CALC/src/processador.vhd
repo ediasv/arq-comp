@@ -31,8 +31,11 @@ architecture a_processador of processador is
       sel_mux_to_bank   : out std_logic;
       sel_mux_to_ula    : out std_logic;
       sel_mux_to_acc    : out std_logic;
+      sel_ula_operation : out unsigned(1 downto 0);
       en_wr_pc          : out std_logic;
-      sel_ula_operation : out unsigned(1 downto 0)
+      en_wr_acc         : out std_logic;
+      en_wr_reg_rom     : out std_logic;
+      en_bank_of_registers : out std_logic
     );
   end component;
 
@@ -100,17 +103,20 @@ architecture a_processador of processador is
   signal sel_mux_to_pc : std_logic := '0';
   signal mux_to_pc     : unsigned(6 downto 0);
   signal pc_to_rom     : unsigned(6 downto 0);
-  signal rom_to_mux    : unsigned(6 downto 0);
+
   signal en_wr_pc      : std_logic := '0';
+  signal en_wr_acc     : std_logic := '0';
+  signal en_wr_reg_rom : std_logic := '0';
+  signal en_bank_of_registers : std_logic := '0';
+
+  
   --mux 2
   signal rom_to_reg_rom  : unsigned(14 downto 0);
   signal reg_rom_out     : unsigned(14 downto 0);
   signal mux_to_bank     : unsigned(14 downto 0) := (others => '0');
-  signal acc_to_mux      : unsigned(14 downto 0) := (others => '0');
   signal sel_mux_to_bank : std_logic             := '0';
 
   --mux 3
-  signal reg_rom_to_mux : unsigned(6 downto 0);
   signal bank_to_mux    : unsigned(14 downto 0) := (others => '0');
   signal mux_to_ula     : unsigned(14 downto 0) := (others => '0');
   signal sel_mux_to_ula : std_logic             := '0';
@@ -122,6 +128,7 @@ architecture a_processador of processador is
   signal sel_mux_to_acc : std_logic             := '0';
 
   signal sel_ula_operation : unsigned(3 downto 0) := (others => '0');
+
 
 begin
 
@@ -142,10 +149,14 @@ begin
       sel_ula_operation => sel_ula_operation,
       sel_mux_to_acc    => sel_mux_to_acc,
       sel_mux_to_bank   => sel_mux_to_bank,
-      en_wr_pc          => en_wr_pc
+      en_wr_pc          => en_wr_pc,
+      en_wr_acc         => en_wr_acc,
+      en_wr_reg_rom     => en_wr_reg_rom,
+      en_bank_of_registers => en_bank_of_registers
     );
-
-  mux_to_pc <= rom_to_mux when sel_mux_to_pc = '1' else pc_to_rom + 1;
+  
+  
+  mux_to_pc <= reg_rom_out when sel_mux_to_pc = "1" else pc_to_rom + 1;
 
   inst_pc: program_counter
     port map (
@@ -158,33 +169,32 @@ begin
   --lógica para adicionar 1 ou fazer o jump
   inst_rom: rom
     port map (
-      addr     => pc_to_rom,
-      data_out => rom_to_reg_rom
+      clk     => clk,
+      endereco     => pc_to_rom,
+      dado => rom_to_reg_rom
     );
 
   inst_reg_rom: reg_rom
     port map (
       clk           => clk,
       rst           => rst,
-      wr_en         => '1' when sm_to_uc = "00"
-    else
-        ' 0',
+      wr_en         => en_wr_reg_rom,
       data_from_rom => rom_to_reg_rom,
       data_out      => reg_rom_out
     );
 
-  mux_to_bank <= reg_rom_out when sm_to_uc = "10" else
-                 reg_rom_to_mux;
+  mux_to_bank <= acc_to_ula when sel_mux_to_bank = "01" else
+                bank_to_mux when sel_mux_to_bank = "00" else
+                reg_rom_out when sel_mux_to_bank = "10"; 
+
 
   inst_bank: bank_of_registers
     port map (
       clk         => clk,
       rst         => rst,
-      wr_en       => '1' when sm_to_uc = "10"
-    else
-        '0',
-      addr_dest   => inst_reg_out(5 downto 3),
-      addr_source => inst_reg_out(2 downto 0),
+      addr_dest   => mux_to_bank(5 downto 3),
+      addr_source => mux_to_bank(2 downto 0),
+      wr_en       => en_bank_of_registers,
       data_in     => mux_to_bank,
       data_out    => bank_to_mux
     );
@@ -193,15 +203,13 @@ begin
     port map (
       clk      => clk,
       rst      => rst,
-      wr_en    => '1' when sm_to_uc = "10"
-    else
-        '0',
+      wr_en    => en_wr_acc,
       data_in  => mux_to_acc,
       data_out => acc_to_ula
     );
 
-  mux_to_ula <= bank_to_mux when sel_mux_to_ula else
-                acc_to_mux;
+  mux_to_ula <=reg_rom_out(10 downto 4) when sel_mux_to_ula = "1" else bank_to_mux; --reg_rom_out(10 downto 4) = constant
+  
 
   inst_ula: ula
     port map (
@@ -213,12 +221,9 @@ begin
       sig     => open
     );
 
-  mux_to_acc <= ula_to_mux when sel_mux_to_acc else
-                bank_to_mux;
+  mux_to_acc <= bank_to_mux when sel_mux_to_acc = "1" else ula_to_mux;                bank_to_mux;
 
-  -- PONTOS QUE FALTAM: 
-  -- LÓGICA DOS MUXES E SINAIS DE CONTROLE PARA ELES (Unidade de Controle)
-  -- OPCODES DA ULA (DINHO)
-  -- CONFERIR OS BITS DE CADA ENTRADA E SAÍDA DOS COMPONENTES
-  -- CONFERIR ATRIBUIÇÕES DE ENTRADA E SAÍDA DOS COMPONENTES
+  
+  
+
 end architecture;
