@@ -80,43 +80,44 @@ architecture a_processador of processador is
 
     component ula
       port (
-        a        : in  unsigned(15 downto 0);
-        b        : in  unsigned(15 downto 0);
-        opcode   : in  unsigned(3 downto 0);
-        result   : out unsigned(15 downto 0)
+        in0, in1        : in  unsigned(15 downto 0);
+        op   : in  unsigned(1 downto 0);
+        ula_out   : out unsigned(15 downto 0);
+        zero, sig : out std_logic;
       );
     end component;
 
 
     signal sm_to_uc  : unsigned(1 downto 0) := (others => '0'); -- fetch, decode, execute
-    signal en_uc_to_pc  : unsigned(14 downto 0) := (others => '0'); 
     
     --mux 1
-    signal en_uc_to_mux  : std_logic := '0';
+    signal sel_mux_to_pc  : std_logic := '0';
     signal mux_to_pc  : unsigned(6 downto 0); 
     signal pc_to_rom  : unsigned(6 downto 0);
     signal rom_to_mux : unsigned(6 downto 0);
     signal add_to_mux : unsigned(6 downto 0);
-  
-  
+    signal en_wr_pc : std_logic := '0';
    --mux 2
-    -- signal inst_reg_to_uc : unsigned(6 downto 0);
-    -- signal inst_reg_to_mux : unsigned(6 downto 0);
     signal rom_to_reg_rom : unsigned(14 downto 0);
     signal reg_rom_out    : unsigned(14 downto 0);
     signal mux_to_bank    : unsigned(14 downto 0) := (others => '0');
     signal acc_to_mux     : unsigned(14 downto 0) := (others => '0');
-    
+    signal sel_mux_to_bank  : std_logic := '0';
+
     --mux 3
-    signal inst_reg_cte_to_mux : unsigned(6 downto 0);
+    signal reg_rom_to_mux : unsigned(6 downto 0);
     signal bank_to_mux  : unsigned(14 downto 0) := (others => '0');
     signal mux_to_ula   : unsigned(14 downto 0) := (others => '0');
-  
+    signal sel_mux_to_ula  : std_logic := '0';
+
    --mux 4
     signal ula_to_mux   : unsigned(14 downto 0) := (others => '0');
     signal mux_to_acc   : unsigned(14 downto 0) := (others => '0');
     signal acc_to_ula   : unsigned(14 downto 0) := (others => '0');
+    signal sel_mux_to_acc  : std_logic := '0';
 
+
+    signal sel_ula_operation : unsigned(3 downto 0) := (others => '0');
 
     begin 
 
@@ -131,10 +132,16 @@ architecture a_processador of processador is
     inst_uc : uc
       port map (
         uc_data_in => rom_to_reg_rom,
-        jump_en    => en_uc_to_pc
+        sm           => sm_to_uc,
+        -- jump_en    => en_uc_to_pc,
+        sel_mux_to_pc => sel_mux_to_pc,
+        sel_mux_to_ula => sel_mux_to_ula 
+        sel_ula_operation => sel_ula_operation
+        sel_mux_to_acc => sel_mux_to_acc 
+        sel_mux_to_bank => sel_mux_to_bank 
       );
 
-  -- mux_to_pc <= rom_to_mux when en_uc_to_pc = '1' else add_to_mux; VER DEPOIS A UC
+    mux_to_pc <= rom_to_mux when sel_mux_to_pc = '1' else add_to_mux; 
 
     inst_pc : program_counter
     port map (
@@ -162,8 +169,7 @@ architecture a_processador of processador is
       );
 
       mux_to_bank <= reg_rom_out when sm_to_uc = "10" else
-                      inst_reg_cte_to_mux;
---CONFERIR COM A PARADA DO ESTADO EXECUTE E SLA OQ QUE O JULIANO ESPECIFICOU
+      reg_rom_to_mux;
 
     inst_bank : bank_of_registers
       port map (
@@ -173,7 +179,7 @@ architecture a_processador of processador is
         addr_dest   => inst_reg_out(5 downto 3),
         addr_source => inst_reg_out(2 downto 0),
         data_in     => mux_to_bank,
-        data_out    => bank_to_mux --?? como diferenciar as duas saídas do banco de registradores??
+        data_out    => bank_to_mux 
       );
 
     inst_acc : acc
@@ -185,19 +191,21 @@ architecture a_processador of processador is
         data_out => acc_to_ula
       );
 
-  -- mux_to_ula <= bank_to_mux when ??? else
-  --                acc_to_mux;
+     mux_to_ula <= bank_to_mux when sel_mux_to_ula else
+                  acc_to_mux;
 
       inst_ula : ula  
       port map (
-        a        => acc_to_ula,
-        b        => mux_to_ula,
-        opcode   => ???,
-        result   => ula_to_mux
+        in0        => acc_to_ula,
+        in1        => mux_to_ula,
+        op         => sel_ula_operation,
+        ula_out    => ula_to_mux,
+        zero       => open,
+        sig        => open
       );
 
-    -- mux_to_acc <= ula_to_mux when ??? else
-    --                bank_to_mux;
+     mux_to_acc <= ula_to_mux when sel_mux_to_acc else
+                    bank_to_mux;
 
 
 
