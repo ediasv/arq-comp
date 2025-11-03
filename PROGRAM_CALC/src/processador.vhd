@@ -1,225 +1,224 @@
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+  use ieee.std_logic_1164.all;
+  use ieee.numeric_std.all;
 
 entity processador is
-  port ();
+  port (
+    rst : in std_logic;
+    clk : in std_logic
+  );
 end entity;
 
 architecture a_processador of processador is
 
   --  Carga de constantes, transferência de valores entre registradores, salto incondicional e nop;
   -- 'Registrador de Instruções': ['wr_en no primeiro estado'],
-  -- 'Incremento do PC': ['PC+1 gravado entre o primeiro e segundo estado E jmp '
-  -- 'Executado no último estado']}
-  
+  -- 'Incremento do PC': ['PC+1 gravado entre o primeiro e segundo estado E jmp Executado no último estado']}
+
   -- Componentes
-    component sm
-      port ( 
-        clk,rst: in std_logic;
-        estado: out unsigned(1 downto 0)
-      );
-      end component;
-
-      component uc
-        port (
-          uc_data_in        : in  unsigned(14 downto 0);
-          sm                : in  unsigned(1 downto 0);
-          sel_mux_to_pc     : out std_logic;
-          sel_mux_to_bank   : out std_logic;
-          sel_mux_to_ula    : out std_logic;
-          sel_mux_to_acc    : out std_logic;
-          en_wr_pc          : out std_logic;
-          sel_ula_operation : out unsigned(1 downto 0)
-        );
-      end component;
-
-    component program_counter
-      port (
-        clk      : in  std_logic;
-        wr_en    : in  std_logic;
-        data_in  : in  unsigned(6 downto 0);
-        data_out : out unsigned(6 downto 0)
-      );
-    end component;
-
-    component rom
-      port (
-        clk      : in  std_logic;
-        endereco : in  unsigned(6 downto 0);
-        dado     : out unsigned(14 downto 0)
-      );
-    end component;
-   
-
-    component reg_rom
+  component sm
     port (
-        clk      : in  std_logic;
-        rst      : in  std_logic;
-        wr_en    : in  std_logic;
-        data_from_rom  : in  unsigned(15 downto 0);
-        data_out : out unsigned(15 downto 0)
+      clk, rst : in  std_logic;
+      estado   : out unsigned(1 downto 0)
     );
-    end component;
+  end component;
 
-    component bank_of_registers
-      port (
-        clk         : in  std_logic;
-        rst         : in  std_logic;
-        wr_en       : in  std_logic;
-        addr_dest   : in  unsigned(2 downto 0);
-        addr_source : in  unsigned(2 downto 0);
-        data_in     : in  unsigned(15 downto 0);
-        data_out    : out unsigned(15 downto 0)
-      );
-    end component;
+  component uc
+    port (
+      uc_data_in        : in  unsigned(14 downto 0);
+      sm                : in  unsigned(1 downto 0);
+      sel_mux_to_pc     : out std_logic;
+      sel_mux_to_bank   : out std_logic;
+      sel_mux_to_ula    : out std_logic;
+      sel_mux_to_acc    : out std_logic;
+      en_wr_pc          : out std_logic;
+      sel_ula_operation : out unsigned(1 downto 0)
+    );
+  end component;
 
-    component acc
-      port (
-        clk      : in  std_logic;
-        rst      : in  std_logic;
-        wr_en    : in  std_logic;
-        data_in  : in  unsigned(15 downto 0);
-        data_out : out unsigned(15 downto 0)
-      );
-    end component;
+  component program_counter
+    port (
+      clk      : in  std_logic;
+      wr_en    : in  std_logic;
+      data_in  : in  unsigned(6 downto 0);
+      data_out : out unsigned(6 downto 0)
+    );
+  end component;
 
+  component rom
+    port (
+      clk      : in  std_logic;
+      endereco : in  unsigned(6 downto 0);
+      dado     : out unsigned(14 downto 0)
+    );
+  end component;
 
-    component ula
-      port (
-        in0, in1        : in  unsigned(15 downto 0);
-        op   : in  unsigned(1 downto 0);
-        ula_out   : out unsigned(15 downto 0);
-        zero, sig : out std_logic;
-      );
-    end component;
+  component reg_rom
+    port (
+      clk           : in  std_logic;
+      rst           : in  std_logic;
+      wr_en         : in  std_logic;
+      data_from_rom : in  unsigned(15 downto 0);
+      data_out      : out unsigned(15 downto 0)
+    );
+  end component;
 
+  component bank_of_registers
+    port (
+      clk         : in  std_logic;
+      rst         : in  std_logic;
+      wr_en       : in  std_logic;
+      addr_dest   : in  unsigned(2 downto 0);
+      addr_source : in  unsigned(2 downto 0);
+      data_in     : in  unsigned(15 downto 0);
+      data_out    : out unsigned(15 downto 0)
+    );
+  end component;
 
-    signal sm_to_uc  : unsigned(1 downto 0) := (others => '0'); -- fetch, decode, execute
-    
-    --mux 1
-    signal sel_mux_to_pc  : std_logic := '0';
-    signal mux_to_pc  : unsigned(6 downto 0); 
-    signal pc_to_rom  : unsigned(6 downto 0);
-    signal rom_to_mux : unsigned(6 downto 0);
-    signal add_to_mux : unsigned(6 downto 0);
-    signal en_wr_pc : std_logic := '0';
-   --mux 2
-    signal rom_to_reg_rom : unsigned(14 downto 0);
-    signal reg_rom_out    : unsigned(14 downto 0);
-    signal mux_to_bank    : unsigned(14 downto 0) := (others => '0');
-    signal acc_to_mux     : unsigned(14 downto 0) := (others => '0');
-    signal sel_mux_to_bank  : std_logic := '0';
+  component acc
+    port (
+      clk      : in  std_logic;
+      rst      : in  std_logic;
+      wr_en    : in  std_logic;
+      data_in  : in  unsigned(15 downto 0);
+      data_out : out unsigned(15 downto 0)
+    );
+  end component;
 
-    --mux 3
-    signal reg_rom_to_mux : unsigned(6 downto 0);
-    signal bank_to_mux  : unsigned(14 downto 0) := (others => '0');
-    signal mux_to_ula   : unsigned(14 downto 0) := (others => '0');
-    signal sel_mux_to_ula  : std_logic := '0';
+  component ula
+    port (
+      in0, in1  : in  unsigned(15 downto 0);
+      op        : in  unsigned(1 downto 0);
+      ula_out   : out unsigned(15 downto 0);
+      zero, sig : out std_logic
+    );
+  end component;
 
-   --mux 4
-    signal ula_to_mux   : unsigned(14 downto 0) := (others => '0');
-    signal mux_to_acc   : unsigned(14 downto 0) := (others => '0');
-    signal acc_to_ula   : unsigned(14 downto 0) := (others => '0');
-    signal sel_mux_to_acc  : std_logic := '0';
+  signal sm_to_uc : unsigned(1 downto 0) := (others => '0'); -- fetch, decode, execute
 
+  --mux 1
+  signal sel_mux_to_pc : std_logic := '0';
+  signal mux_to_pc     : unsigned(6 downto 0);
+  signal pc_to_rom     : unsigned(6 downto 0);
+  signal rom_to_mux    : unsigned(6 downto 0);
+  signal en_wr_pc      : std_logic := '0';
+  --mux 2
+  signal rom_to_reg_rom  : unsigned(14 downto 0);
+  signal reg_rom_out     : unsigned(14 downto 0);
+  signal mux_to_bank     : unsigned(14 downto 0) := (others => '0');
+  signal acc_to_mux      : unsigned(14 downto 0) := (others => '0');
+  signal sel_mux_to_bank : std_logic             := '0';
 
-    signal sel_ula_operation : unsigned(3 downto 0) := (others => '0');
+  --mux 3
+  signal reg_rom_to_mux : unsigned(6 downto 0);
+  signal bank_to_mux    : unsigned(14 downto 0) := (others => '0');
+  signal mux_to_ula     : unsigned(14 downto 0) := (others => '0');
+  signal sel_mux_to_ula : std_logic             := '0';
 
-    begin 
+  --mux 4
+  signal ula_to_mux     : unsigned(14 downto 0) := (others => '0');
+  signal mux_to_acc     : unsigned(14 downto 0) := (others => '0');
+  signal acc_to_ula     : unsigned(14 downto 0) := (others => '0');
+  signal sel_mux_to_acc : std_logic             := '0';
 
-    sm_inst : sm
-      port map (
-        clk   => clk,
-        rst   => rst,
-        estado => sm_to_uc
-      );
+  signal sel_ula_operation : unsigned(3 downto 0) := (others => '0');
 
+begin
 
-    inst_uc : uc
-      port map (
-        uc_data_in => reg_rom_out,
-        sm           => sm_to_uc,
-        -- jump_en    => en_uc_to_pc,
-        sel_mux_to_pc => sel_mux_to_pc,
-        sel_mux_to_ula => sel_mux_to_ula 
-        sel_ula_operation => sel_ula_operation
-        sel_mux_to_acc => sel_mux_to_acc 
-        sel_mux_to_bank => sel_mux_to_bank 
-      );
+  sm_inst: sm
+    port map (
+      clk    => clk,
+      rst    => rst,
+      estado => sm_to_uc
+    );
 
-    mux_to_pc <= rom_to_mux when sel_mux_to_pc = '1' else add_to_mux; 
+  inst_uc: uc
+    port map (
+      uc_data_in        => reg_rom_out,
+      sm                => sm_to_uc,
+      -- jump_en    => en_uc_to_pc,
+      sel_mux_to_pc     => sel_mux_to_pc,
+      sel_mux_to_ula    => sel_mux_to_ula,
+      sel_ula_operation => sel_ula_operation,
+      sel_mux_to_acc    => sel_mux_to_acc,
+      sel_mux_to_bank   => sel_mux_to_bank,
+      en_wr_pc          => en_wr_pc
+    );
 
-    inst_pc : program_counter
+  mux_to_pc <= rom_to_mux when sel_mux_to_pc = '1' else pc_to_rom + 1;
+
+  inst_pc: program_counter
     port map (
       clk      => clk,
-      wr_en    => '0', --ENABLE VEM DO UC
+      wr_en    => en_wr_pc, --ENABLE VEM DA UC
       data_in  => mux_to_pc,
       data_out => pc_to_rom
     );
- 
---lógica para adicionar 1 ou fazer o jump
 
-    inst_rom : rom
+  --lógica para adicionar 1 ou fazer o jump
+  inst_rom: rom
     port map (
       addr     => pc_to_rom,
       data_out => rom_to_reg_rom
     );
 
-    inst_reg_rom : reg_rom
-      port map (
-        clk           => clk,
-        rst           => rst,
-        wr_en         => '1' when sm_to_uc = "00" else '0 ',
-        data_from_rom => rom_to_reg_rom,
-        data_out      => reg_rom_out
-      );
+  inst_reg_rom: reg_rom
+    port map (
+      clk           => clk,
+      rst           => rst,
+      wr_en         => '1' when sm_to_uc = "00"
+    else
+        ' 0',
+      data_from_rom => rom_to_reg_rom,
+      data_out      => reg_rom_out
+    );
 
-      mux_to_bank <= reg_rom_out when sm_to_uc = "10" else
-      reg_rom_to_mux;
+  mux_to_bank <= reg_rom_out when sm_to_uc = "10" else
+                 reg_rom_to_mux;
 
-    inst_bank : bank_of_registers
-      port map (
-        clk         => clk,
-        rst         => rst,
-        wr_en       => '1' when sm_to_uc = "10" else '0',
-        addr_dest   => inst_reg_out(5 downto 3),
-        addr_source => inst_reg_out(2 downto 0),
-        data_in     => mux_to_bank,
-        data_out    => bank_to_mux 
-      );
+  inst_bank: bank_of_registers
+    port map (
+      clk         => clk,
+      rst         => rst,
+      wr_en       => '1' when sm_to_uc = "10"
+    else
+        '0',
+      addr_dest   => inst_reg_out(5 downto 3),
+      addr_source => inst_reg_out(2 downto 0),
+      data_in     => mux_to_bank,
+      data_out    => bank_to_mux
+    );
 
-    inst_acc : acc
-      port map (
-        clk      => clk,
-        rst      => rst,
-        wr_en    => '1' when sm_to_uc = "10" else '0',
-        data_in  => mux_to_acc,
-        data_out => acc_to_ula
-      );
+  inst_acc: acc
+    port map (
+      clk      => clk,
+      rst      => rst,
+      wr_en    => '1' when sm_to_uc = "10"
+    else
+        '0',
+      data_in  => mux_to_acc,
+      data_out => acc_to_ula
+    );
 
-     mux_to_ula <= bank_to_mux when sel_mux_to_ula else
-                  acc_to_mux;
+  mux_to_ula <= bank_to_mux when sel_mux_to_ula else
+                acc_to_mux;
 
-      inst_ula : ula  
-      port map (
-        in0        => acc_to_ula,
-        in1        => mux_to_ula,
-        op         => sel_ula_operation,
-        ula_out    => ula_to_mux,
-        zero       => open,
-        sig        => open
-      );
+  inst_ula: ula
+    port map (
+      in0     => acc_to_ula,
+      in1     => mux_to_ula,
+      op      => sel_ula_operation,
+      ula_out => ula_to_mux,
+      zero    => open,
+      sig     => open
+    );
 
-     mux_to_acc <= ula_to_mux when sel_mux_to_acc else
-                    bank_to_mux;
+  mux_to_acc <= ula_to_mux when sel_mux_to_acc else
+                bank_to_mux;
 
-
-
--- PONTOS QUE FALTAM: 
--- LÓGICA DOS MUXES E SINAIS DE CONTROLE PARA ELES (Unidade de Controle)
--- OPCODES DA ULA (DINHO)
--- CONFERIR OS BITS DE CADA ENTRADA E SAÍDA DOS COMPONENTES
--- CONFERIR ATRIBUIÇÕES DE ENTRADA E SAÍDA DOS COMPONENTES
-
-    end architecture;
+  -- PONTOS QUE FALTAM: 
+  -- LÓGICA DOS MUXES E SINAIS DE CONTROLE PARA ELES (Unidade de Controle)
+  -- OPCODES DA ULA (DINHO)
+  -- CONFERIR OS BITS DE CADA ENTRADA E SAÍDA DOS COMPONENTES
+  -- CONFERIR ATRIBUIÇÕES DE ENTRADA E SAÍDA DOS COMPONENTES
+end architecture;
