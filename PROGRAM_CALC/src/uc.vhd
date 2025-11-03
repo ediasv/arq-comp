@@ -23,6 +23,7 @@ architecture a_uc of uc is
   signal opcode : unsigned(3 downto 0) := (others => '0');
   signal reg1   : unsigned(3 downto 0) := (others => '0'); -- result register
   signal reg2   : unsigned(3 downto 0) := (others => '0');
+  signal sel_mux_to_pc_internal : std_logic;
   signal format : std_logic;
 
 begin
@@ -36,7 +37,8 @@ begin
   reg2 <= uc_data_in(7 downto 4) when format = '1' else (others => '0');
 
   --C format
-  sel_mux_to_pc  <= '1' when opcode = "0110" and format = '0' else '0'; -- equals to jump_en 1 means rom_to_mux, 0 means add_to_mux
+  sel_mux_to_pc_internal  <= '1' when opcode = "0110" and format = '0' else '0'; -- equals to jump_en 1 means rom_to_mux, 0 means add_to_mux
+  sel_mux_to_pc <= sel_mux_to_pc_internal;
   sel_mux_to_ula <= '1' when opcode = "0011" else '0';                  -- 1 means operation with constant , 0 means    
 
   sel_ula_operation <= "00" when opcode = "0001" else -- ADD
@@ -50,7 +52,7 @@ begin
                      "01" when opcode = "0100" and reg2 = "1001" else                      -- accumulator
                      "10" when format='0' and format = '0'; --rom
 
-  en_wr_pc <= '1' when sm = "01" or (sm = "10" and sel_mux_to_pc = '1') else '0'; -- enable write only in fetch state
+  en_wr_pc <= '1' when sm = "01" or (sm = "10" and sel_mux_to_pc_internal = '1') else '0'; -- enable write only in fetch state
 
   en_wr_acc <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0011") else '0';
 
