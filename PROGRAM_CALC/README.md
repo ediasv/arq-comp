@@ -34,8 +34,10 @@ Atualmente temos 3 estados: fetch (1°), decode (2°) e execute (3°)
 
 ## Formato das Instruções
 
-As instruções tem 15 bits e podem ser dos formatos **S** (**S**em constante),
-**C** (**C**om constante ou salto incondicional)
+As instruções têm 15 bits e podem ser dos formatos:
+
+- **Formato S**: **S**em constante (operações entre registradores)
+- **Formato C**: **C**om constante ou salto incondicional
 
 ### Formato S
 
@@ -78,10 +80,11 @@ AAAA CCCCCCC OOOO
 | LD RX, I    | `0101` | C       | Carrega valor imediato em registrador |
 | JMP ADDRESS | `0110` | C       | Salto incondicional                   |
 
+---
+
 ### NOP
 
-**Descrição**: Instrução sem operação. Não executa nenhuma ação, apenas
-consome um ciclo de clock.
+**Descrição**: Instrução sem operação. Não executa nenhuma ação, apenas consome um ciclo de clock.
 
 - **Opcode**: `0000`
 - **Formato**: N/A (sem operandos)
@@ -89,69 +92,91 @@ consome um ciclo de clock.
 **Exemplo**:
 
 ```asm
-NOP ; Não faz nada
+NOP  ; Não faz nada
 ```
+
+---
 
 ### ADD RX, A
 
-**Descrição**: Soma o conteúdo de um registrador com o valor do acumulador e
-armazena o resultado no acumulador.
+**Descrição**: Soma o conteúdo de um registrador com o valor do acumulador e armazena o resultado no acumulador.
 
 - **Opcode**: `0001`
 - **Formato**: S
-- **Operandos**: Sempre dois registradores (um deles é o acumulador)
+- **Operandos**: Dois registradores (um deles é o acumulador)
 - **Restrição**: Não há soma com constantes
+
+**Sintaxe**: `ADD RX, A`
+
+**Operação**: `A = RX + A`
 
 **Exemplo**:
 
 ```asm
-ADD R4, A ; A = R4 + A
+ADD R4, A  ; A = R4 + A
 ```
+
+---
 
 ### SUB RX, A
 
-**Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e
-armazena o resultado no acumulador.
+**Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e armazena o resultado no acumulador.
 
 - **Opcode**: `0010`
 - **Formato**: S
-- **Operandos**: Sempre dois registradores (um deles é o acumulador)
+- **Operandos**: Dois registradores (um deles é o acumulador)
+
+**Sintaxe**: `SUB RX, A`
+
+**Operação**: `A = RX - A`
 
 **Exemplo**:
 
 ```asm
-SUB R3, A ; A = R3 - A
+SUB R3, A  ; A = R3 - A
 ```
+
+---
 
 ### SUBI I, A
 
-**Descrição**: Subtrai do valor imediato (constante) o valor do acumulador e
-armazena o resultado no acumulador.
+**Descrição**: Subtrai do valor imediato (constante) o valor do acumulador e armazena o resultado no acumulador.
 
 - **Opcode**: `0011`
 - **Formato**: C
 - **Operandos**: Acumulador e valor imediato de 7 bits
 
+**Sintaxe**: `SUBI I, A`
+
+**Operação**: `A = I - A`
+
 **Exemplo**:
 
 ```asm
-SUBI 1, A ; A = 1 - A
+SUBI 1, A  ; A = 1 - A
 ```
+
+---
 
 ### MV RX, RY
 
-**Descrição**: Move (copia) o conteúdo de um registrador para outro registrador.
-RX recebe o valor de RY.
+**Descrição**: Move (copia) o conteúdo de um registrador para outro registrador. RX recebe o valor de RY.
 
 - **Opcode**: `0100`
 - **Formato**: S
 - **Operandos**: Dois registradores (destino e origem)
 
+**Sintaxe**: `MV RX, RY`
+
+**Operação**: `RX = RY`
+
 **Exemplo**:
 
 ```asm
-MV R5, R3 ; R5 = R3
+MV R5, R3  ; R5 = R3
 ```
+
+---
 
 ### LD RX, I
 
@@ -162,11 +187,17 @@ MV R5, R3 ; R5 = R3
 - **Operandos**: Registrador de destino e valor imediato de 7 bits
 - **Restrição**: Não realiza operações aritméticas, apenas carregamento
 
+**Sintaxe**: `LD RX, I`
+
+**Operação**: `RX = I`
+
 **Exemplo**:
 
 ```asm
-LD R3, 5 ; R3 = 5
+LD R3, 5  ; R3 = 5
 ```
+
+---
 
 ### JMP ADDRESS
 
@@ -177,10 +208,14 @@ LD R3, 5 ; R3 = 5
 - **Operandos**: Endereço de destino de 7 bits
 - **Execução**: Realizado no último estado do ciclo de instrução
 
+**Sintaxe**: `JMP ADDRESS`
+
+**Operação**: `PC = ADDRESS`
+
 **Exemplo**:
 
 ```asm
-JMP 20 ; PC = 20
+JMP 20  ; PC = 20
 ```
 
 ---
@@ -193,17 +228,17 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 
 ### Pseudocódigo do Programa
 
-| Passo | Descrição                     |
-| ----- | ----------------------------- |
-| A     | Carrega R3 com o valor 5      |
-| B     | Carrega R4 com o valor 8      |
-| C     | Soma R3 com R4 e guarda em R5 |
-| D     | Subtrai 1 de R5               |
-| E     | Salta para o endereço 20      |
-| F     | Zera R5 _(nunca executada)_   |
-| G     | Copia R5 para R3              |
-| H     | Salta para o passo C (loop)   |
-| I     | Zera R3 _(nunca executada)_   |
+| Passo | Descrição                         | Endereço |
+| ----- | --------------------------------- | -------- |
+| A     | Carrega R3 com o valor 5          | 0        |
+| B     | Carrega R4 com o valor 8          | 1        |
+| C     | Soma R3 com R4 e guarda em R5     | 2-4      |
+| D     | Subtrai 1 de R5                   | 5-7      |
+| E     | Salta para o endereço 20          | 8        |
+| F     | Zera R5 e NOP _(nunca executada)_ | 9-19     |
+| G     | Copia R5 para R3                  | 20       |
+| H     | Salta para o passo C (loop)       | 21       |
+| I     | Zera R3 _(nunca executada)_       | 22-24    |
 
 - **Passos F e I** nunca serão executados devido aos saltos incondicionais
 - O programa entra em **loop infinito** entre os endereços 2 e 21
@@ -221,206 +256,312 @@ graph TD
     E --> G[G]
     G --> H[H]
     H --> C
+
+    style A fill:#90EE90
+    style B fill:#90EE90
+    style C fill:#87CEEB
+    style D fill:#87CEEB
+    style E fill:#FFB6C1
+    style G fill:#FFD700
+    style H fill:#FFB6C1
+
 ```
 
 ### Notas Importantes
 
 - **Passos F e I** nunca serão executados devido aos saltos incondicionais
 - O programa entra em **loop infinito** entre os endereços 2 e 21
-- A cada iteração do loop, R5 é recalculado e decrementado
 
-### Pograma
+## Implementação do Programa
 
-Assembly:
-
-```asm
-    ; A:
-    ; Carrega R3 com o valor 5
-    LD  R3, 5
-
-    ; B:
-    ; Carrega R4 com o valor 8
-    LD  R4, 8
-
-    ; C:
-    ; Soma R3 com R4 e guarda em R5
-C:  MV  A, R4
-    ADD R3, A
-    MV  R5, A
-
-    ; D:
-    ; Subtrai 1 de R5
-    MV  A, R5
-    SUBI 1, A
-    MV  R5, A
-
-    ; E:
-    ; Salta para o endereço 20
-    JMP E
-
-    ; F:
-    ; Zera R5 (Nunca executa)
-    MV  A, R5
-    SUB R5, A
-    MV  R5, A
-
-    ; Instruções aleatórias, apenas para preencher a ROM
-    ; até o endereço 20
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-
-    ; G (Endereço 20):
-    ; Copia R5 para R3
-E:  MV R3, R5
-
-    ; H
-    ; Salta para o passo C
-    JMP C
-
-    ; I:
-    ; Zera R3 (Nunca executa)
-    MV  A, R3
-    SUB R3, A
-    MV R3, A
-```
-
-Binário:
+### Assembly
 
 ```asm
-; LD  R3, 5
-; formato de instrução: C
-; opcode: 0101
-; A: 0011
-; I: 0000101
-0011_0000101_0101
+; ====================================
+; A: Carrega R3 com o valor 5
+; ====================================
+LD  R3, 5
 
-; LD  R4, 8
-; formato de instrução: C
-; opcode: 0101
-; A: 0100
-; I: 0001000
-0100_0001000_0101
+; ====================================
+; B: Carrega R4 com o valor 8
+; ====================================
+LD  R4, 8
 
-; MV  A, R4
-; formato de instrução: S
-; opcode: 0100
-; A: 1001
-; B: 0100
-000_1001_0100_0100
+; ====================================
+; C: Soma R3 com R4 e guarda em R5
+; ====================================
+C:  MV   A, R4      ; A = R4
+    ADD  R3, A      ; A = R3 + A
+    MV   R5, A      ; R5 = A
 
-; ADD R3, A
-; formato de instrução: S
-; opcode: 0001
-; A: 0011
-; B: 1001
-000_0011_1001_0001
+; ====================================
+; D: Subtrai 1 de R5
+; ====================================
+BUG AQUI
+    MV   A, R5      ; A = R5
+    SUBI 1, A       ; A = 1 - A
+    MV   R5, A      ; R5 = A
 
-; MV  R5, A
-; formato de instrução: S
-; opcode: 0100
-; A: 0101
-; B: 1001
-000_0101_1001_0100
+; ====================================
+; E: Salta para o endereço 20
+; ====================================
+    JMP  E
 
-; MV  A, R5
-; formato de instrução: S
-; opcode: 0100
-; A: 1001
-; B: 0101
-000_0100_1001_0101
+; ====================================
+; F: Zera R5 (Nunca executa)
+; ====================================
+    MV   A, R5      ; A = R5
+    SUB  R5, A      ; A = R5 - A
+    MV   R5, A      ; R5 = A
 
-; SUBI 1, A
-; formato de instrução: C
-; opcode: 0011
-; A: 1001
-; I: 0000001
-1001_0000001_0011
+; ====================================
+; Instruções de preenchimento
+; até o endereço 20
+; ====================================
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
 
-; MV  R5, A
-; formato de instrução: S
-; opcode: 0100
-; A: 0101
-; B: 1001
-000_0101_1001_0100
+; ====================================
+; G (Endereço 20): Copia R5 para R3
+; ====================================
+E:  MV   R3, R5     ; R3 = R5
 
-; JMP E
-; formato de instrução: C
-; opcode: 0110
-; A: ~
-; I: 0010100
-0000_0010100_0110
+; ====================================
+; H: Salta para o passo C
+; ====================================
+    JMP  C
 
-; MV  A, R5
-; formato de instrução: S
-; opcode: 0100
-; A: 1001
-; B: 0101
-000_1001_0101_0100
-
-; SUB R5, A
-; formato de instrução: S
-; opcode: 0010
-; A: 0101
-; B: 1001
-000_0101_1001_0010
-
-; MV  R5, A
-; formato de instrução: S
-; opcode: 0100
-; A: 0101
-; B: 1001
-000_0101_1001_0100
-
-; NOP
-; formato de instrução: N/A
-; opcode: 0000
-000_0000_0000_0000
-000_0000_0000_0000
-000_0000_0000_0000
-000_0000_0000_0000
-000_0000_0000_0000
-000_0000_0000_0000
-000_0000_0000_0000
-000_0000_0000_0000
-
-; MV R3, R5
-; formato de instrução: S
-; opcode: 0100
-; A: 0011
-; B: 0101
-000_0011_0101_0100
-
-; JMP C
-; formato de instrução: C
-; opcode: 0110
-; A: ~
-; I: 0000011
-000_0000011_0110
-
-; MV  A, R3
-; formato de instrução: S
-; opcode: 0100
-; A: 1001
-; B: 0011
-000_1001_0011_0100
-
-; SUB R3, A
-; formato de instrução: S
-; opcode: 0010
-; A: 0011
-; B: 1001
-000_0011_1001_0010
-
-; MV R3, A
-; formato de instrução: S
-; opcode: 0100
-; A: 0011
-; B: 1001
-000_0011_1001_0100
+; ====================================
+; I: Zera R3 (Nunca executa)
+; ====================================
+    MV   A, R3      ; A = R3
+    SUB  R3, A      ; A = R3 - A
+    MV   R3, A      ; R3 = A
 ```
+
+---
+
+### Codificação Binária
+
+#### Endereço 0: LD R3, 5
+
+```
+Formato: C
+Opcode:  0101
+A:       0011 (R3)
+I:       0000101 (5)
+
+Binário: 0011_0000101_0101
+```
+
+#### Endereço 1: LD R4, 8
+
+```
+Formato: C
+Opcode:  0101
+A:       0100 (R4)
+I:       0001000 (8)
+
+Binário: 0100_0001000_0101
+```
+
+#### Endereço 2: MV A, R4
+
+```
+Formato: S
+Opcode:  0100
+A:       1001 (ACC)
+B:       0100 (R4)
+
+Binário: 000_1001_0100_0100
+```
+
+#### Endereço 3: ADD R3, A
+
+```
+Formato: S
+Opcode:  0001
+A:       0011 (R3)
+B:       1001 (ACC)
+
+Binário: 000_0011_1001_0001
+```
+
+#### Endereço 4: MV R5, A
+
+```
+Formato: S
+Opcode:  0100
+A:       0101 (R5)
+B:       1001 (ACC)
+
+Binário: 000_0101_1001_0100
+```
+
+#### Endereço 5: MV A, R5
+
+```
+Formato: S
+Opcode:  0100
+A:       1001 (ACC)
+B:       0101 (R5)
+
+Binário: 000_1001_0101_0100
+```
+
+#### Endereço 6: SUBI 1, A
+
+```
+Formato: C
+Opcode:  0011
+A:       1001 (ACC)
+I:       0000001 (1)
+
+Binário: 1001_0000001_0011
+```
+
+#### Endereço 7: MV R5, A
+
+```
+Formato: S
+Opcode:  0100
+A:       0101 (R5)
+B:       1001 (ACC)
+
+Binário: 000_0101_1001_0100
+```
+
+#### Endereço 8: JMP 20
+
+```
+Formato: C
+Opcode:  0110
+A:       0000 (não usado)
+I:       0010100 (20)
+
+Binário: 0000_0010100_0110
+```
+
+#### Endereço 9: MV A, R5
+
+```
+Formato: S
+Opcode:  0100
+A:       1001 (ACC)
+B:       0101 (R5)
+
+Binário: 000_1001_0101_0100
+```
+
+#### Endereço 10: SUB R5, A
+
+```
+Formato: S
+Opcode:  0010
+A:       0101 (R5)
+B:       1001 (ACC)
+
+Binário: 000_0101_1001_0010
+```
+
+#### Endereço 11: MV R5, A
+
+```
+Formato: S
+Opcode:  0100
+A:       0101 (R5)
+B:       1001 (ACC)
+
+Binário: 000_0101_1001_0100
+```
+
+#### Endereços 12-19: NOP (Preenchimento)
+
+```
+Formato: N/A
+Opcode:  0000
+
+Binário: 000_0000_0000_0000
+```
+
+#### Endereço 20: MV R3, R5
+
+```
+Formato: S
+Opcode:  0100
+A:       0011 (R3)
+B:       0101 (R5)
+
+Binário: 000_0011_0101_0100
+```
+
+#### Endereço 21: JMP 2
+
+```
+Formato: C
+Opcode:  0110
+A:       0000 (não usado)
+I:       0000010 (2)
+
+Binário: 0000_0000010_0110
+```
+
+#### Endereço 22: MV A, R3
+
+```
+Formato: S
+Opcode:  0100
+A:       1001 (ACC)
+B:       0011 (R3)
+
+Binário: 000_1001_0011_0100
+```
+
+#### Endereço 23: SUB R3, A
+
+```
+Formato: S
+Opcode:  0010
+A:       0011 (R3)
+B:       1001 (ACC)
+
+Binário: 000_0011_1001_0010
+```
+
+#### Endereço 24: MV R3, A
+
+```
+Formato: S
+Opcode:  0100
+A:       0011 (R3)
+B:       1001 (ACC)
+
+Binário: 000_0011_1001_0100
+```
+
+---
+
+## Resumo da Memória ROM
+
+| Endereço | Instrução Assembly | Código Binário     |
+| -------- | ------------------ | ------------------ |
+| 0        | LD R3, 5           | 0011_0000101_0101  |
+| 1        | LD R4, 8           | 0100_0001000_0101  |
+| 2        | MV A, R4           | 000_1001_0100_0100 |
+| 3        | ADD R3, A          | 000_0011_1001_0001 |
+| 4        | MV R5, A           | 000_0101_1001_0100 |
+| 5        | MV A, R5           | 000_1001_0101_0100 |
+| 6        | SUBI 1, A          | 1001_0000001_0011  |
+| 7        | MV R5, A           | 000_0101_1001_0100 |
+| 8        | JMP 20             | 0000_0010100_0110  |
+| 9-11     | (Não executado)    | -                  |
+| 12-19    | NOP                | 000_0000_0000_0000 |
+| 20       | MV R3, R5          | 000_0011_0101_0100 |
+| 21       | JMP 2              | 0000_0000010_0110  |
+| 22-24    | (Não executado)    | -                  |
