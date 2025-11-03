@@ -6,7 +6,6 @@ entity uc is
   port (
     uc_data_in        : in  unsigned(14 downto 0);
     sm                : in  unsigned(1 downto 0);
-    -- jump_en           : out std_logic;
     sel_mux_to_pc     : out std_logic;
     sel_mux_to_bank   : out std_logic;
     sel_mux_to_ula    : out std_logic;
@@ -47,6 +46,6 @@ architecture a_uc of uc is
                       "10" when opcode = "0101" and format='0';--rom
 
 
-  en_wr_pc <= '1' when sm = "01" or (sm= "10" and sel_mux_to_pc='1') else '0'; -- enable write only in fetch state
+  en_wr_pc <= '1' when sm = "01" or (sm = "10" and sel_mux_to_pc='1') else '0'; -- enable write only in fetch state
 
 end architecture;

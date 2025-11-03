@@ -23,8 +23,14 @@ architecture a_processador of processador is
 
       component uc
         port (
-          uc_data_in : in  unsigned(14 downto 0);
-          jump_en    : out std_logic
+          uc_data_in        : in  unsigned(14 downto 0);
+          sm                : in  unsigned(1 downto 0);
+          sel_mux_to_pc     : out std_logic;
+          sel_mux_to_bank   : out std_logic;
+          sel_mux_to_ula    : out std_logic;
+          sel_mux_to_acc    : out std_logic;
+          en_wr_pc          : out std_logic;
+          sel_ula_operation : out unsigned(1 downto 0)
         );
       end component;
 
@@ -39,8 +45,9 @@ architecture a_processador of processador is
 
     component rom
       port (
-        addr    : in  unsigned(6 downto 0);
-        data_out: out unsigned(15 downto 0)
+        clk      : in  std_logic;
+        endereco : in  unsigned(6 downto 0);
+        dado     : out unsigned(14 downto 0)
       );
     end component;
    
@@ -62,8 +69,8 @@ architecture a_processador of processador is
         wr_en       : in  std_logic;
         addr_dest   : in  unsigned(2 downto 0);
         addr_source : in  unsigned(2 downto 0);
-        data_in     : in  unsigned(14 downto 0);
-        data_out    : out unsigned(14 downto 0)
+        data_in     : in  unsigned(15 downto 0);
+        data_out    : out unsigned(15 downto 0)
       );
     end component;
 
@@ -131,7 +138,7 @@ architecture a_processador of processador is
 
     inst_uc : uc
       port map (
-        uc_data_in => rom_to_reg_rom,
+        uc_data_in => reg_rom_out,
         sm           => sm_to_uc,
         -- jump_en    => en_uc_to_pc,
         sel_mux_to_pc => sel_mux_to_pc,
@@ -146,7 +153,7 @@ architecture a_processador of processador is
     inst_pc : program_counter
     port map (
       clk      => clk,
-      wr_en    => '0',
+      wr_en    => '0', --ENABLE VEM DO UC
       data_in  => mux_to_pc,
       data_out => pc_to_rom
     );
