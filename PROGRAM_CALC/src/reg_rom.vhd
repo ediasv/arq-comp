@@ -6,13 +6,13 @@ entity reg_rom is
   port (clk      : in  std_logic;
         rst      : in  std_logic;
         wr_en    : in  std_logic;
-        data_from_rom  : in  unsigned(15 downto 0);
-        data_out : out unsigned(15 downto 0)
+        data_from_rom  : in  unsigned(14 downto 0);
+        data_out : out unsigned(14 downto 0)
        );
 end entity;
 
 architecture a_reg_rom of reg_rom is
-  signal registro : unsigned(15 downto 0);
+  signal registro : unsigned(14 downto 0);
 begin
   process (clk, rst) -- acionado se houver mudança em clk ou rst
   begin

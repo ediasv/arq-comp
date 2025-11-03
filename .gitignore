@@ -1,3 +1,4 @@
 # Ignore .vcd and .cf files
 *.vcd
 *.cf
+*.ghw
