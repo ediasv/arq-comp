@@ -1,20 +1,34 @@
-set shell := ["fish", "-c"]
+# justfile
 
+SRC_DIR := "src"
+TEST_DIR := "test"
+WORK_DIR := "."
+
+# Compila todos os arquivos
+compile:
+    @echo "Compilando arquivos VHDL..."
+    ghdl -a --workdir={{ WORK_DIR }} {{ SRC_DIR }}/*.vhd
+    ghdl -a --workdir={{ WORK_DIR }} {{ TEST_DIR }}/*.vhd
+
+# Elabora o testbench
+elaborate:
+    @echo "Elaborando testbench..."
+    ghdl -e --workdir={{ WORK_DIR }} processador_tb
+
+# Executa a simulação
+run:
+    @echo "Executando simulação..."
+    ghdl -r --workdir={{ WORK_DIR }} processador_tb --wave=processador_tb.ghw --stop-time=10us
+
+# Visualiza forma de onda
+view:
+    @echo "Abrindo GTKWave..."
+    gtkwave processador_tb.ghw
+
+# Limpa arquivos gerados
 clean:
-    rm -f work-obj93.cf
+    @echo "Limpando arquivos..."
+    rm -f *.o *.cf *.ghw processador_tb
 
-analyze: clean
-    ghdl -a ./*.vhd
-
-all: clean
-    #!/usr/bin/env fish
-
-    for file in src/*.vhd
-        ghdl -a $file
-    end
-
-    for file in test/*_tb.vhd
-        set basename (basename $file .vhd)
-        ghdl -e $basename
-        ghdl -r $basename --vcd=gtk_output/$basename.vcd
-    end
+# Executa tudo
+all: clean compile elaborate run
