@@ -9,13 +9,17 @@ architecture a_processador_tb of processador_tb is
 
   component processador
     port (
-      rst : in std_logic;
-      clk : in std_logic
+      rst  : in  std_logic;
+      clk  : in  std_logic;
+      zero : out std_logic;
+      sig  : out std_logic
     );
   end component;
 
-  signal clk : std_logic := '0';
-  signal rst : std_logic := '0';
+  signal clk  : std_logic := '0';
+  signal rst  : std_logic := '0';
+  signal zero : std_logic;
+  signal sig  : std_logic;
 
   constant clk_period : time := 100 ns;
 
@@ -27,13 +31,19 @@ begin
   -- Instantiate processor
   uut: processador
     port map (
-      clk => clk,
-      rst => rst
+      clk  => clk,
+      rst  => rst,
+      zero => zero,
+      sig  => sig
     );
 
   -- Test process
   stimulus: process
   begin
+    -- Wait for 100 clock periods
+    wait for clk_period * 100;
+    
+    -- Stop the simulation
     wait;
   end process;
 

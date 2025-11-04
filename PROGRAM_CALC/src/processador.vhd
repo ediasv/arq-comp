@@ -268,16 +268,16 @@ begin
   -- Mux do data_in do banco de registradores
   -- bank_out OU acc_out OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução LD
-  bank_data_in <= bank_data_out                             when sel_bank_in_sig = "00" else
-                  acc_out                                   when sel_bank_in_sig = "01" else
-                    ("000000" & instr_reg_out(10 downto 4)) when sel_bank_in_sig = "10" else
-                    (others => '0');
+  bank_data_in <= bank_data_out                                when sel_bank_in_sig = "00" else
+                  acc_out                                      when sel_bank_in_sig = "01" else
+                  ("000000000" & instr_reg_out(10 downto 4))   when sel_bank_in_sig = "10" else
+                  (others => '0');
 
   -- Mux da entrada 0 da ULA
   -- bank_out OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução SUBI
   mux_to_ula <= bank_data_out when sel_ula_in_sig = '0' else
-                  ("000000" & instr_reg_out(10 downto 4));
+                ("000000000" & instr_reg_out(10 downto 4));
 
   -- Mux da entrada do acumulador
   -- ula_out OU bank_out
