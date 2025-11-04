@@ -40,10 +40,10 @@ begin
   -- Test process
   stimulus: process
   begin
-    -- Wait for 100 clock periods
-    wait for clk_period * 100;
-    
-    -- Stop the simulation
+
+    -- Test 2: State progression (00 -> 01 -> 10 -> 00)
+    wait for clk_period * 60;
+
     wait;
   end process;
 
