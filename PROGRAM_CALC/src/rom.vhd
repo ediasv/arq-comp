@@ -44,15 +44,18 @@ architecture a_rom of rom is
     others => (others => '0')
   );
 
+  signal dado_sig : unsigned(14 downto 0) := (others => '0');
 begin
   process (clk)
   begin
     if (rising_edge(clk)) then
       if (endereco >= 0 and endereco <= 127) then
-        dado <= conteudo_rom(to_integer(endereco));
+        dado_sig <= conteudo_rom(to_integer(endereco));
       else
-        dado <= (others => '0');
+        dado_sig <= (others => '0');
       end if;
     end if;
   end process;
+
+  dado <= dado_sig;
 end architecture;
