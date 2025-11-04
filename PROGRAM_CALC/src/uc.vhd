@@ -74,18 +74,18 @@ begin
 
   -- Sinal de enable do acumulador
   -- O acumulador é habilitado nas instruções: 
-  -- ADD (opcode = 0001) 
-  -- SUB (opcode = 0010)
-  -- SUBI (opcode = 0011)
-  -- LD com destino acumulador (opcode = 0101 e c_inst_dest_reg = "1001")
-  -- MV com destino acumulador (opcode = 0100 and s_inst_dest_reg = "1001")
+  --   ADD (opcode = 0001) 
+  --   SUB (opcode = 0010)
+  --   SUBI (opcode = 0011)
+  --   LD com destino acumulador (opcode = 0101 e c_inst_dest_reg = "1001")
+  --   MV com destino acumulador (opcode = 0100 and s_inst_dest_reg = "1001")
   en_acc <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0011" or (opcode = "0101" and c_inst_dest_reg = "1001") or (opcode = "0100" and s_inst_dest_reg = "1001")) else
             '0';
 
   -- Sinal de enable do banco de registradores
   -- O banco de registradores é habilitado nas instruções:
-  -- LD com destino dentro do banco (opcode = 0101 e c_inst_dest_reg /= "1001")
-  -- MV com destino dentro do banco (opcode = 0100 e s_inst_dest_reg /= "1001")
+  --   LD com destino dentro do banco (opcode = 0101 e c_inst_dest_reg /= "1001")
+  --   MV com destino dentro do banco (opcode = 0100 e s_inst_dest_reg /= "1001")
   en_bank <= '1' when ((opcode = "0101" and c_inst_dest_reg /= "1001") or (opcode = "0100" and s_inst_dest_reg /= "1001")) else
              '0';
 
