@@ -37,6 +37,8 @@ architecture a_uc of uc is
   -- Sinal de registrador destino (formato C)
   signal c_inst_dest_reg : unsigned(3 downto 0) := (others => '0');
 
+  signal instr_format_sig : std_logic := '0';
+
 begin
 
   -- opcode sempre recebe os 4 bits menos significativos
@@ -51,8 +53,9 @@ begin
   -- As instruções de formato S têm opcode 0001, 0010, 0100
   -- As instruções de formato C têm opcode 0011, 0101, 0110
   -- O sinal instr_format é '1' para formato S e '0' para formato C
-  instr_format <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0100") else
+  instr_format_sig <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0100") else
                   '0';
+  instr_format <= instr_format_sig;
 
   -- Sinal que diz se é operação de jump
   -- A instrução JMP tem opcode 0110
@@ -124,7 +127,7 @@ begin
   --       Quando: formato S
   --   1: constante do formato C
   --       Quando: formato C
-  sel_ula_in <= '0' when instr_format = '1' else
+  sel_ula_in <= '0' when instr_format_sig = '1' else
                 '1';
 
   -- Sinal de seleção da entrada do acumulador

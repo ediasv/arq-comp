@@ -4,8 +4,8 @@ library ieee;
 
 entity processador is
   port (
-    rst : in std_logic;
-    clk : in std_logic;
+    rst  : in  std_logic;
+    clk  : in  std_logic;
     zero : out std_logic;
     sig  : out std_logic
   );
@@ -55,13 +55,14 @@ architecture a_processador of processador is
       estado       : in  unsigned(1 downto 0);
       instr_format : out std_logic;
       sel_ula_op   : out unsigned(1 downto 0);
-      sel_bank_in  : out std_logic;
+      sel_bank_in  : out std_logic_vector(1 downto 0);
       sel_acc_in   : out std_logic;
       sel_ula_in   : out std_logic;
       en_is_jmp    : out std_logic;
       en_acc       : out std_logic;
       en_bank      : out std_logic;
-      en_instr_reg : out std_logic
+      en_instr_reg : out std_logic;
+      en_pc        : out std_logic
     );
   end component;
 
@@ -88,7 +89,7 @@ architecture a_processador of processador is
     );
   end component;
 
-  -- Registrador de 16 bits (ACC e REG_INSTR)
+  -- Registrador de 16 bits (ACC)
   component reg16bits
     port (
       clk      : in  std_logic;
@@ -96,6 +97,17 @@ architecture a_processador of processador is
       wr_en    : in  std_logic;
       data_in  : in  unsigned(15 downto 0);
       data_out : out unsigned(15 downto 0)
+    );
+  end component;
+
+  -- Registrador de 15 bits (REG_INSTR)
+  component reg15bits
+    port (
+      clk      : in  std_logic;
+      rst      : in  std_logic;
+      wr_en    : in  std_logic;
+      data_in  : in  unsigned(14 downto 0);
+      data_out : out unsigned(14 downto 0)
     );
   end component;
 
@@ -136,16 +148,16 @@ architecture a_processador of processador is
   signal acc_out : unsigned(15 downto 0) := (others => '0');
 
   -- Sinais da Unidade de Controle
-  signal instr_format_sig : std_logic            := '0';
-  signal sel_ula_op_sig   : unsigned(1 downto 0) := (others => '0');
-  signal sel_bank_in_sig  : std_logic            := '0';
-  signal sel_acc_in_sig   : std_logic            := '0';
-  signal sel_ula_in_sig   : std_logic            := '0';
-  signal en_is_jmp_sig    : std_logic            := '0';
-  signal en_acc_sig       : std_logic            := '0';
-  signal en_bank_sig      : std_logic            := '0';
-  signal en_instr_reg_sig : std_logic            := '0';
-  signal en_pc_sig        : std_logic            := '0';
+  signal instr_format_sig : std_logic                    := '0';
+  signal sel_ula_op_sig   : unsigned(1 downto 0)         := (others => '0');
+  signal sel_bank_in_sig  : std_logic_vector(1 downto 0) := (others => '0');
+  signal sel_acc_in_sig   : std_logic                    := '0';
+  signal sel_ula_in_sig   : std_logic                    := '0';
+  signal en_is_jmp_sig    : std_logic                    := '0';
+  signal en_acc_sig       : std_logic                    := '0';
+  signal en_bank_sig      : std_logic                    := '0';
+  signal en_instr_reg_sig : std_logic                    := '0';
+  signal en_pc_sig        : std_logic                    := '0';
 
 begin
 
@@ -179,7 +191,7 @@ begin
     );
 
   -- Registrador de Instruções
-  instr_reg_inst: reg16bits
+  instr_reg_inst: reg15bits
     port map (
       clk      => clk,
       rst      => rst,
@@ -201,7 +213,8 @@ begin
       en_is_jmp    => en_is_jmp_sig,
       en_acc       => en_acc_sig,
       en_bank      => en_bank_sig,
-      en_instr_reg => en_instr_reg_sig
+      en_instr_reg => en_instr_reg_sig,
+      en_pc       => en_pc_sig
     );
 
   -- Banco de Registradores
@@ -245,7 +258,7 @@ begin
   -- PC+1 OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é o endereço de salto da instrução JMP
   mux_to_pc <= pc_data_out + 1 when en_is_jmp_sig = '0' else
-                instr_reg_out(10 downto 4);
+               instr_reg_out(10 downto 4);
 
   -- Mux do endereço de destino do banco de registradores
   -- instr_reg_out(14 downto 11) quando formato C OU instr_reg_out(11 downto 8) quando formato S
@@ -255,20 +268,20 @@ begin
   -- Mux do data_in do banco de registradores
   -- bank_out OU acc_out OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução LD
-  bank_data_in <= bank_data_out when sel_bank_in_sig = "00" else
-                   acc_out when sel_bank_in_sig = "01" else
-                   ("000000" & instr_reg_out(10 downto 4)) when sel_bank_in_sig = "10" else
-                   (others => '0');
+  bank_data_in <= bank_data_out                             when sel_bank_in_sig = "00" else
+                  acc_out                                   when sel_bank_in_sig = "01" else
+                    ("000000" & instr_reg_out(10 downto 4)) when sel_bank_in_sig = "10" else
+                    (others => '0');
 
   -- Mux da entrada 0 da ULA
   -- bank_out OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução SUBI
   mux_to_ula <= bank_data_out when sel_ula_in_sig = '0' else
-                 ("000000" & instr_reg_out(10 downto 4));
+                  ("000000" & instr_reg_out(10 downto 4));
 
   -- Mux da entrada do acumulador
   -- ula_out OU bank_out
   acc_in <= ula_out when sel_acc_in_sig = '0' else
-             bank_data_out;
+            bank_data_out;
 
 end architecture;
