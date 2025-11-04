@@ -30,5 +30,11 @@ clean:
     @echo "Limpando arquivos..."
     rm -f *.o *.cf *.ghw processador_tb
 
+sm: clean compile
+    @echo "Elaborando testbench da SM"
+    ghdl -e --workdir={{ WORK_DIR }} sm_tb
+    @echo "Executando simulação da SM"
+    ghdl -r --workdir={{ WORK_DIR }} sm_tb --wave=sm_tb.ghw --stop-time=10us
+
 # Executa tudo
 all: clean compile elaborate run
