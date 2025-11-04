@@ -248,17 +248,17 @@ begin
                 instr_reg_out(10 downto 4);
 
   -- Mux do endereço de destino do banco de registradores
-  -- instr_reg_out(14 downto 11) OU instr_reg_out(11 downto 8)
-  -- NOTA: depende do formato da instrução
+  -- instr_reg_out(14 downto 11) quando formato C OU instr_reg_out(11 downto 8) quando formato S
   mux_addr_dest <= instr_reg_out(14 downto 11) when instr_format_sig = '0' else
                    instr_reg_out(11 downto 8);
 
   -- Mux do data_in do banco de registradores
   -- bank_out OU acc_out OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução LD
-  bank_data_in <= bank_data_out when sel_bank_in_sig = '0' else
-                   acc_out when sel_bank_in_sig = '1' else
-                   ("000000" & instr_reg_out(10 downto 4));
+  bank_data_in <= bank_data_out when sel_bank_in_sig = "00" else
+                   acc_out when sel_bank_in_sig = "01" else
+                   ("000000" & instr_reg_out(10 downto 4)) when sel_bank_in_sig = "10" else
+                   (others => '0');
 
   -- Mux da entrada 0 da ULA
   -- bank_out OU instr_reg_out(10 downto 4)
