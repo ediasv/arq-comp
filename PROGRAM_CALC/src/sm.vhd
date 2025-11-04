@@ -9,7 +9,7 @@ entity sm is
 end entity;
 
 architecture a_sm of sm is
-  signal estado_s : unsigned(1 downto 0);
+  signal estado_s : unsigned(1 downto 0) := "00";
 begin
   process (clk, rst)
   begin
