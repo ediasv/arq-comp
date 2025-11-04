@@ -40,10 +40,6 @@ begin
   -- Test process
   stimulus: process
   begin
-
-    -- Test 2: State progression (00 -> 01 -> 10 -> 00)
-    wait for clk_period * 60;
-
     wait;
   end process;
 
