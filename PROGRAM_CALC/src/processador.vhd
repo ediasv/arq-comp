@@ -165,7 +165,7 @@ begin
   -- Instancias dos componentes --
   --------------------------------
 
-  -- Máquina de Estados
+  -- instancia da maquina de Estados
   sm_inst: sm
     port map (
       clk    => clk,
@@ -173,7 +173,7 @@ begin
       estado => estado_sig
     );
 
-  -- PC
+  -- instancia do PC
   pc_inst: program_counter
     port map (
       clk      => clk,
@@ -182,7 +182,7 @@ begin
       data_out => pc_data_out
     );
 
-  -- ROM
+  -- Instancia da ROM
   rom_inst: rom
     port map (
       clk      => clk,
@@ -190,7 +190,7 @@ begin
       dado     => rom_data_out
     );
 
-  -- Registrador de Instruções
+  -- instancia do registrador de instrucoes
   instr_reg_inst: reg15bits
     port map (
       clk      => clk,
@@ -200,7 +200,7 @@ begin
       data_out => instr_reg_out
     );
 
-  -- Unidade de Controle
+  -- Uinstancia da uc
   uc_inst: uc
     port map (
       uc_data_in   => instr_reg_out,
@@ -217,7 +217,7 @@ begin
       en_pc       => en_pc_sig
     );
 
-  -- Banco de Registradores
+  -- instancia do banco de registradores
   bank_of_registers_inst: bank_of_registers
     port map (
       clk         => clk,
@@ -229,7 +229,7 @@ begin
       data_out    => bank_data_out
     );
 
-  -- Acumulador
+  -- instancia do acumulador
   acc_inst: reg16bits
     port map (
       clk      => clk,
@@ -239,7 +239,7 @@ begin
       data_out => acc_out
     );
 
-  -- ULA
+  -- instancia da ULA
   ula_inst: ula
     port map (
       in0     => mux_to_ula,
