@@ -77,34 +77,34 @@ begin
   --   ADD (opcode = 0001) 
   --   SUB (opcode = 0010)
   --   SUBI (opcode = 0011)
-  --   LD com destino acumulador (opcode = 0101 e c_inst_dest_reg = "1001")
-  --   MV com destino acumulador (opcode = 0100 and s_inst_dest_reg = "1001")
-  en_acc <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0011" or (opcode = "0101" and c_inst_dest_reg = "1001") or (opcode = "0100" and s_inst_dest_reg = "1001")) else
+  --   LD com destino acumulador (opcode = 0101 e c_inst_dest_reg = "1000")
+  --   MV com destino acumulador (opcode = 0100 and s_inst_dest_reg = "1000")
+  en_acc <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0011" or (opcode = "0101" and c_inst_dest_reg = "1000") or (opcode = "0100" and s_inst_dest_reg = "1000")) else
             '0';
 
   -- Sinal de enable do banco de registradores
   -- O banco de registradores é habilitado nas instruções:
-  --   LD com destino dentro do banco (opcode = 0101 e c_inst_dest_reg /= "1001")
-  --   MV com destino dentro do banco (opcode = 0100 e s_inst_dest_reg /= "1001")
-  en_bank <= '1' when ((opcode = "0101" and c_inst_dest_reg /= "1001") or (opcode = "0100" and s_inst_dest_reg /= "1001")) else
+  --   LD com destino dentro do banco (opcode = 0101 e c_inst_dest_reg /= "1000")
+  --   MV com destino dentro do banco (opcode = 0100 e s_inst_dest_reg /= "1000")
+  en_bank <= '1' when ((opcode = "0101" and c_inst_dest_reg /= "1000") or (opcode = "0100" and s_inst_dest_reg /= "1000")) else
              '0';
 
   -- Sinal de seleção da entrada do banco de registradores
   -- A entrada do banco de registradores pode ser:
   --   00: saída do banco de registradores
   --       Quando: MV com destino dentro do banco e fonte é um registrador
-  --       Condição: opcode = 0100 AND s_inst_source_reg /= "1001"
+  --       Condição: opcode = 0100 AND s_inst_source_reg /= "1000"
   --
   --   01: saída do acumulador
   --       Quando: MV com destino dentro do banco e fonte é o acumulador
-  --       Condição: opcode = 0100 AND s_inst_source_reg = "1001"
+  --       Condição: opcode = 0100 AND s_inst_source_reg = "1000"
   --
   --   10: constante do formato C
   --       Quando: LD com destino dentro do banco
-  --       Condição: opcode = 0101 AND c_inst_dest_reg /= "1001"
-  sel_bank_in <= "00" when (opcode = "0100" and s_inst_source_reg /= "1001") else
-                 "01" when (opcode = "0100" and s_inst_source_reg = "1001") else
-                 "10" when (opcode = "0101" and c_inst_dest_reg /= "1001") else
+  --       Condição: opcode = 0101 AND c_inst_dest_reg /= "1000"
+  sel_bank_in <= "00" when (opcode = "0100" and s_inst_source_reg /= "1000") else
+                 "01" when (opcode = "0100" and s_inst_source_reg = "1000") else
+                 "10" when (opcode = "0101" and c_inst_dest_reg /= "1000") else
                  "00";
 
   -- Sinal de seleção da operação da ULA
