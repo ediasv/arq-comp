@@ -44,7 +44,7 @@ architecture a_rom of rom is
     others => (others => '0')
   );
 
-  signal dado_sig : unsigned(14 downto 0) := (others => '0');
+  signal dado_sig : unsigned(14 downto 0) := conteudo_rom(0);
 begin
   process (clk)
   begin
