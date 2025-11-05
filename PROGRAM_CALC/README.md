@@ -90,7 +90,7 @@ NOP  ; Não faz nada
 
 ---
 
-### ADD RX, A
+### ADD A, RX
 
 **Descrição**: Soma o conteúdo de um registrador com o valor do acumulador
 e armazena o resultado no acumulador.
@@ -100,19 +100,19 @@ e armazena o resultado no acumulador.
 - **Operandos**: Dois registradores (um deles é o acumulador)
 - **Restrição**: Não há soma com constantes
 
-**Sintaxe**: `ADD RX, A`
+**Sintaxe**: `ADD A, RX`
 
 **Operação**: `A = RX + A`
 
 **Exemplo**:
 
 ```asm
-ADD R4, A  ; A = R4 + A
+ADD A, R4  ; A = R4 + A
 ```
 
 ---
 
-### SUB RX, A
+### SUB A, RX
 
 **Descrição**: Subtrai do conteúdo de um registrador o valor do acumulador e
 armazena o resultado no acumulador.
@@ -121,19 +121,19 @@ armazena o resultado no acumulador.
 - **Formato**: S
 - **Operandos**: Dois registradores (um deles é o acumulador)
 
-**Sintaxe**: `SUB RX, A`
+**Sintaxe**: `SUB A, RX`
 
 **Operação**: `A = RX - A`
 
 **Exemplo**:
 
 ```asm
-SUB R3, A  ; A = R3 - A
+SUB A, R3  ; A = R3 - A
 ```
 
 ---
 
-### SUBI I, A
+### SUBI A, I
 
 **Descrição**: Subtrai do valor imediato (constante) o valor do acumulador e
 armazena o resultado no acumulador.
@@ -142,14 +142,14 @@ armazena o resultado no acumulador.
 - **Formato**: C
 - **Operandos**: Acumulador e valor imediato de 7 bits
 
-**Sintaxe**: `SUBI I, A`
+**Sintaxe**: `SUBI A, I`
 
 **Operação**: `A = I - A`
 
 **Exemplo**:
 
 ```asm
-SUBI 1, A  ; A = 1 - A
+SUBI A, I  ; A = 1 - A
 ```
 
 ---
@@ -364,15 +364,15 @@ B:       0100 (R4)
 Binário: 000_1000_0100_0100
 ```
 
-#### Endereço 3: ADD R3, A
+#### Endereço 3: ADD A, R3
 
 ```
 Formato: S
 Opcode:  0001
-A:       0011 (R3)
-B:       1000 (ACC)
+A:       1000 (ACC)
+B:       0011 (R3)
 
-Binário: 000_0011_1000_0001
+Binário: 000_1000_0011_0001
 ```
 
 #### Endereço 4: MV R5, A
@@ -408,15 +408,15 @@ B:       0001 (R1)
 Binário: 000_1000_0001_0100
 ```
 
-#### Endereço 7: SUB R5, A
+#### Endereço 7: SUB A, R5
 
 ```
 Formato: S
 Opcode:  0010
-A:       0101 (R5)
-B:       1000 (ACC)
+A:       1000 (ACC)
+B:       0101 (R5)
 
-Binário: 000_0101_1000_0010
+Binário: 000_1000_0101_0010
 ```
 
 #### Endereço 8: MV R5, A
@@ -452,15 +452,15 @@ B:       0101 (R5)
 Binário: 000_1000_0101_0100
 ```
 
-#### Endereço 11: SUB R5, A
+#### Endereço 11: SUB A, R5
 
 ```
 Formato: S
 Opcode:  0010
-A:       0101 (R5)
-B:       1000 (ACC)
+A:       1000 (ACC)
+B:       0101 (R5)
 
-Binário: 000_0101_1000_0010
+Binário: 000_1000_0101_0010
 ```
 
 #### Endereço 12: MV R5, A
@@ -516,15 +516,15 @@ B:       0011 (R3)
 Binário: 000_1000_0011_0100
 ```
 
-#### Endereço 23: SUB R3, A
+#### Endereço 23: SUB A, R3
 
 ```
 Formato: S
 Opcode:  0010
-A:       0011 (R3)
-B:       1000 (ACC)
+A:       1000 (ACC)
+B:       0011 (R3)
 
-Binário: 000_0011_1000_0010
+Binário: 000_1000_0011_0010
 ```
 
 #### Endereço 24: MV R3, A
@@ -547,19 +547,19 @@ Binário: 000_0011_1000_0100
 | 0        | LD R3, 5           | 0011_0000101_0101  |
 | 1        | LD R4, 8           | 0100_0001000_0101  |
 | 2        | MV A, R4           | 000_1000_0100_0100 |
-| 3        | ADD R3, A          | 000_0011_1000_0001 |
+| 3        | ADD A, R3          | 000_1000_0011_0001 |
 | 4        | MV R5, A           | 000_0101_1000_0100 |
 | 5        | LD R1, 1           | 0001_0000001_0101  |
 | 6        | MV A, R1           | 000_1000_0001_0100 |
-| 7        | SUB R5, A          | 000_0101_1000_0010 |
+| 7        | SUB A, R5          | 000_1000_0101_0010 |
 | 8        | MV R5, A           | 000_0101_1000_0100 |
 | 9        | JMP 20             | 0000_0010100_0110  |
 | 10       | MV A, R5           | 000_1000_0101_0100 |
-| 11       | SUB R5, A          | 000_0101_1000_0010 |
+| 11       | SUB A, R5          | 000_1000_0101_0010 |
 | 12       | MV R5, A           | 000_0101_1000_0100 |
 | 13-19    | NOP                | 000_0000_0000_0000 |
 | 20       | MV R3, R5          | 000_0011_0101_0100 |
 | 21       | JMP 2              | 0000_0000010_0110  |
 | 22       | MV A, R3           | 000_1000_0011_0100 |
-| 23       | SUB R3, A          | 000_0011_1000_0010 |
+| 23       | SUB A, R3          | 000_1000_0011_0010 |
 | 24       | MV R3, A           | 000_0011_1000_0100 |
