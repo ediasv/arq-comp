@@ -6,21 +6,21 @@ entity reg16bits is
   port (clk      : in  std_logic;
         rst      : in  std_logic;
         wr_en    : in  std_logic;
-        data_from_rom  : in  unsigned(15 downto 0);
+        data_in  : in  unsigned(15 downto 0);
         data_out : out unsigned(15 downto 0)
        );
 end entity;
 
 architecture a_reg16bits of reg16bits is
-  signal registro : unsigned(15 downto 0);
+  signal registro : unsigned(15 downto 0) := (others => '0');
 begin
-  process (clk, rst) -- acionado se houver mudança em clk ou rst
+  process (clk, rst)
   begin
     if rst = '1' then
       registro <= (others => '0');
     elsif rising_edge(clk) then
       if wr_en = '1' then
-        registro <= data_from_rom;
+        registro <= data_in;
       end if;
     end if;
   end process;
