@@ -63,7 +63,9 @@ begin
                '0';
 
   -- Sinal de enable do PC
-  -- O PC é incrementado entre o primeiro e o segundo estado (estado = 00)
+  -- O PC é incrementado:
+  --   entre o primeiro e o segundo estados (estado = 00)
+  --   ou quando a instrução é um JMP (opcode = 0110) entre o segundo e o terceiro estados (estado = 01)
   en_pc <= '1' when estado = "00" or (opcode = "0110" and estado = "01") else
            '0';
 
@@ -73,7 +75,7 @@ begin
                   '0';
 
   -- Sinal de enable do acumulador
-  -- O acumulador é habilitado nas instruções: 
+  -- O acumulador é habilitado nas instruções (no estado de execução): 
   --   ADD (opcode = 0001) 
   --   SUB (opcode = 0010)
   --   SUBI (opcode = 0011)
