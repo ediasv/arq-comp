@@ -64,7 +64,7 @@ begin
 
   -- Sinal de enable do PC
   -- O PC é incrementado entre o primeiro e o segundo estado (estado = 00)
-  en_pc <= '1' when estado = "00" else
+  en_pc <= '1' when estado = "00" or (opcode = "0110" and estado = "01") else
            '0';
 
   -- Sinal de enable do registrador de instruções
@@ -79,7 +79,7 @@ begin
   --   SUBI (opcode = 0011)
   --   LD com destino acumulador (opcode = 0101 e c_inst_dest_reg = "1000")
   --   MV com destino acumulador (opcode = 0100 and s_inst_dest_reg = "1000")
-  en_acc <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0011" or (opcode = "0101" and c_inst_dest_reg = "1000") or (opcode = "0100" and s_inst_dest_reg = "1000")) else
+  en_acc <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0011" or (opcode = "0101" and c_inst_dest_reg = "1000") or (opcode = "0100" and s_inst_dest_reg = "1000")) and estado = "01" else
             '0';
 
   -- Sinal de enable do banco de registradores

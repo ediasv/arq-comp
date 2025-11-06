@@ -18,7 +18,7 @@ elaborate:
 # Executa a simulação
 run:
     @echo "Executando simulação..."
-    ghdl -r --workdir={{ WORK_DIR }} processador_tb --wave=processador_tb.ghw --stop-time=10us
+    ghdl -r --workdir={{ WORK_DIR }} processador_tb --wave=processador_tb.ghw --stop-time=100us
 
 # Visualiza forma de onda
 view:
@@ -34,7 +34,7 @@ sm: clean compile
     @echo "Elaborando testbench da SM"
     ghdl -e --workdir={{ WORK_DIR }} sm_tb
     @echo "Executando simulação da SM"
-    ghdl -r --workdir={{ WORK_DIR }} sm_tb --wave=sm_tb.ghw --stop-time=10us
+    ghdl -r --workdir={{ WORK_DIR }} sm_tb --wave=sm_tb.ghw --stop-time=100us
 
 # Executa tudo
 all: clean compile elaborate run
