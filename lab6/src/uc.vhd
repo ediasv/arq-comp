@@ -11,13 +11,16 @@ entity uc is
     sel_bank_in  : out std_logic_vector(1 downto 0);
     sel_acc_in   : out std_logic;
     sel_ula_in   : out std_logic;
-    flag_z       : in  std_logic;  -- Para BEQ
-    flag_v       : in  std_logic;  -- Para BVS
+    flag_zero    : in  std_logic;  -- Para BEQ
+    flag_over    : in  std_logic;  -- Para BVS
+-- flag_neg     : in  std_logic;  Comentado para uso futuro
+-- flag_carry   : in  std_logic;  Comentado para uso futuro
     en_is_jmp    : out std_logic;
     en_acc       : out std_logic;
     en_bank      : out std_logic;
     en_instr_reg : out std_logic;
-    en_pc        : out std_logic
+    en_pc        : out std_logic;
+    en_psw       : out std_logic
   );
 end entity;
 
@@ -142,4 +145,20 @@ begin
   --       Quando: instrução MV com destino acumulador
   sel_acc_in <= '0' when (opcode = "0001" or opcode = "0010" or opcode = "0011") else
                 '1';
+
+
+
+  -- enable das flags do psw
+  -- enable acontece quando os componentes ligados a ULA fazem alguma operação que mudam os seus valores
+  en_psw <= '1' when opcode = "0001" or -- ADD
+                     opcode = "0010" or -- SUB
+                     opcode = "0011" else -- SUBI
+             '0';
+             
+  -- lógica de salto condicional
+  en_is_jmp <= '1' when (opcode = "0111" and flag_zero = '1') or        -- BEQ (salta se flag_zero =1)
+                        (opcode = "1000" and flag_over = '1') else      -- BVS (salta se flag_over =1)
+               '0';
+             
+          
 end architecture;
