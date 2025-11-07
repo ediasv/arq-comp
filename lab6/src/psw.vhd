@@ -4,21 +4,19 @@ library ieee;
 
 entity psw is
   port (
-      clk      : in  std_logic;
-        rst      : in  std_logic;
-        wr_en    : in  std_logic;
-        data_in  : in  unsigned(1 downto 0);
-      -- Flags individuais
-      
-         flag_zero   : out std_logic;  -- Zero
-         flag_over   : out std_logic   -- Overflow
-         -- flag_c   : out std_logic;  -- Carry
-         -- flag_n   : out std_logic;  -- Negative
-       );
+    clk       : in  std_logic;
+    rst       : in  std_logic;
+    wr_en     : in  std_logic;
+    data_in   : in  unsigned(2 downto 0);
+    -- Flags individuais
+    flag_zero : out std_logic; -- Zero
+    flag_over : out std_logic; -- Overflow
+    flag_neg  : out std_logic  -- Negative
+  );
 end entity;
 
 architecture a_psw of psw is
-  signal flag : unsigned(1 downto 0) := (others => '0');  -- Mudou para 2 bits
+  signal flag : unsigned(2 downto 0) := (others => '0'); -- Mudou para 2 bits
 begin
   process (clk, rst)
   begin
@@ -31,8 +29,9 @@ begin
     end if;
   end process;
 
-  flag_over <= flag(1);  -- Overflow flag
-  flag_zero <= flag(0);  -- Zero flag
+  flag_zero <= flag(0); -- Zero flag
+  flag_over <= flag(1); -- Overflow flag
+  flag_neg  <= flag(2); -- Negative flag
 
 end architecture;
 
@@ -45,5 +44,3 @@ end architecture;
 -- VS Overflow V = 1
 -- VC Now overflow V = 0
 -- AL Always. This is the default 
-
-

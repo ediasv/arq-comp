@@ -17,34 +17,32 @@ architecture a_rom of rom is
   constant conteudo_rom : mem := (
     -- caso endereco => conteudo
 
--- Carrega R3 (o registrador 3) com o valor 0
+    -- Carrega R3 (o registrador 3) com o valor 0
     0      => "001100000000101", -- LD R3, 0  
 
--- Carrega R4 com 0
+    -- Carrega R4 com 0
     1      => "010000000000101", -- LD R4, 0 
 
--- Soma R3 com R4 e guarda em R4
+    -- Soma R3 com R4 e guarda em R4
     2      => "000100000110100", -- MV A, R3 
     3      => "000100001000001", -- ADD A, R4
     4      => "000010010000100", -- MV R4, A
 
--- Soma 1 em R3
-    5      => "011100000010101",  --  LD  R7, 1    
+    -- Soma 1 em R3
+    5      => "011100000010101", --  LD  R7, 1    
     6      => "000100001110100", --  MV  A, R7     
     7      => "000100000110001", --  ADD  A, R3      
     8      => "000001110000100", --  MV  R3, A      
 
+    -- Se R3<30 salta para a instrução do passo C * (soma r3 com r4)
+    9      => "011100111100101", -- LD R7, 30
+    10     => "000100001110100", -- MV A, R7
+    11     => "000100000110010", -- SUB A, R3
 
--- Se R3<30 salta para a instrução do passo C * (soma r3 com r4)
-    9      => "100000111100101", -- LD A, 30
-    10     => "000100000110010", -- SUB A, R3
+    12     => "000011101101001", -- BLT -10
 
-    11     => "100011110000111", -- BEQ 2
-
-
--- Copia valor de R4 para R5
-    12     => "000010101000100", -- MV R5, R4
-
+    -- Copia valor de R4 para R5
+    13     => "000010101000100", -- MV R5, R4
 
     others => (others => '0')
   );

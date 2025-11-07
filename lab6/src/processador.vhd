@@ -4,8 +4,8 @@ library ieee;
 
 entity processador is
   port (
-    rst     : in  std_logic;
-    clk     : in  std_logic
+    rst : in std_logic;
+    clk : in std_logic
   );
 end entity;
 
@@ -52,8 +52,8 @@ architecture a_processador of processador is
       sel_bank_in  : out std_logic_vector(1 downto 0);
       sel_acc_in   : out std_logic;
       sel_ula_in   : out std_logic;
-      flag_zero    : in  std_logic;  -- Para BEQ
-      flag_over    : in  std_logic;  -- Para BVS
+      flag_zero    : in  std_logic; -- Para BEQ
+      flag_over    : in  std_logic; -- Para BVS
       -- flag_carry   : in  std_logic;  Comentado para uso futuro
       -- flag_neg     : in  std_logic;  Comentado para uso futuro
       en_is_jmp    : out std_logic;
@@ -84,10 +84,10 @@ architecture a_processador of processador is
       in0, in1  : in  unsigned(15 downto 0);
       op        : in  unsigned(1 downto 0);
       ula_out   : out unsigned(15 downto 0);
-      flag_zero : out std_logic;   -- Zero
-      flag_over : out std_logic  -- Overflow
-      -- flag_neg  : out std_logic;  -- Negative comentado para uso futuro
-   -- flag_carry: out std_logic;  -- Carry comentado para uso futuro
+      flag_zero : out std_logic; -- Zero
+      flag_over : out std_logic; -- Overflow
+      flag_neg  : out std_logic  -- Negative comentado para uso futuro
+      -- flag_carry: out std_logic;  -- Carry comentado para uso futuro
     );
   end component;
 
@@ -118,11 +118,11 @@ architecture a_processador of processador is
       clk       : in  std_logic;
       rst       : in  std_logic;
       wr_en     : in  std_logic;
-      data_in   : in  unsigned(1 downto 0);
+      data_in   : in  unsigned(2 downto 0);
       flag_zero : out std_logic;
-      flag_over : out std_logic
-      -- flag_neg  : out std_logic; Comentado para uso futuro
-      -- flag_carry: out std_logic; Comentado para uso futuro
+      flag_over : out std_logic;
+      flag_neg  : out std_logic
+        -- flag_carry: out std_logic; Comentado para uso futuro
     );
   end component;
 
@@ -155,21 +155,22 @@ architecture a_processador of processador is
   signal bank_data_out : unsigned(15 downto 0) := (others => '0');
 
   -- Sinais da ULA
-  signal mux_to_ula : unsigned(15 downto 0) := (others => '0');
-  signal ula_out    : unsigned(15 downto 0) := (others => '0');
-  signal ula_flag_zero : std_logic := '0';
-  signal ula_flag_over : std_logic := '0'; 
+  signal mux_to_ula    : unsigned(15 downto 0) := (others => '0');
+  signal ula_out       : unsigned(15 downto 0) := (others => '0');
+  signal ula_flag_zero : std_logic             := '0';
+  signal ula_flag_over : std_logic             := '0';
   -- ula_flag_neg e ula_flag_carry Comentado para uso futuro
-  
-   -- Sinais do acumulador
+
+  -- Sinais do acumulador
   signal acc_in  : unsigned(15 downto 0) := (others => '0');
   signal acc_out : unsigned(15 downto 0) := (others => '0');
 
   -- Sinais do PSW (flags)
-  signal en_psw_sig : std_logic := '0';
-  signal flag_zero_sig : std_logic := '0';
-  signal flag_over_sig : std_logic := '0';
-  signal logic_psw_data_in : unsigned(1 downto 0);
+  signal en_psw_sig        : std_logic := '0';
+  signal flag_zero_sig     : std_logic := '0';
+  signal flag_over_sig     : std_logic := '0';
+  signal flag_neg_sig      : std_logic := '0';
+  signal logic_psw_data_in : unsigned(2 downto 0);
   -- signal flag_carry_sig : std_logic := '0'; Comentado para uso futuro
   -- signal flag_neg_sig : std_logic := '0'; Comentado para uso futuro
 
@@ -244,8 +245,8 @@ begin
       en_instr_reg => en_instr_reg_sig,
       en_pc        => en_pc_sig,
       en_psw       => en_psw_sig
-      -- flag_carry   => flag_carry_sig, Comentado para uso futuro
-      -- flag_neg     => flag_neg_sig, Comentado para uso futuro
+        -- flag_carry   => flag_carry_sig, Comentado para uso futuro
+        -- flag_neg     => flag_neg_sig, Comentado para uso futuro
     );
 
   -- instancia do banco de registradores
@@ -273,36 +274,32 @@ begin
   -- instancia da ULA
   ula_inst: ula
     port map (
-      in0     => mux_to_ula,
-      in1     => acc_out,
-      op      => sel_ula_op_sig,
-      ula_out => ula_out,
-      flag_zero  => ula_flag_zero,
-      flag_over  => ula_flag_over
-      -- flag_carry  => ula_flag_carry, Comentado para uso futuro
-      -- flag_neg  => ula_flag_neg, Comentado para uso futuro
-      );
+      in0       => mux_to_ula,
+      in1       => acc_out,
+      op        => sel_ula_op_sig,
+      ula_out   => ula_out,
+      flag_zero => ula_flag_zero,
+      flag_over => ula_flag_over,
+      flag_neg  => flag_neg_sig
+        -- flag_carry  => ula_flag_carry, Comentado para uso futuro
+    );
 
-  psw_inst : psw  
-  port map (
-    clk      => clk,
-    rst      => rst,
-    wr_en    => en_psw_sig,
-    data_in  =>  logic_psw_data_in, 
-    flag_zero   => flag_zero_sig,
-    flag_over   => flag_over_sig
-    -- flag_carry   => flag_carry_sig, Comentado para uso futuro
-    -- flag_neg   => flag_neg_sig, Comentado para uso futuro
-  );
+  psw_inst: psw
+    port map (
+      clk       => clk,
+      rst       => rst,
+      wr_en     => en_psw_sig,
+      data_in   => logic_psw_data_in,
+      flag_zero => flag_zero_sig,
+      flag_over => flag_over_sig,
+      flag_neg  => flag_neg_sig
+        -- flag_carry   => flag_carry_sig, Comentado para uso futuro
+    );
 
-
-    ----------------------
+  ----------------------
   -- Lógica do PSW --
   ----------------------
-
-  logic_psw_data_in<=(ula_flag_over & ula_flag_zero);
-
-
+  logic_psw_data_in <= (ula_flag_zero & ula_flag_over & flag_neg_sig);
 
   ----------------------
   -- Lógica dos muxes --
@@ -313,8 +310,8 @@ begin
   -- NOTA:
   -- Para incrementar: offset = +1 (0000001)
   -- Para JMP/BEQ/BVS: offset = instr_reg_out(10 downto 4) em complemento de 2
-  mux_to_pc <= "0000001" when en_is_jmp_sig = '0' else  -- Incrementa PC (+1)
-                instr_reg_out(10 downto 4);               -- Salto relativo
+  mux_to_pc <= "0000001" when en_is_jmp_sig = '0' else -- Incrementa PC (+1)
+               instr_reg_out(10 downto 4); -- Salto relativo
 
   -- Mux do endereço de destino do banco de registradores
   -- instr_reg_out(14 downto 11) quando formato C OU instr_reg_out(11 downto 8) quando formato S
@@ -326,14 +323,14 @@ begin
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução LD
   bank_data_in <= bank_data_out                                when sel_bank_in_sig = "00" else
                   acc_out                                      when sel_bank_in_sig = "01" else
-                  ("000000000" & instr_reg_out(10 downto 4))   when sel_bank_in_sig = "10" else
-                  (others => '0');
+                    ("000000000" & instr_reg_out(10 downto 4)) when sel_bank_in_sig = "10" else
+                    (others => '0');
 
   -- Mux da entrada 0 da ULA
   -- bank_out OU instr_reg_out(10 downto 4)
   -- NOTA: instr_reg_out(10 downto 4) é a constante da instrução SUBI
   mux_to_ula <= bank_data_out when sel_ula_in_sig = '0' else
-                ("000000000" & instr_reg_out(10 downto 4));
+                  ("000000000" & instr_reg_out(10 downto 4));
 
   -- Mux da entrada do acumulador
   -- ula_out OU bank_out

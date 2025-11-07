@@ -13,8 +13,7 @@ entity uc is
     sel_ula_in   : out std_logic;
     flag_zero    : in  std_logic;  -- Para BEQ
     flag_over    : in  std_logic;  -- Para BVS
--- flag_neg     : in  std_logic;  Comentado para uso futuro
--- flag_carry   : in  std_logic;  Comentado para uso futuro
+    flag_neg     : in  std_logic;
     en_is_jmp    : out std_logic;
     en_acc       : out std_logic;
     en_bank      : out std_logic;
@@ -42,6 +41,7 @@ architecture a_uc of uc is
   -- Sinal de registrador destino (formato C)
   signal c_inst_dest_reg : unsigned(3 downto 0) := (others => '0');
 
+  -- Sinal para o formato da instrução
   signal instr_format_sig : std_logic := '0';
 
 begin
@@ -157,7 +157,8 @@ begin
              
   -- lógica de salto condicional
   en_is_jmp <= '1' when (opcode = "0111" and flag_zero = '1') or        -- BEQ (salta se flag_zero =1)
-                        (opcode = "1000" and flag_over = '1') else      -- BVS (salta se flag_over =1)
+                        (opcode = "1000" and flag_over = '1') or      -- BVS (salta se flag_over =1)
+                        (opcode = "1001" and flag_neg = '1') else    -- BNS (salta se flag_neg =1)
                '0';
              
           

@@ -218,7 +218,7 @@ JMP 20  ; PC = 20
 
 ---
 
-## BEQ ADDRESS
+### BEQ ADDRESS
 
 **Descrição**: Salto condicional para um endereço da memória se a flag Zero (Z)
 estiver setada (igual a 1). Verifica se o resultado da última operação da ULA foi zero.
@@ -244,7 +244,8 @@ BEQ 10       ; Se resultado foi zero, salta para endereço 10
 ### BVS ADDRESS
 
 **Descrição**: Salto condicional para um endereço da memória se a flag Overflow (V)
-estiver setada (igual a 1). Verifica se houve overflow aritmético na última operação da ULA.
+estiver setada (igual a 1). Verifica se houve overflow aritmético na última
+operação da ULA.
 
 - **Opcode**: `1000`
 - **Formato**: C
@@ -261,6 +262,32 @@ estiver setada (igual a 1). Verifica se houve overflow aritmético na última op
 ADD A, R7    ; A = R7 + A (atualiza flags)
 BVS ERRO     ; Se houve overflow, salta para rotina de erro
 ```
+
+---
+
+### BLT OFST
+
+**Descrição**: Salto condicional para um endereço relativo da memória se a flag `flag_neg`
+estiver setada (igual a 1). A flag é setada se o resultado da última operação feita
+pela ULA foi menor que zero
+
+- **Opcode**: `1001`
+- **Formato**: C
+- **Operandos**: Posição do endereço de destino em relação ao endereço atual
+- **Condição**: `PC = PC + OFST when flag_neg = '1' else PC + 1`
+
+**Sintaxe**: `BLT ADDRESS`
+
+**Operação**: `if (flag_neg == 1) then PC = PC + OFST`
+
+**Exemplo**:
+
+```asm
+SUB A, R7    ; A = R7 - A (atualiza flags)
+BLT ERRO     ; Se R7 < A, salta para rotina de erro
+```
+
+---
 
 ## Programa de Teste (Lab 6)
 
