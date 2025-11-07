@@ -10,15 +10,15 @@ entity psw is
         data_in  : in  unsigned(1 downto 0);
       -- Flags individuais
       
-         flag_z   : out std_logic;  -- Zero
-         flag_v   : out std_logic   -- Overflow
+         flag_zero   : out std_logic;  -- Zero
+         flag_over   : out std_logic   -- Overflow
          -- flag_c   : out std_logic;  -- Carry
          -- flag_n   : out std_logic;  -- Negative
        );
 end entity;
 
 architecture a_psw of psw is
-  signal flag : unsigned(3 downto 0) := (others => '0');
+  signal flag : unsigned(1 downto 0) := (others => '0');  -- Mudou para 2 bits
 begin
   process (clk, rst)
   begin
@@ -31,13 +31,10 @@ begin
     end if;
   end process;
 
---   flag_n <= flag(3);  -- MI/PL: Negative flag
---   flag_c <= flag(1);  -- CS/CC: Carry flag
-flag_v <= flag(1);  -- VS/VC: Overflow flag
-flag_z <= flag(0);  -- EQ/NE: Zero flag
+  flag_over <= flag(1);  -- Overflow flag
+  flag_zero <= flag(0);  -- Zero flag
 
-
-  end architecture;
+end architecture;
 
 -- EQ Equal Z = 1
 -- NE Not equal Z = 0

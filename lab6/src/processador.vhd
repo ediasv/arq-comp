@@ -4,10 +4,8 @@ library ieee;
 
 entity processador is
   port (
-    rst  : in  std_logic;
-    clk  : in  std_logic
-    -- zero : out std_logic;
-    -- sig  : out std_logic
+    rst     : in  std_logic;
+    clk     : in  std_logic
   );
 end entity;
 
@@ -120,7 +118,7 @@ architecture a_processador of processador is
       clk       : in  std_logic;
       rst       : in  std_logic;
       wr_en     : in  std_logic;
-      data_in   : in  unsigned(3 downto 0);
+      data_in   : in  unsigned(1 downto 0);
       flag_zero : out std_logic;
       flag_over : out std_logic
       -- flag_neg  : out std_logic; Comentado para uso futuro
@@ -171,6 +169,7 @@ architecture a_processador of processador is
   signal en_psw_sig : std_logic := '0';
   signal flag_zero_sig : std_logic := '0';
   signal flag_over_sig : std_logic := '0';
+  signal logic_psw_data_in : unsigned(1 downto 0);
   -- signal flag_carry_sig : std_logic := '0'; Comentado para uso futuro
   -- signal flag_neg_sig : std_logic := '0'; Comentado para uso futuro
 
@@ -289,12 +288,20 @@ begin
     clk      => clk,
     rst      => rst,
     wr_en    => en_psw_sig,
-    data_in  =>  (ula_flag_over & ula_flag_zero), -- ula_flag_neg e ula_flag_carry Comentado para uso futuro
+    data_in  =>  logic_psw_data_in, 
     flag_zero   => flag_zero_sig,
     flag_over   => flag_over_sig
     -- flag_carry   => flag_carry_sig, Comentado para uso futuro
     -- flag_neg   => flag_neg_sig, Comentado para uso futuro
   );
+
+
+    ----------------------
+  -- Lógica do PSW --
+  ----------------------
+
+  logic_psw_data_in<=(ula_flag_over & ula_flag_zero);
+
 
 
   ----------------------
