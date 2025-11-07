@@ -86,9 +86,9 @@ architecture a_processador of processador is
       in0, in1  : in  unsigned(15 downto 0);
       op        : in  unsigned(1 downto 0);
       ula_out   : out unsigned(15 downto 0);
-      flag_over : out std_logic;  -- Overflow
-      flag_zero : out std_logic   -- Zero
-   -- flag_neg  : out std_logic;  -- Negative comentado para uso futuro
+      flag_zero : out std_logic;   -- Zero
+      flag_over : out std_logic  -- Overflow
+      -- flag_neg  : out std_logic;  -- Negative comentado para uso futuro
    -- flag_carry: out std_logic;  -- Carry comentado para uso futuro
     );
   end component;
