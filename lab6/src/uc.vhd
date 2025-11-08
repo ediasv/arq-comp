@@ -158,7 +158,7 @@ begin
   -- lógica de salto condicional
   en_is_jmp <= '1' when (opcode = "0111" and flag_zero = '1') or        -- BEQ (salta se flag_zero =1)
                         (opcode = "1000" and flag_over = '1') or      -- BVS (salta se flag_over =1)
-                        (opcode = "1001" and flag_neg = '1') else    -- BNS (salta se flag_neg =1)
+                        (opcode = "1001" and flag_neg = '1') else    -- BLT (salta se flag_neg =1)
                '0';
              
           
