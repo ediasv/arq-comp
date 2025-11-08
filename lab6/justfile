@@ -18,7 +18,7 @@ elaborate:
 # Executa a simulação
 run:
     @echo "Executando simulação..."
-    ghdl -r --workdir={{ WORK_DIR }} processador_tb --wave=processador_tb.ghw --stop-time=100us
+    ghdl -r --workdir={{ WORK_DIR }} processador_tb --wave=processador_tb.ghw --stop-time=200us
 
 # Visualiza forma de onda
 view:
