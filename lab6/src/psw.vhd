@@ -29,9 +29,9 @@ begin
     end if;
   end process;
 
-  flag_zero <= flag(0); -- Zero flag
+  flag_zero <= flag(2); -- Zero flag
   flag_over <= flag(1); -- Overflow flag
-  flag_neg  <= flag(2); -- Negative flag
+  flag_neg  <= flag(0); -- Negative flag
 
 end architecture;
 
