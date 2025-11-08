@@ -55,7 +55,7 @@ architecture a_processador of processador is
       flag_zero    : in  std_logic; -- Para BEQ
       flag_over    : in  std_logic; -- Para BVS
       -- flag_carry   : in  std_logic;  Comentado para uso futuro
-      -- flag_neg     : in  std_logic;  Comentado para uso futuro
+      flag_neg     : in  std_logic;
       en_is_jmp    : out std_logic;
       en_acc       : out std_logic;
       en_bank      : out std_logic;
@@ -159,6 +159,7 @@ architecture a_processador of processador is
   signal ula_out       : unsigned(15 downto 0) := (others => '0');
   signal ula_flag_zero : std_logic             := '0';
   signal ula_flag_over : std_logic             := '0';
+  signal ula_flag_neg  : std_logic             := '0';
   -- ula_flag_neg e ula_flag_carry Comentado para uso futuro
 
   -- Sinais do acumulador
@@ -172,7 +173,6 @@ architecture a_processador of processador is
   signal flag_neg_sig      : std_logic := '0';
   signal logic_psw_data_in : unsigned(2 downto 0);
   -- signal flag_carry_sig : std_logic := '0'; Comentado para uso futuro
-  -- signal flag_neg_sig : std_logic := '0'; Comentado para uso futuro
 
   -- Sinais da Unidade de Controle
   signal instr_format_sig : std_logic                    := '0';
@@ -244,7 +244,8 @@ begin
       en_bank      => en_bank_sig,
       en_instr_reg => en_instr_reg_sig,
       en_pc        => en_pc_sig,
-      en_psw       => en_psw_sig
+      en_psw       => en_psw_sig,
+      flag_neg     => flag_neg_sig
         -- flag_carry   => flag_carry_sig, Comentado para uso futuro
         -- flag_neg     => flag_neg_sig, Comentado para uso futuro
     );
@@ -280,7 +281,7 @@ begin
       ula_out   => ula_out,
       flag_zero => ula_flag_zero,
       flag_over => ula_flag_over,
-      flag_neg  => flag_neg_sig
+      flag_neg  => ula_flag_neg
         -- flag_carry  => ula_flag_carry, Comentado para uso futuro
     );
 
