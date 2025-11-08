@@ -300,7 +300,7 @@ begin
   ----------------------
   -- Lógica do PSW --
   ----------------------
-  logic_psw_data_in <= (ula_flag_zero & ula_flag_over & flag_neg_sig);
+  logic_psw_data_in <= (ula_flag_zero & ula_flag_over & ula_flag_neg);
 
   ----------------------
   -- Lógica dos muxes --
