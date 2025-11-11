@@ -126,6 +126,16 @@ architecture a_processador of processador is
     );
   end component;
 
+  component ram
+  port (
+    clk      : in std_logic;
+    endereco : in unsigned(6 downto 0);
+    wr_en    : in std_logic;
+    dado_in  : in unsigned(15 downto 0);
+    dado_out : out unsigned(15 downto 0) 
+  );
+  end component;
+
   ---------------------
   -- Sinais Internos --
   ---------------------
@@ -295,6 +305,15 @@ begin
       flag_over => flag_over_sig,
       flag_neg  => flag_neg_sig
         -- flag_carry   => flag_carry_sig, Comentado para uso futuro
+    );
+
+  ram_inst: ram
+    port map (
+      clk      => clk,
+      endereco => pc_data_out,
+      wr_en    => en_acc_sig,
+      dado_in  => acc_out,
+      dado_out => bank_data_out
     );
 
   ----------------------
