@@ -288,3 +288,8 @@ operação da ULA foi menor que zero.
 SUB A, R7    ; A = R7 - A (atualiza flags)
 BLT -5       ; Se R7 < A, salta para PC - 5
 ```
+---
+
+### LW
+
+### RW
