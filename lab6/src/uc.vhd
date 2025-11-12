@@ -11,13 +11,15 @@ entity uc is
     sel_bank_in  : out std_logic_vector(1 downto 0);
     sel_acc_in   : out std_logic;
     sel_ula_in   : out std_logic;
-    flag_z       : in  std_logic;  -- Para BEQ
-    flag_v       : in  std_logic;  -- Para BVS
+    flag_zero    : in  std_logic; -- Para BEQ
+    flag_over    : in  std_logic; -- Para BVS
+    flag_neg     : in  std_logic;
     en_is_jmp    : out std_logic;
     en_acc       : out std_logic;
     en_bank      : out std_logic;
     en_instr_reg : out std_logic;
-    en_pc        : out std_logic
+    en_pc        : out std_logic;
+    en_psw       : out std_logic
   );
 end entity;
 
@@ -39,9 +41,17 @@ architecture a_uc of uc is
   -- Sinal de registrador destino (formato C)
   signal c_inst_dest_reg : unsigned(3 downto 0) := (others => '0');
 
+  -- Sinal para o formato da instrução
   signal instr_format_sig : std_logic := '0';
 
+  signal branch_code : std_logic := '0';
+
 begin
+
+  -- branch code recebe 1 para os sinais que tem salto
+  -- JMP (0110), BEQ (0111), BVS (1000), BLT (1001)
+  branch_code <= '1' when (opcode = "0110" or opcode = "0111" or opcode = "1000" or opcode = "1001") else
+                 '0';
 
   -- opcode sempre recebe os 4 bits menos significativos
   opcode <= uc_data_in(3 downto 0);
@@ -56,7 +66,7 @@ begin
   -- As instruções de formato C têm opcode 0011, 0101, 0110
   -- O sinal instr_format é '1' para formato S e '0' para formato C
   instr_format_sig <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0100") else
-                  '0';
+                      '0';
   instr_format <= instr_format_sig;
 
   -- Sinal que diz se é operação de jump
@@ -68,7 +78,7 @@ begin
   -- O PC é incrementado:
   --   entre o primeiro e o segundo estados (estado = 00)
   --   ou quando a instrução é um JMP (opcode = 0110) entre o segundo e o terceiro estados (estado = 01)
-  en_pc <= '1' when estado = "00" or (opcode = "0110" and estado = "01") else
+  en_pc <= '1' when (estado = "01" and branch_code = '0') or (branch_code = '1' and estado = "01") else
            '0';
 
   -- Sinal de enable do registrador de instruções
@@ -142,4 +152,16 @@ begin
   --       Quando: instrução MV com destino acumulador
   sel_acc_in <= '0' when (opcode = "0001" or opcode = "0010" or opcode = "0011") else
                 '1';
+
+  -- enable das flags do psw
+  -- enable acontece quando os componentes ligados a ULA fazem alguma operação que mudam os seus valores
+  en_psw <= '1' when estado = "01" and (opcode = "0001" or -- ADD
+                                        opcode = "0010" or -- SUB
+                                        opcode = "0011") else -- SUBI
+            '0';
+
+  -- lógica de salto condicional
+  en_is_jmp <= '1' when (opcode = "0111" and flag_zero = '1') or (opcode = "1000" and flag_over = '1') or (opcode = "1001" and flag_neg = '1') else
+               '0';
+
 end architecture;
