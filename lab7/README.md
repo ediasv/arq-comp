@@ -1,10 +1,13 @@
-# Programa de Teste (Lab 6)
 
-## Objetivo
+---
+
+## Programa de Teste (Lab 6)
+
+### Objetivo
 
 Implementar um programa na ROM que executa as seguintes operações em sequência:
 
-## Pseudocódigo do Programa
+### Pseudocódigo do Programa
 
 | Passo | Descrição                                  | Endereço |
 | ----- | ------------------------------------------ | -------- |
