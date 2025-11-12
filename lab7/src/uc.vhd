@@ -19,7 +19,8 @@ entity uc is
     en_bank      : out std_logic;
     en_instr_reg : out std_logic;
     en_pc        : out std_logic;
-    en_psw       : out std_logic
+    en_psw       : out std_logic;
+    en_ram       : out std_logic
   );
 end entity;
 
@@ -116,9 +117,14 @@ begin
   --   10: constante do formato C
   --       Quando: LD com destino dentro do banco
   --       Condição: opcode = 0101 AND c_inst_dest_reg /= "1000"
+  --
+  --   11: saída da RAM
+  --       Quando: LW com destino no banco de registradores
+  --       Condição: opcode = 1010 AND c_inst_dest_reg /= "1000"
   sel_bank_in <= "00" when (opcode = "0100" and s_inst_source_reg /= "1000") else
                  "01" when (opcode = "0100" and s_inst_source_reg = "1000") else
                  "10" when (opcode = "0101" and c_inst_dest_reg /= "1000") else
+                 "11" when (opcode = "1010" and c_inst_dest_reg /= "1000") else
                  "00";
 
   -- Sinal de seleção da operação da ULA
@@ -164,4 +170,8 @@ begin
   en_is_jmp <= '1' when (opcode = "0111" and flag_zero = '1') or (opcode = "1000" and flag_over = '1') or (opcode = "1001" and flag_neg = '1') else
                '0';
 
+  -- Sinal de enable da RAM
+  -- A RAM é habilitada para escrita na instrucao SW (opcode = 1011) e quando o estado é 01
+  en_ram <= '1' when estado = "01" and opcode = "1011" else
+            '0';
 end architecture;

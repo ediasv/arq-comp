@@ -127,13 +127,13 @@ architecture a_processador of processador is
   end component;
 
   component ram
-  port (
-    clk      : in std_logic;
-    endereco : in unsigned(6 downto 0);
-    wr_en    : in std_logic;
-    dado_in  : in unsigned(15 downto 0);
-    dado_out : out unsigned(15 downto 0) 
-  );
+    port (
+      clk      : in  std_logic;
+      endereco : in  unsigned(6 downto 0);
+      wr_en    : in  std_logic;
+      dado_in  : in  unsigned(15 downto 0);
+      dado_out : out unsigned(15 downto 0)
+    );
   end component;
 
   ---------------------
@@ -195,6 +195,10 @@ architecture a_processador of processador is
   signal en_bank_sig      : std_logic                    := '0';
   signal en_instr_reg_sig : std_logic                    := '0';
   signal en_pc_sig        : std_logic                    := '0';
+  signal en_ram_sig       : std_logic                    := '0';
+
+  -- Sinais da RAM
+  signal ram_dado_out : unsigned(15 downto 0) := (others => '0');
 
 begin
 
@@ -310,10 +314,10 @@ begin
   ram_inst: ram
     port map (
       clk      => clk,
-      endereco => pc_data_out,
-      wr_en    => en_acc_sig,
-      dado_in  => acc_out,
-      dado_out => bank_data_out
+      endereco => bank_data_out(6 downto 0),
+      wr_en    => en_ram_sig,
+      dado_in  => bank_data_out,
+      dado_out => ram_dado_out
     );
 
   ----------------------
@@ -344,6 +348,7 @@ begin
   bank_data_in <= bank_data_out                                when sel_bank_in_sig = "00" else
                   acc_out                                      when sel_bank_in_sig = "01" else
                     ("000000000" & instr_reg_out(10 downto 4)) when sel_bank_in_sig = "10" else
+                  ram_dado_out                                 when sel_bank_in_sig = "11" else
                     (others => '0');
 
   -- Mux da entrada 0 da ULA
