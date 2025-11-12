@@ -4,7 +4,7 @@
 
 Implementar um programa na ROM que executa as seguintes operações em sequência:
 
-## Pseudocódigo do Programa
+### Pseudocódigo do Programa
 
 | Passo | Descrição                                  | Endereço |
 | ----- | ------------------------------------------ | -------- |

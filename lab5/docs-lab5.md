@@ -4,7 +4,7 @@
 
 Implementar um programa na ROM que executa as seguintes operações em sequência:
 
-## Pseudocódigo do Programa
+### Pseudocódigo do Programa
 
 | Passo | Descrição                         | Endereço |
 | ----- | --------------------------------- | -------- |
@@ -17,11 +17,6 @@ Implementar um programa na ROM que executa as seguintes operações em sequênci
 | G     | Copia R5 para R3                  | 20       |
 | H     | Salta para o passo C (loop)       | 21       |
 | I     | Zera R3 _(nunca executada)_       | 22-24    |
-
-Observações:
-
-- **Passos F e I** nunca serão executados devido aos saltos incondicionais
-- O programa entra em **loop infinito** entre os endereços 2 e 21
 
 ## Fluxo de Execução
 
@@ -115,210 +110,153 @@ E:  MV   R3, R5     ; R3 = R5
 
 #### Endereço 0: LD R3, 5
 
-```
-Formato: C
-Opcode:  0101
-A:       0011 (R3)
-I:       0000101 (5)
-
-Binário: 0011_0000101_0101
-```
+- **Formato**: C
+- **Opcode**: 0101
+- **A**: 0011 (R3)
+- **I**: 0000101 (5)
+- **Binário**: `0011_0000101_0101`
 
 #### Endereço 1: LD R4, 8
 
-```
-Formato: C
-Opcode:  0101
-A:       0100 (R4)
-I:       0001000 (8)
-
-Binário: 0100_0001000_0101
-```
+- **Formato**: C
+- **Opcode**: 0101
+- **A**: 0100 (R4)
+- **I**: 0001000 (8)
+- **Binário**: `0100_0001000_0101`
 
 #### Endereço 2: MV A, R4
 
-```
-Formato: S
-Opcode:  0100
-A:       1000 (ACC)
-B:       0100 (R4)
-
-Binário: 000_1000_0100_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 1000 (ACC)
+- **B**: 0100 (R4)
+- **Binário**: `000_1000_0100_0100`
 
 #### Endereço 3: ADD A, R3
 
-```
-Formato: S
-Opcode:  0001
-A:       1000 (ACC)
-B:       0011 (R3)
-
-Binário: 000_1000_0011_0001
-```
+- **Formato**: S
+- **Opcode**: 0001
+- **A**: 1000 (ACC)
+- **B**: 0011 (R3)
+- **Binário**: `000_1000_0011_0001`
 
 #### Endereço 4: MV R5, A
 
-```
-Formato: S
-Opcode:  0100
-A:       0101 (R5)
-B:       1000 (ACC)
-
-Binário: 000_0101_1000_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 0101 (R5)
+- **B**: 1000 (ACC)
+- **Binário**: `000_0101_1000_0100`
 
 #### Endereço 5: LD, R1, 1
 
-```
-Formato: C
-Opcode: 0101
-A: 0001
-I: 0000001
-
-Binário: 0001_0000001_0101
-```
+- **Formato**: C
+- **Opcode**: 0101
+- **A**: 0001
+- **I**: 0000001
+- **Binário**: `0001_0000001_0101`
 
 #### Endereço 6: MV A, R1
 
-```
-Formato: S
-Opcode:  0100
-A:       1000 (ACC)
-B:       0001 (R1)
-
-Binário: 000_1000_0001_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 1000 (ACC)
+- **B**: 0001 (R1)
+- **Binário**: `000_1000_0001_0100`
 
 #### Endereço 7: SUB A, R5
 
-```
-Formato: S
-Opcode:  0010
-A:       1000 (ACC)
-B:       0101 (R5)
-
-Binário: 000_1000_0101_0010
-```
+- **Formato**: S
+- **Opcode**: 0010
+- **A**: 1000 (ACC)
+- **B**: 0101 (R5)
+- **Binário**: `000_1000_0101_0010`
 
 #### Endereço 8: MV R5, A
 
-```
-Formato: S
-Opcode:  0100
-A:       0101 (R5)
-B:       1000 (ACC)
-
-Binário: 000_0101_1000_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 0101 (R5)
+- **B**: 1000 (ACC)
+- **Binário**: `000_0101_1000_0100`
 
 #### Endereço 9: JMP 20
 
-```
-Formato: C
-Opcode:  0110
-A:       0000 (não usado)
-I:       0010100 (20)
-
-Binário: 0000_0010100_0110
-```
+- **Formato**: C
+- **Opcode**: 0110
+- **A**: 0000 (não usado)
+- **I**: 0010100 (20)
+- **Binário**: `0000_0010100_0110`
 
 #### Endereço 10: MV A, R5
 
-```
-Formato: S
-Opcode:  0100
-A:       1000 (ACC)
-B:       0101 (R5)
-
-Binário: 000_1000_0101_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 1000 (ACC)
+- **B**: 0101 (R5)
+- **Binário**: `000_1000_0101_0100`
 
 #### Endereço 11: SUB A, R5
 
-```
-Formato: S
-Opcode:  0010
-A:       1000 (ACC)
-B:       0101 (R5)
-
-Binário: 000_1000_0101_0010
-```
+- **Formato**: S
+- **Opcode**: 0010
+- **A**: 1000 (ACC)
+- **B**: 0101 (R5)
+- **Binário**: `000_1000_0101_0010`
 
 #### Endereço 12: MV R5, A
 
-```
-Formato: S
-Opcode:  0100
-A:       0101 (R5)
-B:       1000 (ACC)
-
-Binário: 000_0101_1000_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 0101 (R5)
+- **B**: 1000 (ACC)
+- **Binário**: `000_0101_1000_0100`
 
 #### Endereços 13-19: NOP (Preenchimento)
 
-```
-Formato: N/A
-Opcode:  0000
-
-Binário: 000_0000_0000_0000
-```
+- **Formato**: N/A
+- **Opcode**: 0000
+- **Binário**: `000_0000_0000_0000`
 
 #### Endereço 20: MV R3, R5
 
-```
-Formato: S
-Opcode:  0100
-A:       0011 (R3)
-B:       0101 (R5)
-
-Binário: 000_0011_0101_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 0011 (R3)
+- **B**: 0101 (R5)
+- **Binário**: `000_0011_0101_0100`
 
 #### Endereço 21: JMP 2
 
-```
-Formato: C
-Opcode:  0110
-A:       0000 (não usado)
-I:       0000010 (2)
-
-Binário: 0000_0000010_0110
-```
+- **Formato**: C
+- **Opcode**: 0110
+- **A**: 0000 (não usado)
+- **I**: 0000010 (2)
+- **Binário**: `0000_0000010_0110`
 
 #### Endereço 22: MV A, R3
 
-```
-Formato: S
-Opcode:  0100
-A:       1000 (ACC)
-B:       0011 (R3)
-
-Binário: 000_1000_0011_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 1000 (ACC)
+- **B**: 0011 (R3)
+- **Binário**: `000_1000_0011_0100`
 
 #### Endereço 23: SUB A, R3
 
-```
-Formato: S
-Opcode:  0010
-A:       1000 (ACC)
-B:       0011 (R3)
-
-Binário: 000_1000_0011_0010
-```
+- **Formato**: S
+- **Opcode**: 0010
+- **A**: 1000 (ACC)
+- **B**: 0011 (R3)
+- **Binário**: `000_1000_0011_0010`
 
 #### Endereço 24: MV R3, A
 
-```
-Formato: S
-Opcode:  0100
-A:       0011 (R3)
-B:       1000 (ACC)
-
-Binário: 000_0011_1000_0100
-```
+- **Formato**: S
+- **Opcode**: 0100
+- **A**: 0011 (R3)
+- **B**: 1000 (ACC)
+- **Binário**: `000_0011_1000_0100`
 
 ---
 

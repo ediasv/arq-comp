@@ -1,9 +1,6 @@
+# Programa de Teste (Lab 7)
 
----
-
-## Programa de Teste (Lab 6)
-
-### Objetivo
+## Objetivo
 
 Implementar um programa na ROM que executa as seguintes operações em sequência:
 

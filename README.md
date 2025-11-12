@@ -74,6 +74,8 @@ AAAA CCCCCCC OOOO
 | BEQ         | `0111` | C       | Salto condicional                     |
 | BVS         | `1000` | C       | Salto condicional                     |
 | BLT         | `1001` | C       | Salto condicional                     |
+| LW RD, RP   | `1010` | S       | Carrega valor da RAM em registrador   |
+| SW RS, RP   | `1011` | S       | Armazena registrador na RAM           |
 
 ---
 
@@ -288,8 +290,48 @@ operação da ULA foi menor que zero.
 SUB A, R7    ; A = R7 - A (atualiza flags)
 BLT -5       ; Se R7 < A, salta para PC - 5
 ```
+
 ---
 
-### LW
+### LW RD, RP
 
-### RW
+**Descrição**: Carrega (Load Word) o valor armazenado na RAM no endereço contido
+no registrador ponteiro (RP) e armazena no registrador de destino (RD).
+
+- **Opcode**: `1010`
+- **Formato**: S
+- **Operandos**: Registrador de destino (RD) e registrador ponteiro (RP)
+
+**Sintaxe**: `LW RD, RP`
+
+**Operação**: `RD = RAM[RP]`
+
+**Exemplo**:
+
+```asm
+LD R3, 10    ; R3 = 10 (endereço da RAM)
+LW R5, R3    ; R5 = RAM[10] (carrega valor da posição 10 da RAM em R5)
+```
+
+---
+
+### SW RS, RP
+
+**Descrição**: Armazena (Store Word) o valor contido no registrador fonte (RS)
+na RAM no endereço contido no registrador ponteiro (RP).
+
+- **Opcode**: `1011`
+- **Formato**: S
+- **Operandos**: Registrador fonte (RS) e registrador ponteiro (RP)
+
+**Sintaxe**: `SW RS, RP`
+
+**Operação**: `RAM[RP] = RS`
+
+**Exemplo**:
+
+```asm
+LD R4, 42    ; R4 = 42 (valor a ser armazenado)
+LD R3, 10    ; R3 = 10 (endereço da RAM)
+SW R4, R3    ; RAM[10] = 42 (armazena 42 na posição 10 da RAM)
+```
