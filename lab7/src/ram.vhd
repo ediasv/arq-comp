@@ -1,15 +1,6 @@
-
---o endereço a ser lido ou escrito deve usar um registrador como ponteiro
---barramento de dados e endereços explícitos
-
---dividir o data bus entre dados para serem escritos e dados lidos.
-
---verificar os momentos de leitura da RAM e escrita no banco
-
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
-  ------------------------------------------------------------------------
 
 entity ram is
   port (
@@ -20,13 +11,11 @@ entity ram is
     dado_out : out unsigned(15 downto 0)
   );
 end entity;
-------------------------------------------------------------------------
-
---Escrita síncrona e leitura assíncrona
 
 architecture a_ram of ram is
   type mem is array (0 to 127) of unsigned(15 downto 0);
-  signal conteudo_ram : mem;
+
+  signal conteudo_ram : mem := (others => (others => '0'));
 begin
   process (clk, wr_en)
   begin
