@@ -61,7 +61,8 @@ architecture a_processador of processador is
       en_bank      : out std_logic;
       en_instr_reg : out std_logic;
       en_pc        : out std_logic;
-      en_psw       : out std_logic
+      en_psw       : out std_logic;
+      en_ram       : out std_logic
     );
   end component;
 
@@ -259,7 +260,8 @@ begin
       en_instr_reg => en_instr_reg_sig,
       en_pc        => en_pc_sig,
       en_psw       => en_psw_sig,
-      flag_neg     => flag_neg_sig
+      flag_neg     => flag_neg_sig,
+      en_ram       => en_ram_sig
         -- flag_carry   => flag_carry_sig, Comentado para uso futuro
         -- flag_neg     => flag_neg_sig, Comentado para uso futuro
     );
