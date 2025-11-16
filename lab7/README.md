@@ -2,13 +2,15 @@
 
 ## Objetivo
 
-Testar a funcionalidade de leitura e escrita da RAM com dados variados, endereços espaçados e evitando falsos positivos.
+Testar a funcionalidade de leitura e escrita da RAM com dados variados,
+endereços espaçados e evitando falsos positivos.
 
 ## Estratégia de Teste
 
 1. **Escritas espaçadas**: Dados em endereços não sequenciais (3, 17, 42, 89, 120)
 2. **Dados variados**: Valores diferentes dos endereços para evitar falso positivo
-3. **Leituras não subsequentes**: Fazer todas as escritas primeiro, depois todas as leituras
+3. **Leituras não subsequentes**: Fazer todas as escritas primeiro, depois
+   todas as leituras
 4. **Uso de registradores distintos**: Cada operação usa registradores diferentes
 5. **Valores embaralhados**: Dados aleatórios sem padrão óbvio
 
@@ -91,11 +93,9 @@ Testar a funcionalidade de leitura e escrita da RAM com dados variados, endereç
 ; --- Leitura 5: R0 = RAM[120] (deve ser29) ---
     LD   R1, 120      ; R1 = 120 (endereço)
     LW   R0, R1       ; R0 = RAM[120] =29
-
-
----
-
 ```
+
+### Codificação Binária
 
 ## Resumo da Memória ROM
 
