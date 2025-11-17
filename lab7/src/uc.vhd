@@ -66,7 +66,7 @@ begin
   -- As instruções de formato S têm opcode 0001, 0010, 0100
   -- As instruções de formato C têm opcode 0011, 0101, 0110
   -- O sinal instr_format é '1' para formato S e '0' para formato C
-  instr_format_sig <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0100") else
+  instr_format_sig <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0100" or opcode = "1010" or opcode = "1011") else
                       '0';
   instr_format <= instr_format_sig;
 
