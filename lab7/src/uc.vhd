@@ -101,7 +101,7 @@ begin
   -- O banco de registradores é habilitado nas instruções:
   --   LD com destino dentro do banco (opcode = 0101 e c_inst_dest_reg /= "1000")
   --   MV com destino dentro do banco (opcode = 0100 e s_inst_dest_reg /= "1000")
-  en_bank <= '1' when ((opcode = "0101" and c_inst_dest_reg /= "1000") or (opcode = "0100" and s_inst_dest_reg /= "1000")) else
+  en_bank <= '1' when ((opcode = "0101" and c_inst_dest_reg /= "1000") or (opcode = "0100" and s_inst_dest_reg /= "1000") or (opcode = "1010" and s_inst_dest_reg /= "1000")) else
              '0';
 
   -- Sinal de seleção da entrada do banco de registradores
