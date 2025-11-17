@@ -315,23 +315,24 @@ LW R5, R3    ; R5 = RAM[10] (carrega valor da posição 10 da RAM em R5)
 
 ---
 
-### SW RS, RP
+### SW ACC, RS
 
 **Descrição**: Armazena (Store Word) o valor contido no registrador fonte (RS)
-na RAM no endereço contido no registrador ponteiro (RP).
+na RAM no endereço contido no acumulador (ACC).
 
 - **Opcode**: `1011`
 - **Formato**: S
-- **Operandos**: Registrador fonte (RS) e registrador ponteiro (RP)
+- **Operandos**: Registrador fonte (RS) e registrador ponteiro (ACC)
 
-**Sintaxe**: `SW RS, RP`
+**Sintaxe**: `SW ACC, RS`
 
-**Operação**: `RAM[RP] = RS`
+**Operação**: `RAM[ACC] = RS`
 
 **Exemplo**:
 
 ```asm
 LD R4, 42    ; R4 = 42 (valor a ser armazenado)
 LD R3, 10    ; R3 = 10 (endereço da RAM)
-SW R4, R3    ; RAM[10] = 42 (armazena 42 na posição 10 da RAM)
+MV ACC, R3
+SW ACC, R4    ; RAM[10] = 42 (armazena 42 na posição 10 da RAM)
 ```

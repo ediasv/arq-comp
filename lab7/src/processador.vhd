@@ -316,7 +316,7 @@ begin
   ram_inst: ram
     port map (
       clk      => clk,
-      endereco => bank_data_out(6 downto 0),
+      endereco => acc_out(6 downto 0),
       wr_en    => en_ram_sig,
       dado_in  => bank_data_out,
       dado_out => ram_dado_out
