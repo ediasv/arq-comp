@@ -17,6 +17,8 @@ architecture a_rom of rom is
   constant conteudo_rom : mem := (
     0   => "000100000100101",  -- LD R1, 2
     1   => "001001000000101",  -- LD R2, 32
+    2   => "000100000010100",  -- MV ACC, R1
+    3   => "000100000011011",  -- SW ACC, R1
     others => (others => '0')
   );
 

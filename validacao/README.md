@@ -9,6 +9,11 @@ Os testes devem incluir:
 1. Crivo de Eratóstenes.
 2. Testar todas as instruções implementadas.
 
+Além disso é preciso implementar duas "complicações" adicionais. Elas são:
+
+1.
+2.
+
 ---
 
 ## Crivo de Eratóstenes
@@ -31,8 +36,19 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
     ; carregar 32 no R2
     LD R2, 32
 
-    ;
+    ; carrega R1 na RAM no endereço (R1)
+carrega_ram:
+    MV ACC, R1
+    SW ACC, R1
 
+    ; soma 1 em R1
+
+    ; se R1 = R2, fim do loop (BEQ fim_carrega_ram)
+
+    ; jump incondicional para carrega_ram
+
+fim_carrega_ram:
+    NOP
 ```
 
 ### Resumo da Memória ROM para o Crivo de Eratóstenes
@@ -41,3 +57,5 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
 | -------- | ------------------ | --------------- |
 | 0        | LD R1, 2           | 000100000100101 |
 | 1        | LD R2, 32          | 001001000000101 |
+| 2        | MV ACC, R1         | 000100000010100 |
+| 3        | SW ACC, R1         | 000100000011011 |
