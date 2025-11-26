@@ -36,14 +36,20 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
     ; carregar 32 no R2
     LD R2, 32
 
+    ; carregar 1 no R7
+    LD R7, 1
+
     ; carrega R1 na RAM no endereço (R1)
 carrega_ram:
     MV ACC, R1
     SW ACC, R1
 
     ; soma 1 em R1
+    ADD ACC, R7
+    MV R1, ACC
 
-    ; se R1 = R2, fim do loop (BEQ fim_carrega_ram)
+    ; se R1 = R2, fim do loop
+    BEQ fim_carrega_ram
 
     ; jump incondicional para carrega_ram
 
@@ -57,5 +63,8 @@ fim_carrega_ram:
 | -------- | ------------------ | --------------- |
 | 0        | LD R1, 2           | 000100000100101 |
 | 1        | LD R2, 32          | 001001000000101 |
-| 2        | MV ACC, R1         | 000100000010100 |
-| 3        | SW ACC, R1         | 000100000011011 |
+| 2        | LD R7, 1           | 011100000010101 |
+| 3        | MV ACC, R1         | 000100000010100 |
+| 4        | SW ACC, R1         | 000100000011011 |
+| 5        | ADD ACC, R7        | 000100001110001 |
+| 6        | MV R1, ACC         | 000000110000100 |
