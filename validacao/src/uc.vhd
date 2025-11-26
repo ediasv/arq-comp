@@ -70,11 +70,6 @@ begin
                       '0';
   instr_format <= instr_format_sig;
 
-  -- Sinal que diz se é operação de jump
-  -- A instrução JMP tem opcode 0110
-  en_is_jmp <= '1' when opcode = "0110" else
-               '0';
-
   -- Sinal de enable do PC
   -- O PC é incrementado:
   --   entre o primeiro e o segundo estados (estado = 00)
@@ -167,7 +162,7 @@ begin
             '0';
 
   -- lógica de salto condicional
-  en_is_jmp <= '1' when (opcode = "0111" and flag_zero = '1') or (opcode = "1000" and flag_over = '1') or (opcode = "1001" and flag_neg = '1') else
+  en_is_jmp <= '1' when (opcode = "0110") or (opcode = "0111" and flag_zero = '1') or (opcode = "1000" and flag_over = '1') or (opcode = "1001" and flag_neg = '1') else
                '0';
 
   -- Sinal de enable da RAM
