@@ -84,7 +84,7 @@ As instruções têm 15 bits e podem ser dos formatos:
 | `BVS Offset`  | `1000` |    C    | `if V=1, PC <- PC + Offset` | Branch if Overflow Set |
 | `BLT Offset`  | `1001` |    C    | `if N=1, PC <- PC + Offset` | Branch if Less Than    |
 | `LW Rd, ACC`  | `1010` |    S    | `Rd <- RAM[ACC]`            | Load Word              |
-| `SW Rs, ACC`  | `1011` |    S    | `RAM[ACC] <- Rs`            | Store Word             |
+| `SW ACC, Rs`  | `1011` |    S    | `RAM[ACC] <- Rs`            | Store Word             |
 
 ---
 
@@ -324,16 +324,16 @@ LW R5, ACC   ; R5 = RAM[10]
 
 ---
 
-### SW RS, ACC
+### SW ACC, RS
 
 **Descrição**: Armazena (Store Word) o valor contido no registrador fonte (RS)
 na RAM no endereço contido no Acumulador (ACC).
 
 - **Opcode**: `1011`
 - **Formato**: S
-- **Operandos**: Registrador fonte (RS) e Acumulador (Implícito como ponteiro)
+- **Operandos**: Acumulador (Implícito como ponteiro) e Registrador fonte (RS)
 
-**Sintaxe**: `SW RS, ACC`
+**Sintaxe**: `SW ACC, RS`
 
 **Operação**: `RAM[ACC] = RS`
 
@@ -342,5 +342,5 @@ na RAM no endereço contido no Acumulador (ACC).
 ```asm
 LD R4, 42    ; R4 = 42
 LD ACC, 10   ; ACC = 10 (endereço)
-SW R4, ACC   ; RAM[10] = 42
+SW ACC, R4   ; RAM[10] = 42
 ```
