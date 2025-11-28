@@ -51,7 +51,7 @@ fim_carrega_ram:
     ; basicamente um loop aninhado
     ; loop externo de 0 ate 773
 
-        MV R5, R3
+        MV R5, R2
         LD R3, 28
         LD R2, 2
         LD R1, 1
