@@ -76,6 +76,7 @@ carrega_ram:
     ; ------------------------------
 
     ; jump incondicional para carrega_ram
+    JMP 3
 
 fim_carrega_ram:
     NOP
