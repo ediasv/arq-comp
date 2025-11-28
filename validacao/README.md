@@ -36,7 +36,19 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
     LD R1, 2
 
     ; carregar 32 no R2
-    LD R2, 32
+    LD R2, 127
+    MV A, R2
+    ADD A, R2
+    MV R2 A     ; agora tem 256 em R2
+
+    ADD A, R2
+    ADD A, R2   
+    MV R2, A    ; agora tem 768 em R2
+    LD A, 6
+    ADD A, R2   
+    MV R2, A    ; R2 tem 774
+
+    ADD A, R2
 
     ; carregar 1 no R7
     LD R7, 1
