@@ -121,8 +121,8 @@ fim_carrega_ram:
 
 - **Formato**: S
 - **Opcode**: 0100
-- **A**: 0010 (R2)
-- **B**: 1000 (ACC)
+- **A**: 0010 (R2 - Destino)
+- **B**: 1000 (ACC - Fonte)
 - **Binário**: `000_0010_1000_0100`
 
 #### Endereço 5: ADD A, R2
@@ -141,39 +141,31 @@ fim_carrega_ram:
 - **B**: 0010 (R2)
 - **Binário**: `000_1000_0010_0001`
 
-#### Endereço 7: MV R2, A
-
-- **Formato**: S
-- **Opcode**: 0100
-- **A**: 0010 (R2)
-- **B**: 1000 (ACC)
-- **Binário**: `000_0010_1000_0100`
-
-#### Endereço 8: LD A, 12
+#### Endereço 7: LD R5, 12
 
 - **Formato**: C
-- **Opcode**: 1100
-- **A**: 1000 (ACC)
-- **I**: 0001100 (6)
-- **Binário**: `1000_0001100_0101`
+- **Opcode**: 0101
+- **A**: 0101 (R5)
+- **I**: 0001100 (12)
+- **Binário**: `0101_0001100_0101`
 
-#### Endereço 9: ADD A, R2
+#### Endereço 8: ADD A, R5
 
 - **Formato**: S
 - **Opcode**: 0001
 - **A**: 1000 (ACC)
-- **B**: 0010 (R2)
-- **Binário**: `000_1000_0010_0001`
+- **B**: 0101 (R5)
+- **Binário**: `000_1000_0101_0001`
 
-#### Endereço 10: MV R2, A
+#### Endereço 9: MV R2, A
 
 - **Formato**: S
 - **Opcode**: 0100
-- **A**: 0010 (R2)
-- **B**: 1000 (ACC)
+- **A**: 0010 (R2 - Destino)
+- **B**: 1000 (ACC - Fonte)
 - **Binário**: `000_0010_1000_0100`
 
-#### Endereço 11: LD R7, 1
+#### Endereço 10: LD R7, 1
 
 - **Formato**: C
 - **Opcode**: 0101
@@ -181,7 +173,7 @@ fim_carrega_ram:
 - **I**: 0000001 (1)
 - **Binário**: `0111_0000001_0101`
 
-#### Endereço 12: MV ACC, R1
+#### Endereço 11: MV ACC, R1
 
 - **Formato**: S
 - **Opcode**: 0100
@@ -189,7 +181,7 @@ fim_carrega_ram:
 - **B**: 0001 (R1)
 - **Binário**: `000_1000_0001_0100`
 
-#### Endereço 13: SW ACC, R7
+#### Endereço 12: SW ACC, R7
 
 - **Formato**: S
 - **Opcode**: 1011
@@ -197,7 +189,7 @@ fim_carrega_ram:
 - **B**: 0111 (R7 - Fonte)
 - **Binário**: `000_1000_0111_1011`
 
-#### Endereço 14: ADD ACC, R7
+#### Endereço 13: ADD ACC, R7
 
 - **Formato**: S
 - **Opcode**: 0001
@@ -205,7 +197,7 @@ fim_carrega_ram:
 - **B**: 0111 (R7)
 - **Binário**: `000_1000_0111_0001`
 
-#### Endereço 15: MV R1, ACC
+#### Endereço 14: MV R1, ACC
 
 - **Formato**: S
 - **Opcode**: 0100
@@ -213,7 +205,7 @@ fim_carrega_ram:
 - **B**: 1000 (ACC)
 - **Binário**: `000_0001_1000_0100`
 
-#### Endereço 16: MV ACC, R1
+#### Endereço 15: MV ACC, R1
 
 - **Formato**: S
 - **Opcode**: 0100
@@ -221,7 +213,7 @@ fim_carrega_ram:
 - **B**: 0001 (R1)
 - **Binário**: `000_1000_0001_0100`
 
-#### Endereço 17: SUB ACC, R2
+#### Endereço 16: SUB ACC, R2
 
 - **Formato**: S
 - **Opcode**: 0010
@@ -229,7 +221,7 @@ fim_carrega_ram:
 - **B**: 0010 (R2)
 - **Binário**: `000_1000_0010_0010`
 
-#### Endereço 18: BEQ 2
+#### Endereço 17: BEQ 2
 
 - **Formato**: C
 - **Opcode**: 0111
@@ -237,15 +229,15 @@ fim_carrega_ram:
 - **I**: 0000010 (2)
 - **Binário**: `0000_0000010_0111`
 
-#### Endereço 19: JMP 12
+#### Endereço 18: JMP 11
 
 - **Formato**: C
 - **Opcode**: 0110
 - **A**: 0000 (Não usado)
-- **I**: 0001100 (12)
-- **Binário**: `0000_0001100_0110`
+- **I**: 0001011 (11)
+- **Binário**: `0000_0001011_0110`
 
-#### Endereço 20: NOP
+#### Endereço 19: NOP
 
 - **Formato**: N/A
 - **Opcode**: 0000
@@ -262,17 +254,16 @@ fim_carrega_ram:
 | 4        | MV R2, A           | 000001010000100 | R2 = 254                      |
 | 5        | ADD A, R2          | 000100000100001 | A = 254 + 254 = 508           |
 | 6        | ADD A, R2          | 000100000100001 | A = 508 + 254 = 762           |
-| 7        | MV R2, A           | 000001010000100 | R2 = 762                      |
-| 8        | LD A, 12           | 100000001100101 | A = 12                        |
-| 9        | ADD A, R2          | 000100000100001 | A = 12 + 762 = 774            |
-| 10       | MV R2, A           | 000001010000100 | R2 = 774 (limite)             |
-| 11       | LD R7, 1           | 011100000010101 | R7 = 1 (incremento)           |
-| 12       | MV ACC, R1         | 000100000010100 | ACC = R1 (endereço)           |
-| 13       | SW ACC, R7         | 000100001111011 | RAM[ACC] = R7                 |
-| 14       | ADD ACC, R7        | 000100001110001 | ACC = ACC + 1                 |
-| 15       | MV R1, ACC         | 000000110000100 | R1 = ACC (atualiza contador)  |
-| 16       | MV ACC, R1         | 000100000010100 | ACC = R1                      |
-| 17       | SUB ACC, R2        | 000100000100010 | ACC = R1 - R2                 |
-| 18       | BEQ 2              | 000000000100111 | Se R1 = R2, pula 2 instruções |
-| 19       | JMP 12             | 000000011000110 | Volta para carrega_ram        |
-| 20       | NOP                | 000000000000000 | Fim                           |
+| 7        | LD R5, 12          | 010100011000101 | R5 = 12                       |
+| 8        | ADD A, R5          | 000100001010001 | A = 762 + 12 = 774            |
+| 9        | MV R2, A           | 000001010000100 | R2 = 774 (limite)             |
+| 10       | LD R7, 1           | 011100000010101 | R7 = 1 (incremento)           |
+| 11       | MV ACC, R1         | 000100000010100 | ACC = R1 (carrega_ram)        |
+| 12       | SW ACC, R7         | 000100001111011 | RAM[ACC] = R7                 |
+| 13       | ADD ACC, R7        | 000100001110001 | ACC = ACC + 1                 |
+| 14       | MV R1, ACC         | 000000110000100 | R1 = ACC (atualiza contador)  |
+| 15       | MV ACC, R1         | 000100000010100 | ACC = R1                      |
+| 16       | SUB ACC, R2        | 000100000100010 | ACC = R2 - R1                 |
+| 17       | BEQ 2              | 000000000100111 | Se R2 = R1, pula 2 instruções |
+| 18       | JMP 11             | 000000010110110 | Volta para carrega_ram        |
+| 19       | NOP                | 000000000000000 | Fim (fim_carrega_ram)         |
