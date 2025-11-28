@@ -74,7 +74,7 @@ carrega_ram:
     BEQ fim_carrega_ram ; 0000 00000010 0111
 
     ; jump incondicional para carrega_ram
-    JMP 3       ; 0000 0000011 0110
+    JMP carrega_ram       ; 0000 0000011 0110
 
 fim_carrega_ram:
     ; percorrer a ram de 2 até 27, tirando os multiplos
