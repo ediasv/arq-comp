@@ -12,11 +12,9 @@
 
     ADD A, R2 ; 000 1000 0010 0001
     ADD A, R2 ; 000 1000 0010 0001
-    MV R2, A  ; 000 0010 1000 0100
-    ; agora tem 768 em R2
 
-    LD A, 6   ; 1000 0000101 0101
-    ADD A, R2 ; 000 1000 0010 0001
+    LD R5, 12   ; 0101 0001100 0101
+    ADD A, R5 ; 000 1000 0101 0001
     MV R2, A  ; 000 0010 1000 0100
     ; R2 tem 774
 
@@ -35,16 +33,16 @@ carrega_ram:
 
     ; VERIFICA SE O NOVO ENDERECO EH VALIDO
     ; move R1 para ACC
-    MV ACC, R1  ; 000 1000 0010  0100
+    MV ACC, R1  ; 000 1000 0001  0100
 
     ; subtrai R2 - ACC (R1)
-    SUB ACC, R2  ; 000 1000 0001  0010
+    SUB ACC, R2  ; 000 1000 0010  0010
 
-    ; se R1 = R2, fim do loop (zero = '1')
-    BEQ fim_carrega_ram
+    ; se R1 = R2, fim do loop (zero = '1') (soma 2 no pc)
+    BEQ fim_carrega_ram ; 0000 00000010 0111
 
     ; jump incondicional para carrega_ram
-    JMP 3
+    JMP 3       ; 0000 0000011 0110
 
 fim_carrega_ram:
     ; percorrer a ram de 2 até 27, tirando os multiplos
