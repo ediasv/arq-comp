@@ -62,7 +62,8 @@ architecture a_processador of processador is
       en_instr_reg : out std_logic;
       en_pc        : out std_logic;
       en_psw       : out std_logic;
-      en_ram       : out std_logic
+      en_ram       : out std_logic;
+      en_is_branch : out std_logic
     );
   end component;
 
@@ -197,6 +198,8 @@ architecture a_processador of processador is
   signal en_instr_reg_sig : std_logic                    := '0';
   signal en_pc_sig        : std_logic                    := '0';
   signal en_ram_sig       : std_logic                    := '0';
+  signal en_is_branch_sig : std_logic                   := '0';
+
 
   -- Sinais da RAM
   signal ram_dado_out : unsigned(15 downto 0) := (others => '0');
@@ -261,7 +264,8 @@ begin
       en_pc        => en_pc_sig,
       en_psw       => en_psw_sig,
       flag_neg     => flag_neg_sig,
-      en_ram       => en_ram_sig
+      en_ram       => en_ram_sig,
+      en_is_branch => en_is_branch_sig
         -- flag_carry   => flag_carry_sig, Comentado para uso futuro
         -- flag_neg     => flag_neg_sig, Comentado para uso futuro
     );
@@ -336,8 +340,13 @@ begin
   -- NOTA:
   -- Para incrementar: offset = +1 (0000001)
   -- Para JMP/BEQ/BVS: offset = instr_reg_out(10 downto 4) em complemento de 2
-  mux_to_pc <= "0000001" when en_is_jmp_sig = '0' else -- Incrementa PC (+1)
-               instr_reg_out(10 downto 4); -- Salto relativo
+
+  mux_to_pc <= instr_reg_out(10 downto 4) - pc_data_out when en_is_jmp_sig = '1' else -- Incrementa PC (+1)
+               instr_reg_out(10 downto 4)
+               when en_is_branch_sig = '1' else
+                "0000001";
+
+
 
   -- Mux do endereço de destino do banco de registradores
   -- instr_reg_out(14 downto 11) quando formato C OU instr_reg_out(11 downto 8) quando formato S
