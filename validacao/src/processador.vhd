@@ -131,7 +131,7 @@ architecture a_processador of processador is
   component ram
     port (
       clk      : in  std_logic;
-      endereco : in  unsigned(6 downto 0);
+      endereco : in  unsigned(9 downto 0);
       wr_en    : in  std_logic;
       dado_in  : in  unsigned(15 downto 0);
       dado_out : out unsigned(15 downto 0)
@@ -320,7 +320,7 @@ begin
   ram_inst: ram
     port map (
       clk      => clk,
-      endereco => acc_out(6 downto 0),
+      endereco => acc_out(9 downto 0),
       wr_en    => en_ram_sig,
       dado_in  => bank_data_out,
       dado_out => ram_dado_out
