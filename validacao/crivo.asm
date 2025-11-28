@@ -21,7 +21,10 @@
     ; R2 tem 773
 
     ; carregar 1 no R7
-    LD R7, 0 ; 0111 0000000 0101
+    LD R7, 1 ; 0111 0000001 0101
+
+    ; carrega 0 no R6
+    LD R6, 0
 
     ; carrega R1 na RAM no endereço (R1)
 carrega_ram:
@@ -32,16 +35,14 @@ carrega_ram:
     ADD ACC, R7  ; 000 1000 0111 0001
     MV R1, ACC   ; 000 0001 1000  0100
 
-    ; ---- verifica se R1 > R2 ----
-    ; move R2 para ACC
-    MV ACC, R2  ; 000 1000 0010  0100
+    ; move R6 para ACC
+    MV ACC, R6  ; 000 1000 0010  0100
 
-    ; subtrai R1 - ACC
-    SUB ACC, R1  ; 000 1000 0001  0010
+    ; subtrai R2 - ACC (R6)
+    SUB ACC, R2  ; 000 1000 0001  0010
 
-    ; se R1 = R2, fim do loop
+    ; se R6 = R2, fim do loop (zero = '1')
     BEQ fim_carrega_ram
-    ; ------------------------------
 
     ; jump incondicional para carrega_ram
     JMP 3
