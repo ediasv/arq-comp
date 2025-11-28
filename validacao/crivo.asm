@@ -1,12 +1,12 @@
-    ; ========= Loop para carregar números de 2 a 32 na RAM =========
-
     ; carregar 2 no R1
     LD R1, 2    ; 0001 0000010 0101
 
     ; carregar 32 no R2
     LD R2, 127  ; 0010 1111111 0101
+
     MV A, R2    ; 000 1000 0010 0100
     ADD A, R2   ; 000 1000 0010  0001
+    
     MV R2 A     ; 000 0010 1000 0100
     ; agora tem 256 em R2
 
