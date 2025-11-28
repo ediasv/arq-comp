@@ -38,7 +38,7 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
 
     MV A, R2    ; 000 1000 0010 0100
     ADD A, R2   ; 000 1000 0010  0001
-    
+
     MV R2 A     ; 000 0010 1000 0100
     ; agora tem 256 em R2
 
@@ -56,7 +56,7 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
     LD R7, 1 ; 0111 0000001 0101
 
     ; carrega 0 no R6
-    LD R6, 0
+    LD R6, 0  ; 0110 0000000 0101
 
     ; carrega R1 na RAM no endereço (R1)
 carrega_ram:
@@ -68,10 +68,10 @@ carrega_ram:
     MV R1, ACC   ; 000 0001 1000  0100
 
     ; move R6 para ACC
-    MV ACC, R6  ; 000 1000 0010  0100
+    MV ACC, R6  ; 000 1000 0110  0100
 
     ; subtrai R2 - ACC (R6)
-    SUB ACC, R2  ; 000 1000 0001  0010
+    SUB ACC, R2  ; 000 1000 0010 0010
 
     ; se R6 = R2, fim do loop (zero = '1')
     BEQ fim_carrega_ram
