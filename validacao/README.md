@@ -33,20 +33,24 @@ todos os múltiplos de 2, 3, ..., $\lfloor \sqrt{37} \rfloor = 6$.
     ; ========= Loop para carregar números de 2 a 32 na RAM =========
 
     ; carregar 2 no R1
-    LD R1, 2
+    LD R1, 2    ; 000100000100101
 
     ; carregar 32 no R2
     LD R2, 127
     MV A, R2
     ADD A, R2
-    MV R2 A     ; agora tem 256 em R2
+    MV R2 A    
+    ; agora tem 256 em R2
 
     ADD A, R2
     ADD A, R2   
-    MV R2, A    ; agora tem 768 em R2
+    MV R2, A    
+    ; agora tem 768 em R2
+
     LD A, 6
     ADD A, R2   
-    MV R2, A    ; R2 tem 774
+    MV R2, A    
+    ; R2 tem 774
 
     ADD A, R2
 
