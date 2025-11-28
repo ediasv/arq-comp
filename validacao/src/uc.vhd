@@ -20,7 +20,8 @@ entity uc is
     en_instr_reg : out std_logic;
     en_pc        : out std_logic;
     en_psw       : out std_logic;
-    en_ram       : out std_logic
+    en_ram       : out std_logic;
+    en_is_branch : out std_logic
   );
 end entity;
 
@@ -69,6 +70,11 @@ begin
   instr_format_sig <= '1' when (opcode = "0001" or opcode = "0010" or opcode = "0100" or opcode = "1010" or opcode = "1011") else
                       '0';
   instr_format <= instr_format_sig;
+
+  -- Sinal que diz se é operação de jump
+  -- A instrução JMP tem opcode 0110
+  en_is_jmp <= '1' when opcode = "0110" else
+               '0';
 
   -- Sinal de enable do PC
   -- O PC é incrementado:
@@ -162,7 +168,7 @@ begin
             '0';
 
   -- lógica de salto condicional
-  en_is_jmp <= '1' when (opcode = "0110") or (opcode = "0111" and flag_zero = '1') or (opcode = "1000" and flag_over = '1') or (opcode = "1001" and flag_neg = '1') else
+  en_is_branch <= '1' when (opcode = "0110") or (opcode = "0111" and flag_zero = '1') or (opcode = "1000" and flag_over = '1') or (opcode = "1001" and flag_neg = '1') else
                '0';
 
   -- Sinal de enable da RAM
