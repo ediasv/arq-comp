@@ -6,7 +6,7 @@
 
     MV A, R2    ; 000 1000 0010 0100
     ADD A, R2   ; 000 1000 0010  0001
-    
+
     MV R2 A     ; 000 0010 1000 0100
     ; agora tem 256 em R2
 
@@ -48,4 +48,7 @@ carrega_ram:
     JMP 3
 
 fim_carrega_ram:
-    NOP
+    ; percorrer a ram de 2 até 27, tirando os multiplos
+    ; desde que o multiplo seja menor que 773
+    ; basicamente um loop aninhado
+    ; loop externo de 0 ate 773
