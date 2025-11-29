@@ -126,7 +126,7 @@ fim_loop_crivo:
 inicio_loop_validacao:
         MV A, R2
         SUB A, R5
-        BEQ fim_loop_validacao
+        BEQ fim_loop_validacao ; offset +25
 
         MV A, R2
         LW R3, A
@@ -134,7 +134,7 @@ inicio_loop_validacao:
         MV A, R3
         SUBI A, 0 ; A == 1 entao subtracao negativa (A = 1 quando RAM[R2] é primo)
                   ; A == 0 entao subtracao é zero (entao RAM[R2] nao é primo)
-        BEQ volta_achou_eh_primo ; nao é primo, vai pro proximo
+        BEQ avanca_endereco ; nao é primo, offset +10
 
         ; RAM[R2] eh primo 
         MV R4, R2 ; primo = o numero
@@ -143,27 +143,27 @@ inicio_loop_validacao:
         MV A, R1
         SUB A, R0
         MV R0, A
-        BEQ achou_debug
+        BEQ achou_debug ; offset +9
         
 volta_achou_debug:
         MV A, R5
         SUB A, R1
-        SUB A, R2
-        BEQ achou_eh_primo
+        ADD A, R2
+        BEQ achou_eh_primo ; offset +7
         
 avanca_endereco:
         MV A, R2
         ADD A, R1
         MV R2, A
-        JMP inicio_loop_validacao
+        JMP inicio_loop_validacao ; endereco 52
 
 achou_debug:
         MV R7, R2
-        JMP volta_achou_debug
+        JMP volta_achou_debug ; endereco 65
 
 achou_eh_primo:
         LD R6, 1
-        JMP avanca_endereco
+        JMP avanca_endereco ; endereco 69
 
 fim_loop_validacao:
 ```
