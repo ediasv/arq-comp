@@ -75,6 +75,7 @@ prox_multiplo:
         MV R6, A 
         SUB A, R5 
         BEQ proximo_endereco_ram
+        BLT proximo_endereco_ram
         JMP prox_multiplo
 
 proximo_endereco_ram:
@@ -86,4 +87,54 @@ proximo_endereco_ram:
         JMP inicio_loop_crivo
 
 fim_loop_crivo:
+
+        ; R5 ainda vale 774
+        LD R2, 2
+        LD R1, 1
+        LD R7, 0
+        LD R6, 0
+        LD R4, 0
+        LD R0, 3
+
+inicio_loop_validacao:
+        MV A, R2
+        SUB A, R5
+        BEQ fim_loop_validacao
+
+        MV A, R2
+        LW R3, A
+
+        MV A, R3
+        SUBI A, 0 ; A == 1 entao subtracao negativa (A = 1 quando RAM[R2] é primo)
+                  ; A == 0 entao subtracao é zero (entao RAM[R2] nao é primo)
+        BEQ inicio_loop_validacao ; nao é primo, vai pro proximo
+
+        ; RAM[R2] eh primo 
+        MV R4, R2 ; primo = o numero
+
+        ; subtrai do contador do enesimo primo
+        MV A, R1
+        SUB A, R0
+        BEQ achou_debug
         
+volta_achou_debug:
+        MV A, R5
+        SUB A, R1
+        SUB A, R2
+        BEQ achou_eh_primo
+        
+volta_achou_eh_primo:
+        MV A, R2
+        ADD A, R1
+        MV R2, A
+        JMP inicio_loop_validacao
+
+achou_debug:
+        MV R7, R2
+        JMP volta_achou_debug
+
+achou_eh_primo:
+        LD R6, 1
+        JMP volta_achou_eh_primo
+
+fim_loop_validacao:

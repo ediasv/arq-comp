@@ -107,6 +107,7 @@ prox_multiplo:
         MV R6, A  ; 000 0110 1000 0100
         SUB A, R5 ; 000 1000 0101 0010
         BEQ proximo_endereco_ram
+        BLT proximo_endereco_ram
         JMP prox_multiplo
 
 proximo_endereco_ram:
@@ -118,185 +119,233 @@ proximo_endereco_ram:
         JMP inicio_loop_crivo
 
 fim_loop_crivo:
+
+        ; R5 ainda vale 774
+        LD R2, 2
+        LD R1, 1
+        LD R7, 0
+        LD R6, 0
+        LD R4, 0
+        LD R0, 3
+
+inicio_loop_validacao:
+        MV A, R2
+        SUB A, R5
+        BEQ fim_loop_validacao
+
+        MV A, R2
+        LW R3, A
+
+        MV A, R3
+        SUBI A, 0 ; A == 1 entao subtracao negativa (A = 1 quando RAM[R2] é primo)
+                  ; A == 0 entao subtracao é zero (entao RAM[R2] nao é primo)
+        BEQ inicio_loop_validacao ; nao é primo, vai pro proximo
+
+        ; RAM[R2] eh primo 
+        MV R4, R2 ; primo = o numero
+
+        ; subtrai do contador do enesimo primo
+        MV A, R1
+        SUB A, R0
+        BEQ achou_debug
+        
+volta_achou_debug:
+        MV A, R5
+        SUB A, R1
+        SUB A, R2
+        BEQ achou_eh_primo
+        
+volta_achou_eh_primo:
+        MV A, R2
+        ADD A, R1
+        MV R2, A
+        JMP inicio_loop_validacao
+
+achou_debug:
+        MV R7, R2
+        JMP volta_achou_debug
+
+achou_eh_primo:
+        LD R6, 1
+        JMP volta_achou_eh_primo
+
+fim_loop_validacao:
 ```
 
 ### 2.3 Codificação Binária
 
 #### Endereço 0: LD R1, 2
-
-- **Formato**: C | **Binário**: `0001_0000010_0101`
+- **Binário**: `0001_0000010_0101`
 
 #### Endereço 1: LD R2, 127
 
-- **Formato**: C | **Binário**: `0010_1111111_0101`
+- **Binário**: `0010_1111111_0101`
 
 #### Endereço 2: MV A, R2
 
-- **Formato**: S | **Binário**: `000_1000_0010_0100`
+- **Binário**: `000_1000_0010_0100`
 
 #### Endereço 3: ADD A, R2
 
-- **Formato**: S | **Binário**: `000_1000_0010_0001`
+- **Binário**: `000_1000_0010_0001`
 
 #### Endereço 4: MV R2, A
 
-- **Formato**: S | **Binário**: `000_0010_1000_0100`
+-**Binário**: `000_0010_1000_0100`
 
 #### Endereço 5: ADD A, R2
 
-- **Formato**: S | **Binário**: `000_1000_0010_0001`
+- **Binário**: `000_1000_0010_0001`
 
 #### Endereço 6: ADD A, R2
 
-- **Formato**: S | **Binário**: `000_1000_0010_0001`
+- **Binário**: `000_1000_0010_0001`
 
 #### Endereço 7: LD R5, 12
 
-- **Formato**: C | **Binário**: `0101_0001100_0101`
+- **Binário**: `0101_0001100_0101`
 
 #### Endereço 8: ADD A, R5
 
-- **Formato**: S | **Binário**: `000_1000_0101_0001`
+- **Binário**: `000_1000_0101_0001`
 
 #### Endereço 9: MV R2, A
 
-- **Formato**: S | **Binário**: `000_0010_1000_0100`
+- **Binário**: `000_0010_1000_0100`
 
 #### Endereço 10: LD R7, 1
 
-- **Formato**: C | **Binário**: `0111_0000001_0101`
+- **Binário**: `0111_0000001_0101`
 
 #### Endereço 11: MV ACC, R1 (carrega_ram)
 
-- **Formato**: S | **Binário**: `000_1000_0001_0100`
+- **Binário**: `000_1000_0001_0100`
 
 #### Endereço 12: SW ACC, R7
 
-- **Formato**: S | **Binário**: `000_1000_0111_1011`
+- **Binário**: `000_1000_0111_1011`
 
 #### Endereço 13: ADD ACC, R7
-
-- **Formato**: S | **Binário**: `000_1000_0111_0001`
+- **Binário**: `000_1000_0111_0001`
 
 #### Endereço 14: MV R1, ACC
-
-- **Formato**: S | **Binário**: `000_0001_1000_0100`
+- **Binário**: `000_0001_1000_0100`
 
 #### Endereço 15: MV ACC, R1
 
-- **Formato**: S | **Binário**: `000_1000_0001_0100`
+- **Binário**: `000_1000_0001_0100`
 
 #### Endereço 16: SUB ACC, R2
 
-- **Formato**: S | **Binário**: `000_1000_0010_0010`
+- **Binário**: `000_1000_0010_0010`
 
 #### Endereço 17: BEQ 2 (fim_carrega_ram)
 
-- **Formato**: C | **Binário**: `0000_0000010_0111`
+- **Binário**: `0000_0000010_0111`
 
 #### Endereço 18: JMP 11 (carrega_ram)
 
-- **Formato**: C | **Binário**: `0000_0001011_0110`
+- **Binário**: `0000_0001011_0110`
 
 #### Endereço 19: MV R5, R3 (fim_carrega_ram)
 
-- **Formato**: S | **Binário**: `000_0101_0011_0100`
+- **Binário**: `000_0101_0011_0100`
 
 #### Endereço 20: LD R3, 28
 
-- **Formato**: C | **Binário**: `0011_0011100_0101`
+- **Binário**: `0011_0011100_0101`
 
 #### Endereço 21: LD R2, 2
 
-- **Formato**: C | **Binário**: `0010_0000010_0101`
+- **Binário**: `0010_0000010_0101`
 
 #### Endereço 22: LD R1, 1
 
-- **Formato**: C | **Binário**: `0001_0000001_0101`
+- **Binário**: `0001_0000001_0101`
 
 #### Endereço 23: LD R0, 0
 
-- **Formato**: C | **Binário**: `0000_0000000_0101`
+- **Binário**: `0000_0000000_0101`
 
 #### Endereço 24: MV A, R2 (inicio_loop_crivo)
 
-- **Formato**: S | **Binário**: `000_1000_0010_0100`
+- **Binário**: `000_1000_0010_0100`
 
 #### Endereço 25: LW R4, A
 
-- **Formato**: S | **Binário**: `000_0100_1000_1010`
+- **Binário**: `000_0100_1000_1010`
 
 #### Endereço 26: MV A, R4
 
-- **Formato**: S | **Binário**: `000_1000_0100_0100`
+- **Binário**: `000_1000_0100_0100`
 
 #### Endereço 27: SUB A, R1
 
-- **Formato**: S | **Binário**: `000_1000_0001_0010`
+- **Binário**: `000_1000_0001_0010`
 
 #### Endereço 28: BEQ 2 (tira_multiplos)
 
-- **Formato**: C | **Binário**: `0000_0000010_0111`
+- **Binário**: `0000_0000010_0111`
 
 #### Endereço 29: JMP 31 (proximo_endereco_ram)
 
-- **Formato**: C | **Binário**: `0000_0011111_0110`
+- **Binário**: `0000_0011111_0110`
 
 #### Endereço 30: MV R6, R2 (tira_multiplos)
 
-- **Formato**: S | **Binário**: `000_0110_0010_0100`
+- **Binário**: `000_0110_0010_0100`
 
 #### Endereço 31: MV A, R6 (prox_multiplo)
 
-- **Formato**: S | **Binário**: `000_1000_0110_0100`
+- **Binário**: `000_1000_0110_0100`
 
 #### Endereço 32: ADD A, R2
 
-- **Formato**: S | **Binário**: `000_1000_0010_0001`
+- **Binário**: `000_1000_0010_0001`
 
 #### Endereço 33: SW A, R0
 
-- **Formato**: S | **Binário**: `000_1000_0000_1011`
+- **Binário**: `000_1000_0000_1011`
 
 #### Endereço 34: MV R6, A
 
-- **Formato**: S | **Binário**: `000_0110_1000_0100`
+- **Binário**: `000_0110_1000_0100`
 
 #### Endereço 35: SUB A, R5
 
-- **Formato**: S | **Binário**: `000_1000_0101_0010`
+- **Binário**: `000_1000_0101_0010`
 
 #### Endereço 36: BEQ 2 (proximo_endereco_ram)
 
-- **Formato**: C | **Binário**: `0000_0000010_0111`
+- **Binário**: `0000_0000010_0111`
 
 #### Endereço 37: JMP 31 (prox_multiplo)
 
-- **Formato**: C | **Binário**: `0000_0011111_0110`
+- **Binário**: `0000_0011111_0110`
 
 #### Endereço 38: MV A, R2 (proximo_endereco_ram)
 
-- **Formato**: S | **Binário**: `000_1000_0010_0100`
+- **Binário**: `000_1000_0010_0100`
 
 #### Endereço 39: ADD A, R1
 
-- **Formato**: S | **Binário**: `000_1000_0001_0001`
+- **Binário**: `000_1000_0001_0001`
 
 #### Endereço 40: MV R2, A
 
-- **Formato**: S | **Binário**: `000_0010_1000_0100`
+- **Binário**: `000_0010_1000_0100`
 
 #### Endereço 41: SUB A, R3
 
-- **Formato**: S | **Binário**: `000_1000_0011_0010`
+- **Binário**: `000_1000_0011_0010`
 
 #### Endereço 42: BEQ 2 (fim_loop_crivo)
 
-- **Formato**: C | **Binário**: `0000_0000010_0111`
+- **Binário**: `0000_0000010_0111`
 
 #### Endereço 43: JMP 24 (inicio_loop_crivo)
 
-- **Formato**: C | **Binário**: `0000_0011000_0110`
+- **Binário**: `0000_0011000_0110`
 
 #### Endereço 44: NOP (fim_loop_crivo)
 

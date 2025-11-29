@@ -4,8 +4,11 @@ library ieee;
 
 entity processador is
   port (
-    rst : in std_logic;
-    clk : in std_logic
+    rst      : in  std_logic;
+    clk      : in  std_logic;
+    debug    : out unsigned(15 downto 0); -- posicao do enesimo primo (i.e. 3) mostrar no R7
+    eh_primo : out unsigned(15 downto 0); -- sinal que indica se o numero dado é primo (R6)
+    primo    : out unsigned(15 downto 0)  -- valor de entrada para verificação de primalidade (R5)
   );
 end entity;
 
@@ -76,7 +79,10 @@ architecture a_processador of processador is
       addr_dest   : in  unsigned(3 downto 0);
       addr_source : in  unsigned(3 downto 0);
       data_in     : in  unsigned(15 downto 0);
-      data_out    : out unsigned(15 downto 0)
+      data_out    : out unsigned(15 downto 0);
+      debug       : out unsigned(15 downto 0);
+      eh_primo    : out unsigned(15 downto 0);
+      primo       : out unsigned(15 downto 0)
     );
   end component;
 
@@ -198,8 +204,7 @@ architecture a_processador of processador is
   signal en_instr_reg_sig : std_logic                    := '0';
   signal en_pc_sig        : std_logic                    := '0';
   signal en_ram_sig       : std_logic                    := '0';
-  signal en_is_branch_sig : std_logic                   := '0';
-
+  signal en_is_branch_sig : std_logic                    := '0';
 
   -- Sinais da RAM
   signal ram_dado_out : unsigned(15 downto 0) := (others => '0');
@@ -279,7 +284,10 @@ begin
       addr_dest   => mux_addr_dest,
       addr_source => instr_reg_out(7 downto 4),
       data_in     => bank_data_in,
-      data_out    => bank_data_out
+      data_out    => bank_data_out,
+      debug       => debug,
+      eh_primo    => eh_primo,
+      primo => primo
     );
 
   -- instancia do acumulador
@@ -340,13 +348,9 @@ begin
   -- NOTA:
   -- Para incrementar: offset = +1 (0000001)
   -- Para JMP/BEQ/BVS: offset = instr_reg_out(10 downto 4) em complemento de 2
-
   mux_to_pc <= instr_reg_out(10 downto 4) - pc_data_out when en_is_jmp_sig = '1' else -- Incrementa PC (+1)
-               instr_reg_out(10 downto 4)
-               when en_is_branch_sig = '1' else
-                "0000001";
-
-
+               instr_reg_out(10 downto 4)               when en_is_branch_sig = '1' else
+               "0000001";
 
   -- Mux do endereço de destino do banco de registradores
   -- instr_reg_out(14 downto 11) quando formato C OU instr_reg_out(11 downto 8) quando formato S
