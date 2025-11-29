@@ -44,7 +44,6 @@ MV A, R0          ; ACC = 3
 LD R1, 100        ; R1 = 100 (valor)
 SW A, R1          ; RAM[3] = 100 (escreve)
 
-LD R5, A          ; [ERRO: deveria ser LW R5, A]
 LW R5, A          ; R5 = RAM[ACC] = RAM[3] = 100 (lê)
 JMP 10            ; Salta para endereço 10
 ```
