@@ -139,7 +139,7 @@ inicio_loop_validacao:
         MV A, R3
         SUBI A, 0 ; A == 1 entao subtracao negativa (A = 1 quando RAM[R2] é primo)
                   ; A == 0 entao subtracao é zero (entao RAM[R2] nao é primo)
-        BEQ inicio_loop_validacao ; nao é primo, vai pro proximo
+        BEQ volta_achou_eh_primo ; nao é primo, vai pro proximo
 
         ; RAM[R2] eh primo 
         MV R4, R2 ; primo = o numero
@@ -147,6 +147,7 @@ inicio_loop_validacao:
         ; subtrai do contador do enesimo primo
         MV A, R1
         SUB A, R0
+        MV R0, A
         BEQ achou_debug
         
 volta_achou_debug:
@@ -155,7 +156,7 @@ volta_achou_debug:
         SUB A, R2
         BEQ achou_eh_primo
         
-volta_achou_eh_primo:
+avanca_endereco:
         MV A, R2
         ADD A, R1
         MV R2, A
@@ -167,7 +168,7 @@ achou_debug:
 
 achou_eh_primo:
         LD R6, 1
-        JMP volta_achou_eh_primo
+        JMP avanca_endereco
 
 fim_loop_validacao:
 ```
@@ -348,7 +349,102 @@ fim_loop_validacao:
 - **Binário**: `0000_0011000_0110`
 
 #### Endereço 44: NOP (fim_loop_crivo)
+- **Formato**: N/A | **Binário**: `000_0000_0000_0000`
 
+#### Endereço 45: LD R2, 2
+- **Formato**: C | **Binário**: `0010_0000010_0101`
+
+#### Endereço 46: LD R1, 1
+- **Formato**: C | **Binário**: `0001_0000001_0101`
+
+#### Endereço 47: LD R7, 0
+- **Formato**: C | **Binário**: `0111_0000000_0101`
+
+#### Endereço 48: LD R6, 0
+- **Formato**: C | **Binário**: `0110_0000000_0101`
+
+#### Endereço 49: LD R4, 0
+- **Formato**: C | **Binário**: `0100_0000000_0101`
+
+#### Endereço 50: LD R0, 3
+- **Formato**: C | **Binário**: `0000_0000011_0101`
+
+#### Endereço 51: MV A, R2 (inicio_loop_validacao)
+- **Formato**: S | **Binário**: `000_1000_0010_0100`
+
+#### Endereço 52: SUB A, R5
+- **Formato**: S | **Binário**: `000_1000_0101_0010`
+
+#### Endereço 53: BEQ 20 (fim_loop_validacao)
+- **Formato**: C | **Binário**: `0000_0010100_0111`
+
+#### Endereço 54: MV A, R2
+- **Formato**: S | **Binário**: `000_1000_0010_0100`
+
+#### Endereço 55: LW R3, A
+- **Formato**: S | **Binário**: `000_0011_1000_1010`
+
+#### Endereço 56: MV A, R3
+- **Formato**: S | **Binário**: `000_1000_0011_0100`
+
+#### Endereço 57: SUBI A, 0
+- **Formato**: C | **Binário**: `1000_0000000_0011`
+
+#### Endereço 58: BEQ -7 (inicio_loop_validacao)
+- **Formato**: C | **Binário**: `0000_1111001_0111`
+
+#### Endereço 59: MV R4, R2
+- **Formato**: S | **Binário**: `000_0100_0010_0100`
+
+#### Endereço 60: MV A, R1
+- **Formato**: S | **Binário**: `000_1000_0001_0100`
+
+#### Endereço 61: SUB A, R0
+- **Formato**: S | **Binário**: `000_1000_0000_0010`
+
+#### Endereço 62: MV R0, A
+- **Formato**: S | **Binário**: `000_0000_1000_0100`
+
+#### Endereço 63: BEQ 2 (achou_debug)
+- **Formato**: C | **Binário**: `0000_0000010_0111`
+
+#### Endereço 64: MV A, R5 (volta_achou_debug)
+- **Formato**: S | **Binário**: `000_1000_0101_0100`
+
+#### Endereço 65: SUB A, R1
+- **Formato**: S | **Binário**: `000_1000_0001_0010`
+
+#### Endereço 66: SUB A, R2
+- **Formato**: S | **Binário**: `000_1000_0010_0010`
+
+#### Endereço 67: BEQ 2 (achou_eh_primo)
+- **Formato**: C | **Binário**: `0000_0000010_0111`
+
+#### Endereço 68: MV A, R2 (volta_achou_eh_primo)
+- **Formato**: S | **Binário**: `000_1000_0010_0100`
+
+#### Endereço 69: ADD A, R1
+- **Formato**: S | **Binário**: `000_1000_0001_0001`
+
+#### Endereço 70: MV R2, A
+- **Formato**: S | **Binário**: `000_0010_1000_0100`
+
+#### Endereço 71: JMP 51 (inicio_loop_validacao)
+- **Formato**: C | **Binário**: `0000_0110011_0110`
+
+#### Endereço 72: MV R7, R2 (achou_debug)
+- **Formato**: S | **Binário**: `000_0111_0010_0100`
+
+#### Endereço 73: JMP 64 (volta_achou_debug)
+- **Formato**: C | **Binário**: `0000_1000000_0110`
+
+#### Endereço 74: LD R6, 1 (achou_eh_primo)
+- **Formato**: C | **Binário**: `0110_0000001_0101`
+
+#### Endereço 75: JMP 68 (volta_achou_eh_primo)
+- **Formato**: C | **Binário**: `0000_1000100_0110`
+
+#### Endereço 76: NOP (fim_loop_validacao)
 - **Formato**: N/A | **Binário**: `000_0000_0000_0000`
 
 ### 2.4 Resumo da Memória ROM para o Crivo de Eratóstenes
@@ -403,3 +499,35 @@ fim_loop_validacao:
 |   43 | BEQ 2       | 000000000100111 | Se >= R3, fim_loop_crivo           |
 |   44 | JMP 24      | 000000110000110 | Senão, inicio_loop_crivo           |
 |   45 | NOP         | 000000000000000 | fim_loop_crivo                     |
+|   46 | LD R2, 2    | 001000000100101 | Reinicia R2                        |
+|   47 | LD R1, 1    | 000100000010101 | R1 = 1                             |
+|   48 | LD R7, 0    | 011100000000101 | R7 = 0 (debug)                     |
+|   49 | LD R6, 0    | 011000000000101 | R6 = 0 (flag)                      |
+|   50 | LD R4, 0    | 010000000000101 | R4 = 0                             |
+|   51 | LD R0, 3    | 000000000110101 | R0 = 3 (n-ésimo primo)             |
+|   52 | MV A, R2    | 000100000100100 | inicio_loop_validacao: A = R2      |
+|   53 | SUB A, R5   | 000100001010010 | A = R5 - A                         |
+|   54 | BEQ 20      | 000000101000111 | Se fim, vai fim_loop_validacao     |
+|   55 | MV A, R2    | 000100000100100 | A = R2                             |
+|   56 | LW R3, A    | 000001110001010 | R3 = RAM[A]                        |
+|   57 | MV A, R3    | 000100000110100 | A = R3                             |
+|   58 | SUBI A, 0   | 100000000000011 | A = 0 - A (testa se é 1)           |
+|   59 | BEQ -7      | 000011110010111 | Se não-primo, próximo              |
+|   60 | MV R4, R2   | 000010000100100 | R4 = R2 (salva primo)              |
+|   61 | MV A, R1    | 000100000010100 | A = R1                             |
+|   62 | SUB A, R0   | 000100000000010 | A = R0 - A                         |
+|   63 | MV R0, A    | 00000001000100 | R0 = A (decrementa contador)       |
+|   64 | BEQ 2       | 000000000100111 | Se é o n-ésimo, achou_debug        |
+|   65 | MV A, R5    | 000100001010100 | volta_achou_debug: A = R5 (774)    |
+|   66 | SUB A, R1   | 000100000010010 | A = R1 - A                         |
+|   67 | SUB A, R2   | 000100000100010 | A = R2 - A                         |
+|   68 | BEQ 2       | 000000000100111 | Se último primo, achou_eh_primo    |
+|   69 | MV A, R2    | 000100000100100 | volta_achou_eh_primo: A = R2       |
+|   70 | ADD A, R1   | 000100000010001 | A = A + 1                          |
+|   71 | MV R2, A    | 000001010000100 | R2 = A                             |
+|   72 | JMP 52      | 000000110100110 | Loop validação                     |
+|   73 | MV R7, R2   | 000011100100100 | achou_debug: R7 = R2 (3º primo)    |
+|   74 | JMP 65      | 000001000001110 | Volta                              |
+|   75 | LD R6, 1    | 011000000010101 | achou_eh_primo: R6 = 1 (flag)      |
+|   76 | JMP 69      | 000001000101110 | Volta                              |
+|   77 | NOP         | 000000000000000 | fim_loop_validacao                 |
