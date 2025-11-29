@@ -9,11 +9,6 @@ Os testes devem incluir:
 1. Crivo de Eratóstenes.
 2. Testar todas as instruções implementadas.
 
-Além disso é preciso implementar duas "complicações" adicionais. Elas são:
-
-1.
-2.
-
 ---
 
 ## 2. Crivo de Eratóstenes
