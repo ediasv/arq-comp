@@ -393,12 +393,13 @@ fim_loop_validacao:
 |   33 | SW A, R0    | 000100000001011 | RAM[A] = 0 (marca não-primo)       |
 |   34 | MV R6, A    | 000011010000100 | R6 = A                             |
 |   35 | SUB A, R5   | 000100001010010 | A = R5 - A                         |
-|   36 | BEQ 2       | 000000000100111 | Se >= limite, proximo_endereco_ram |
-|   37 | JMP 31      | 000000111110110 | Senão, prox_multiplo               |
-|   38 | MV A, R2    | 000100000100100 | proximo_endereco_ram: A = R2       |
-|   39 | ADD A, R1   | 000100000010001 | A = A + 1                          |
-|   40 | MV R2, A    | 000001010000100 | R2 = A (próximo candidato)         |
-|   41 | SUB A, R3   | 000100000110010 | A = R3 - A                         |
-|   42 | BEQ 2       | 000000000100111 | Se >= R3, fim_loop_crivo           |
-|   43 | JMP 24      | 000000110000110 | Senão, inicio_loop_crivo           |
-|   44 | NOP         | 000000000000000 | fim_loop_crivo                     |
+|   36 | BEQ 3       | 000000000100111 | Se = limite, proximo_endereco_ram  |
+|   37 | BLT 2       | 000000000101001 | Se > limite, proximo_endereco_ram  |
+|   38 | JMP 31      | 000000111110110 | Senão, prox_multiplo               |
+|   39 | MV A, R2    | 000100000100100 | proximo_endereco_ram: A = R2       |
+|   40 | ADD A, R1   | 000100000010001 | A = A + 1                          |
+|   41 | MV R2, A    | 000001010000100 | R2 = A (próximo candidato)         |
+|   42 | SUB A, R3   | 000100000110010 | A = R3 - A                         |
+|   43 | BEQ 2       | 000000000100111 | Se >= R3, fim_loop_crivo           |
+|   44 | JMP 24      | 000000110000110 | Senão, inicio_loop_crivo           |
+|   45 | NOP         | 000000000000000 | fim_loop_crivo                     |
