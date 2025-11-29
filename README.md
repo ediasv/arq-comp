@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Documentação do Microprocessador
 
 Este documento descreve a arquitetura e o funcionamento do microprocessador
@@ -10,16 +12,36 @@ desenvolvido para o projeto.
 ### Características Gerais
 
 - **ULA**: Implementada com acumulador
-- **Banco de Registradores**: 8 registradores (R0-R7)
+- **Banco de Registradores**: 8 registradores de propósito geral + Acumulador
 - **Tamanho da Instrução**: 15 bits
 - **ROM**: Síncrona
+
+### Mapeamento de Registradores
+
+| Registrador | Código Binário  | Descrição                        |
+| :---------- | :-------------: | :------------------------------- |
+| **R0 - R7** | `0000` a `0111` | Registradores de Propósito Geral |
+| **ACC**     |     `1000`      | Acumulador                       |
+
+### Flags (PSW)
+
+As flags são atualizadas apenas por operações aritméticas na ULA
+(`ADD`, `SUB`, `SUBI`). Instruções de movimentação
+(`MV`, `LD`, `LW`, `SW`) **não** alteram as flags.
+
+- **Z (Zero):** Setado quando o resultado da ULA é zero. (Afeta: `BEQ`)
+- **V (Overflow):** Setado quando há estouro em soma/subtração com sinal.
+  (Afeta: `BVS`)
+- **N (Negative):** Setado quando o bit mais significativo do resultado é 1.
+  (Afeta: `BLT`)
 
 ### Operações Suportadas
 
 - **Carga de Constantes**: Via instrução LD (sem somar)
 - **Soma**: Sempre entre um registrador e o acumulador (não suporta soma com constantes)
 - **Subtração**: Entre um registrador e o acumulador ou com constantes
-- **Saltos Condicionais**: BEQ (Branch if Equal) e BVS (Branch if Overflow Set)
+- **Saltos Condicionais**: BEQ (Branch if Equal), BVS (Branch if Overflow Set) e
+  BLT (Branch if Less Than)
 - **Não há instruções exclusivas de comparação**
 
 ---
@@ -29,32 +51,19 @@ desenvolvido para o projeto.
 As instruções têm 15 bits e podem ser dos formatos:
 
 - **Formato S**: **S**em constante (operações entre registradores)
-- **Formato C**: **C**om constante ou salto incondicional
+- **Formato C**: **C**om constante ou salto
 
-### Formato S
+### Formato S (Standard/Register)
 
-```asm
-XXX AAAA BBBB OOOO
-```
+| 14..12 |       11..8 (A)       |  7..4 (B)   | 3..0 (Opcode) |
+| :----: | :-------------------: | :---------: | :-----------: |
+| `000`  | **Destino / Fonte 1** | **Fonte 2** |  **Opcode**   |
 
-| Campo | Bits   | Descrição                                    |
-| ----- | ------ | -------------------------------------------- |
-| **X** | 3 bits | Reservado/Não utilizado                      |
-| **A** | 4 bits | Número do primeiro registrador (R0-R7 + ACC) |
-| **B** | 4 bits | Número do segundo registrador (R0-R7 + ACC)  |
-| **O** | 4 bits | Opcode da instrução                          |
+### Formato C (Constant/Control)
 
-### Formato C
-
-```asm
-AAAA CCCCCCC OOOO
-```
-
-| Campo    | Bits   | Descrição                                         |
-| -------- | ------ | ------------------------------------------------- |
-| **A**    | 4 bits | Número do primeiro registrador (R0-R7 + ACC)      |
-| **I**    | 7 bits | Valor imediato ou endereço do salto incondicional |
-| **OOOO** | 4 bits | Opcode da instrução                               |
+|       14..11 (A)       |    10..4 (Imediato)    | 3..0 (Opcode) |
+| :--------------------: | :--------------------: | :-----------: |
+| **Destino / Condição** | **Constante (7 bits)** |  **Opcode**   |
 
 ---
 
@@ -62,20 +71,20 @@ AAAA CCCCCCC OOOO
 
 ### Tabela de Instruções
 
-| Instrução   | Opcode | Formato | Descrição                             |
-| ----------- | ------ | ------- | ------------------------------------- |
-| NOP         | `0000` | N/A     | Instrução sem operação                |
-| ADD RX, A   | `0001` | S       | Soma registrador com acumulador       |
-| SUB RX, A   | `0010` | S       | Subtrai acumulador de registrador     |
-| SUBI I, A   | `0011` | C       | Subtrai acumulador de valor imediato  |
-| MV RX, RY   | `0100` | S       | Move conteúdo entre registradores     |
-| LD RX, I    | `0101` | C       | Carrega valor imediato em registrador |
-| JMP ADDRESS | `0110` | C       | Salto incondicional                   |
-| BEQ         | `0111` | C       | Salto condicional                     |
-| BVS         | `1000` | C       | Salto condicional                     |
-| BLT         | `1001` | C       | Salto condicional                     |
-| LW RD, RP   | `1010` | S       | Carrega valor da RAM em registrador   |
-| SW RS, RP   | `1011` | S       | Armazena registrador na RAM           |
+| Mnemônico     | Opcode | Formato | Operação (RTL)              | Descrição              |
+| :------------ | :----: | :-----: | :-------------------------- | :--------------------- |
+| `NOP`         | `0000` |   N/A   | -                           | No Operation           |
+| `ADD A, Rx`   | `0001` |    S    | `ACC <- ACC + Rx`           | Soma                   |
+| `SUB A, Rx`   | `0010` |    S    | `ACC <- Rx - ACC`           | Subtração              |
+| `SUBI A, Imm` | `0011` |    C    | `ACC <- Imm - ACC`          | Subtração Imediata     |
+| `MV Rd, Rs`   | `0100` |    S    | `Rd <- Rs`                  | Movimentação           |
+| `LD Rd, Imm`  | `0101` |    C    | `Rd <- Imm`                 | Carga Imediata         |
+| `JMP Addr`    | `0110` |    C    | `PC <- Addr`                | Salto Incondicional    |
+| `BEQ Offset`  | `0111` |    C    | `if Z=1, PC <- PC + Offset` | Branch if Equal        |
+| `BVS Offset`  | `1000` |    C    | `if V=1, PC <- PC + Offset` | Branch if Overflow Set |
+| `BLT Offset`  | `1001` |    C    | `if N=1, PC <- PC + Offset` | Branch if Less Than    |
+| `LW Rd, ACC`  | `1010` |    S    | `Rd <- RAM[ACC]`            | Load Word              |
+| `SW ACC, Rs`  | `1011` |    S    | `RAM[ACC] <- Rs`            | Store Word             |
 
 ---
 
@@ -293,24 +302,24 @@ BLT -5       ; Se R7 < A, salta para PC - 5
 
 ---
 
-### LW RD, RP
+### LW RD, ACC
 
 **Descrição**: Carrega (Load Word) o valor armazenado na RAM no endereço contido
-no registrador ponteiro (RP) e armazena no registrador de destino (RD).
+no Acumulador (ACC) e armazena no registrador de destino (RD).
 
 - **Opcode**: `1010`
 - **Formato**: S
-- **Operandos**: Registrador de destino (RD) e registrador ponteiro (RP)
+- **Operandos**: Registrador de destino (RD) e Acumulador (Implícito como ponteiro)
 
-**Sintaxe**: `LW RD, RP`
+**Sintaxe**: `LW RD, ACC`
 
-**Operação**: `RD = RAM[RP]`
+**Operação**: `RD = RAM[ACC]`
 
 **Exemplo**:
 
 ```asm
-LD R3, 10    ; R3 = 10 (endereço da RAM)
-LW R5, R3    ; R5 = RAM[10] (carrega valor da posição 10 da RAM em R5)
+LD ACC, 10   ; ACC = 10 (endereço da RAM)
+LW R5, ACC   ; R5 = RAM[10]
 ```
 
 ---
@@ -318,11 +327,11 @@ LW R5, R3    ; R5 = RAM[10] (carrega valor da posição 10 da RAM em R5)
 ### SW ACC, RS
 
 **Descrição**: Armazena (Store Word) o valor contido no registrador fonte (RS)
-na RAM no endereço contido no acumulador (ACC).
+na RAM no endereço contido no Acumulador (ACC).
 
 - **Opcode**: `1011`
 - **Formato**: S
-- **Operandos**: Registrador fonte (RS) e registrador ponteiro (ACC)
+- **Operandos**: Acumulador (Implícito como ponteiro) e Registrador fonte (RS)
 
 **Sintaxe**: `SW ACC, RS`
 
@@ -331,8 +340,7 @@ na RAM no endereço contido no acumulador (ACC).
 **Exemplo**:
 
 ```asm
-LD R4, 42    ; R4 = 42 (valor a ser armazenado)
-LD R3, 10    ; R3 = 10 (endereço da RAM)
-MV ACC, R3
-SW ACC, R4    ; RAM[10] = 42 (armazena 42 na posição 10 da RAM)
+LD R4, 42    ; R4 = 42
+LD ACC, 10   ; ACC = 10 (endereço)
+SW ACC, R4   ; RAM[10] = 42
 ```
